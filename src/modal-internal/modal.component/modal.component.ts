@@ -46,7 +46,7 @@ import {
 			]),
 
 			transition(`${KX_MODAL_STATE_SHOW} => ${KX_MODAL_STATE_HIDE}`, [
-				animate(`${KX_MODAL_ANIMATION_TIME}ms ease-in`)
+				animate(`${KX_MODAL_ANIMATION_TIME}ms ease-out`)
 			])
 		])
 	]
@@ -105,6 +105,13 @@ export class KxModalComponent implements OnInit {
 		if (this.modalComponent) {
 			this.modalComponent[MODAL_OBSERVER_PROPERTY] = this.modalConfiguration.observer;
 			this.modalComponent[MODAL_SETTINGS_PROPERTY] = this.modalConfiguration.options.modalSettings;
+		}
+
+		if (this.modalConfiguration.options.modalValues) {
+			const keys = Object.keys(this.modalConfiguration.options.modalValues);
+			for (let key of keys) {
+				this.modalComponent[key] = this.modalConfiguration.options.modalValues[key];
+			}
 		}
 
 		this.updateModalComponentValues();
