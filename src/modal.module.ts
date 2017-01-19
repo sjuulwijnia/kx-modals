@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 
 import { KxModalService } from "./modal-external";
 import { KxModalComponent, KxModalContainerComponent, KxModalInstanceService } from "./modal-internal";
-import { KxModalComponentContainer, KxModalModuleDeclaration, KxModalDeclaration } from "./modal-internal";
+import { KxModalComponentContainer, KxModalDeclaration, KxChildModalModuleDeclaration, KxRootModalModuleDeclaration } from "./modal-internal";
 
 import { DEFAULT_MODAL_SETTINGS, DEFAULT_MODAL_SETTINGS_PROVIDER } from "./modal-internal";
 
@@ -13,8 +13,10 @@ import "rxjs/add/operator/debounceTime";
 export class KxModalModule {
 	private static kxModalComponentDeclarationContainer = new KxModalComponentContainer();
 
-	static forRoot(modalModuleConfiguration: KxModalModuleDeclaration) {
+	static forRoot(modalModuleConfiguration: KxRootModalModuleDeclaration) {
 		const modules = modalModuleConfiguration.modalModules || [];
+		const defaultSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, (modalModuleConfiguration.defaultSettings || {}));
+
 		this.enrichModalComponentContainer(modalModuleConfiguration.modalComponents);
 
 		@NgModule({
@@ -36,7 +38,7 @@ export class KxModalModule {
 
 				{
 					provide: DEFAULT_MODAL_SETTINGS_PROVIDER,
-					useValue: DEFAULT_MODAL_SETTINGS
+					useValue: defaultSettings
 				}
 			],
 
@@ -58,7 +60,7 @@ export class KxModalModule {
 		return ModalForRootModule;
 	}
 
-	static forChild(modalModuleConfiguration: KxModalModuleDeclaration) {
+	static forChild(modalModuleConfiguration: KxChildModalModuleDeclaration) {
 		const modules = modalModuleConfiguration.modalModules || [];
 		this.enrichModalComponentContainer(modalModuleConfiguration.modalComponents);
 

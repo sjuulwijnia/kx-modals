@@ -24,7 +24,13 @@ export interface KxModalDeclaration {
 	modalComponentName?: string;
 };
 
-export interface KxModalModuleDeclaration {
+interface KxModalModuleDeclaration {
 	modalComponents: KxModalDeclaration[];
 	modalModules?: any[];
+}
+
+export interface KxChildModalModuleDeclaration extends KxModalModuleDeclaration { }
+
+export interface KxRootModalModuleDeclaration extends KxModalModuleDeclaration {
+	defaultSettings?: IKxModalSettings;
 }
