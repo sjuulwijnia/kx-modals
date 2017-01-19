@@ -1,11 +1,15 @@
-<div class="modal-body">
-    <p>
-        HEY, LET EENS OP!
-    </p>
+<div class="modal-header">
+	<h5 class="modal-title">
+		{{ title }}
+	</h5>
+</div>
 
-    <div>
-        <button class="btn btn-sm btn-success pull-right" (click)="onClose()">
-            OK!
-        </button>
-    </div>
+<div class="modal-body" *ngIf="body">
+	{{ body }}
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-success btn-sm" (click)="onClose()" autofocus>
+		GOT IT!
+	</button>
 </div>

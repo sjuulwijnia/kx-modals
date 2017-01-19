@@ -6,6 +6,9 @@ import { KxModalBaseComponent } from "../../../src";
 	templateUrl: './confirm-modal.component.html'
 })
 export class ConfirmModalComponent extends KxModalBaseComponent<void> {
+	public title: string;
+	public body: string;
+
 	public onConfirm() {
 		this.closeSuccess();
 	}
