@@ -2,21 +2,20 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppComponent } from "./app.component";
-import { AppHomeComponent } from "./app-home.component";
 
 // modals
-import { NotifyModalComponent } from "./notify-modal.component";
-import { DemoModalModule } from "../demo-modals";
-import { KxModalModule } from "../../src";
+import { ConfirmModalComponent, NotifyModalComponent } from "./modals/components";
+import { ModalService } from "./modals";
+import { KxModalModule } from "../src";
 
 @NgModule({
 	imports: [
 		BrowserModule,
 
 		// modals
-		DemoModalModule,
 		KxModalModule.forRoot({
 			modalComponents: [
+				{ modalComponent: ConfirmModalComponent },
 				{ modalComponent: NotifyModalComponent }
 			]
 		})
@@ -24,13 +23,18 @@ import { KxModalModule } from "../../src";
 
 	declarations: [
 		AppComponent,
-		AppHomeComponent,
 
+		ConfirmModalComponent,
 		NotifyModalComponent
 	],
 
 	entryComponents: [
+		ConfirmModalComponent,
 		NotifyModalComponent
+	],
+
+	providers: [
+		ModalService
 	],
 
 	bootstrap: [

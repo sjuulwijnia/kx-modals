@@ -42,9 +42,8 @@ export abstract class KxModalBaseComponent<T> {
 		this.closeSilent();
 	}
 
-	protected closeError(error: string): void {
-		this.$$modalObserver.error(new Error(error));
-		this.closeSilent();
+	protected closeError(error?: any): void {
+		this.$$modalObserver.error(error);
 	}
 
 	protected closeSilent(): void {
