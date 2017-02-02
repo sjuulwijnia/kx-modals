@@ -103,7 +103,7 @@ export class KxModalComponent implements OnInit {
 
 	private resolveModalComponentValues(): void {
 		if (this.modalComponent) {
-			this.modalComponent[MODAL_OBSERVER_PROPERTY] = this.modalConfiguration.observer;
+			this.modalComponent[MODAL_OBSERVER_PROPERTY] = this.modalConfiguration.subject;
 			this.modalComponent[MODAL_SETTINGS_PROPERTY] = this.modalConfiguration.options.modalSettings;
 		}
 

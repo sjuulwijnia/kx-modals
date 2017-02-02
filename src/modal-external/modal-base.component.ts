@@ -37,9 +37,12 @@ export abstract class KxModalBaseComponent<T> {
 
 	constructor() { }
 
-	protected closeSuccess(value?: T): void {
+	protected closeSuccess(value?: T, close: boolean = true): void {
 		this.$$modalObserver.next(value);
-		this.closeSilent();
+
+		if (close) {
+			this.closeSilent();
+		}
 	}
 
 	protected closeError(error?: any): void {

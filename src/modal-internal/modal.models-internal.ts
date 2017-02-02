@@ -1,5 +1,5 @@
 import { OpaqueToken } from "@angular/core";
-import { Observer } from "rxjs/Observer";
+import { Subject } from "rxjs/Subject";
 
 import { IKxModalOptions, IKxModalSettings } from "../modal-external/modal.models";
 
@@ -18,5 +18,5 @@ export const DEFAULT_MODAL_SETTINGS: IKxModalSettings = {
 export interface KxModalConfiguration<RETURN_TYPE> {
 	component: any;
 	options: IKxModalOptions;
-	observer?: Observer<RETURN_TYPE>;
+	subject?: Subject<RETURN_TYPE>;
 };

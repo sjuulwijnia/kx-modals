@@ -11,7 +11,6 @@ import {
 import { KxModalInstanceService } from "../modal-instance.service";
 
 import { Subject } from "rxjs/Subject";
-import { Subscriber } from "rxjs/Subscriber";
 
 @Component({
 	selector: 'kx-modal-container',
@@ -74,26 +73,29 @@ export class KxModalContainerComponent implements OnInit {
 				this.kxModalBackdrop = KX_MODAL_STATE_SHOW;
 				this.modalComponentRefs.push(componentRef);
 
-				this.bindToModalDestroy(componentRef);
+				modalConfiguration.subject
+					.subscribe({
+						error: this.bindToModalDestroy.bind(this, componentRef),
+						complete: this.bindToModalDestroy.bind(this, componentRef)
+					});
+
 				this.emitModalComponentCount();
 			});
 	}
 
 	private bindToModalDestroy(componentRef: ComponentRef<KxModalComponent>) {
-		(componentRef.instance.modalConfiguration.observer as Subscriber<any>).add(() => {
-			componentRef.instance.modalAnimationState = KX_MODAL_STATE_HIDE;
+		componentRef.instance.modalAnimationState = KX_MODAL_STATE_HIDE;
 
-			setTimeout(() => {
-				const index = this.modalComponentContainer.indexOf(componentRef.hostView);
+		setTimeout(() => {
+			const index = this.modalComponentContainer.indexOf(componentRef.hostView);
 
-				if (index >= 0) {
-					this.modalComponentRefs.splice(index, 1);
-					this.modalComponentContainer.remove(index);
-				}
+			if (index >= 0) {
+				this.modalComponentRefs.splice(index, 1);
+				this.modalComponentContainer.remove(index);
+			}
 
-				this.emitModalComponentCount();
-			}, KX_MODAL_ANIMATION_TIME);
-		});
+			this.emitModalComponentCount();
+		}, KX_MODAL_ANIMATION_TIME);
 	}
 
 	private emitModalComponentCount() {

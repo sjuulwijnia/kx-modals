@@ -5,7 +5,6 @@ import { KxModalComponentContainer } from "./modal-declaration-container";
 import { IKxModalOptions, KxModalConfiguration, IKxModalService } from "./modal.models-internal";
 
 import { Subject } from "rxjs/Subject";
-import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 
 @Injectable()
@@ -47,13 +46,15 @@ export class KxModalInstanceService implements IKxModalService {
 			return Observable.throw(new Error(`NO MODALCOMPONENT FOUND FOR VALUE ${modalComponent.toString()}`));
 		}
 
-		return Observable.create((observer: Observer<RETURN_TYPE>) => {
-			this.modalInstanceContainerSubject.next({
-				component: component,
-				options: modalOptions,
-				observer: observer
-			});
+		const subject = new Subject<RETURN_TYPE>();
+
+		this.modalInstanceContainerSubject.next({
+			component: component,
+			options: modalOptions,
+			subject: subject
 		});
+
+		return subject;
 	}
 
 	public getComponentReference(modalConfiguration: KxModalConfiguration<any>): ComponentRef<any> {
