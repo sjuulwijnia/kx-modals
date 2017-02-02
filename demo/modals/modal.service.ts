@@ -3,6 +3,7 @@ import { KxModalBaseComponent, KxModalService, IKxModalOptions, IKxModalService 
 
 import { IConfirmModalConfiguration } from "./confirm-modal.component";
 import { INotifyModalConfiguration } from "./notify-modal.component";
+import { IWaitModalConfiguration } from "./wait-modal.component";
 
 @Injectable()
 export class ModalService implements IKxModalService {
@@ -51,6 +52,24 @@ export class ModalService implements IKxModalService {
 		}
 
 		return this.create("NotifyModalComponent", {
+			modalSettings: {
+				modalSize: 'sm'
+			},
+			modalValues
+		});
+	}
+
+	public wait(waitConfiguration: string | IWaitModalConfiguration) {
+		let modalValues: IWaitModalConfiguration;
+		if (typeof waitConfiguration === "string") {
+			modalValues = {
+				title: waitConfiguration
+			};
+		} else {
+			modalValues = waitConfiguration;
+		}
+
+		return this.create("WaitModalComponent", {
 			modalSettings: {
 				modalSize: 'sm'
 			},

@@ -4,7 +4,11 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppComponent } from "./app.component";
 
 // modals
-import { ConfirmModalComponent, NotifyModalComponent } from "./modals/components";
+import {
+	ConfirmModalComponent,
+	NotifyModalComponent,
+	WaitModalComponent
+} from "./modals/components";
 import { ModalService } from "./modals";
 import { KxModalModule } from "../src";
 
@@ -16,7 +20,8 @@ import { KxModalModule } from "../src";
 		KxModalModule.forRoot({
 			modalComponents: [
 				{ modalComponent: ConfirmModalComponent },
-				{ modalComponent: NotifyModalComponent }
+				{ modalComponent: NotifyModalComponent },
+				{ modalComponent: WaitModalComponent }
 			]
 		})
 	],
@@ -25,12 +30,14 @@ import { KxModalModule } from "../src";
 		AppComponent,
 
 		ConfirmModalComponent,
-		NotifyModalComponent
+		NotifyModalComponent,
+		WaitModalComponent
 	],
 
 	entryComponents: [
 		ConfirmModalComponent,
-		NotifyModalComponent
+		NotifyModalComponent,
+		WaitModalComponent
 	],
 
 	providers: [
