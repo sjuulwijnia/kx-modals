@@ -65,25 +65,27 @@ export class KxModalContainerComponent implements OnInit {
 
 	ngOnInit() {
 		this.modalInstanceService.bindToModalInstance(this.modalContainerCountSubject)
-			.subscribe((modalConfiguration: KxModalConfiguration<any>) => {
-				const componentRef = this.modalComponentContainer.createComponent(this.modalContainerComponentFactory);
-
-				componentRef.instance.modalConfiguration = modalConfiguration;
-
-				this.kxModalBackdrop = KX_MODAL_STATE_SHOW;
-				this.modalComponentRefs.push(componentRef);
-
-				modalConfiguration.subject
-					.subscribe({
-						error: this.bindToModalDestroy.bind(this, componentRef),
-						complete: this.bindToModalDestroy.bind(this, componentRef)
-					});
-
-				this.emitModalComponentCount();
-			});
+			.subscribe(this.onModalCreation.bind(this));
 	}
 
-	private bindToModalDestroy(componentRef: ComponentRef<KxModalComponent>) {
+	private onModalCreation(modalConfiguration: KxModalConfiguration<any>): void {
+		const componentRef = this.modalComponentContainer.createComponent(this.modalContainerComponentFactory);
+
+		componentRef.instance.modalConfiguration = modalConfiguration;
+
+		this.kxModalBackdrop = KX_MODAL_STATE_SHOW;
+		this.modalComponentRefs.push(componentRef);
+
+		modalConfiguration.subject
+			.subscribe({
+				error: this.onModalDestroy.bind(this, componentRef),
+				complete: this.onModalDestroy.bind(this, componentRef)
+			});
+
+		this.emitModalComponentCount();
+	}
+
+	private onModalDestroy(componentRef: ComponentRef<KxModalComponent>) {
 		componentRef.instance.modalAnimationState = KX_MODAL_STATE_HIDE;
 
 		setTimeout(() => {

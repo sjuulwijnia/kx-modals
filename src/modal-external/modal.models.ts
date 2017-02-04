@@ -5,6 +5,10 @@ import { KxModalBaseComponent } from "./modal-base.component";
 export interface IKxModalSettings {
 	modalClasses?: string;
 	modalSize?: 'sm' | 'md' | 'lg';
+
+	dismissByEscape?: boolean;
+	dismissByClick?: boolean;
+	dismissCausesError?: boolean;
 }
 
 export interface IKxModalOptions {

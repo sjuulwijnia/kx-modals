@@ -12,7 +12,11 @@ export const KX_MODAL_STATE_SHOW = 'kxModalAnimationShow';
 export const DEFAULT_MODAL_SETTINGS_PROVIDER = new OpaqueToken("kxModalDefaultSettings");
 export const DEFAULT_MODAL_SETTINGS: IKxModalSettings = {
 	modalClasses: '',
-	modalSize: 'md'
+	modalSize: 'md',
+
+	dismissByClick: true,
+	dismissByEscape: true,
+	dismissCausesError: false
 };
 
 export interface KxModalConfiguration<RETURN_TYPE> {

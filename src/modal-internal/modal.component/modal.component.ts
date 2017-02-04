@@ -1,4 +1,4 @@
-import { Component, ComponentRef, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ComponentRef, HostListener, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { animate, state, style, transition, trigger } from "@angular/core";
 
 import {
@@ -8,6 +8,7 @@ import {
 	KX_MODAL_STATE_SHOW
 } from "../modal.models-internal";
 import { KxModalInstanceService } from "../modal-instance.service";
+import { KxModalBaseComponent } from "../../modal-external";
 
 import {
 	MODAL_COUNT_PROPERTY,
@@ -78,7 +79,7 @@ export class KxModalComponent implements OnInit {
 	modalClasses: string[] = [];
 	modalDialogClasses: string[] = [];
 
-	private modalComponentRef: ComponentRef<any> = null;
+	private modalComponentRef: ComponentRef<KxModalBaseComponent<any>> = null;
 	private modalComponent: any = null;
 
 	public get modalZIndex(): number {
@@ -123,4 +124,35 @@ export class KxModalComponent implements OnInit {
 			this.modalComponent[MODAL_INDEX_PROPERTY] = this._modalIndex;
 		}
 	}
+
+	/* EVENT HANDLING START */
+	public onBackdropClick($event: MouseEvent) {
+		if (!$event.defaultPrevented) {
+			this.handleDismiss(this.modalConfiguration.options.modalSettings.dismissByClick, 'click');
+		}
+	}
+
+	public onBackdropClickCancel($event: MouseEvent) {
+		$event.preventDefault();
+	}
+
+	@HostListener('document:keydown.escape', ['$event'])
+	public onEscapePress($event: KeyboardEvent) {
+		if (!$event.shiftKey && !$event.ctrlKey && !$event.altKey) {
+			this.handleDismiss(this.modalConfiguration.options.modalSettings.dismissByEscape, 'escape');
+		}
+	}
+
+	private handleDismiss(dismiss: boolean, from: string) {
+		if (this.modalComponentRef.instance.isTopModal && dismiss) {
+			if (dismiss) {
+				if (this.modalConfiguration.options.modalSettings.dismissCausesError) {
+					this.modalComponentRef.instance.closeError(`Dismissed by ${from}.`);
+				} else {
+					this.modalComponentRef.instance.closeSilent();
+				}
+			}
+		}
+	}
+	/* EVENT HANDLING END */
 }
