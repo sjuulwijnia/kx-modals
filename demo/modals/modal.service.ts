@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { KxModalBaseComponent, KxModalService, IKxModalOptions, IKxModalService } from "../../src";
+import { KxModalService, IKxModalOptions, IKxModalService } from "../../src";
 
-import { IConfirmModalConfiguration } from "./confirm-modal.component";
-import { INotifyModalConfiguration } from "./notify-modal.component";
-import { IWaitModalConfiguration } from "./wait-modal.component";
+import { ConfirmModalComponent, IConfirmModalConfiguration } from "./confirm-modal.component";
+import { NotifyModalComponent, INotifyModalConfiguration } from "./notify-modal.component";
+import { WaitModalComponent, IWaitModalConfiguration } from "./wait-modal.component";
 
 @Injectable()
 export class ModalService implements IKxModalService {
@@ -19,7 +19,7 @@ export class ModalService implements IKxModalService {
 		private kxModalService: KxModalService
 	) { }
 
-	public create(modalComponent: string | KxModalBaseComponent<any>, modalOptions: IKxModalOptions) {
+	public create(modalComponent: any, modalOptions: IKxModalOptions) {
 		return this.kxModalService.create(modalComponent, modalOptions);
 	}
 
@@ -33,7 +33,7 @@ export class ModalService implements IKxModalService {
 			modalValues = confirmConfiguration;
 		}
 
-		return this.create("ConfirmModalComponent", {
+		return this.create(ConfirmModalComponent, {
 			modalSettings: {
 				modalSize: 'sm',
 
@@ -53,7 +53,7 @@ export class ModalService implements IKxModalService {
 			modalValues = notifyConfiguration;
 		}
 
-		return this.create("NotifyModalComponent", {
+		return this.create(NotifyModalComponent, {
 			modalSettings: {
 				modalSize: 'sm'
 			},
@@ -71,7 +71,7 @@ export class ModalService implements IKxModalService {
 			modalValues = waitConfiguration;
 		}
 
-		return this.create("WaitModalComponent", {
+		return this.create(WaitModalComponent, {
 			modalSettings: {
 				modalSize: 'sm',
 

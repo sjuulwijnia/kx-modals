@@ -29,7 +29,7 @@ export interface KxModalDeclaration {
 };
 
 interface KxModalModuleDeclaration {
-	modalComponents: KxModalDeclaration[];
+	modalComponents?: KxModalDeclaration[];
 	modalModules?: any[];
 }
 

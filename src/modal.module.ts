@@ -13,11 +13,13 @@ import "rxjs/add/operator/debounceTime";
 export class KxModalModule {
 	private static kxModalComponentDeclarationContainer = new KxModalComponentContainer();
 
-	static forRoot(modalModuleConfiguration: KxRootModalModuleDeclaration) {
-		const modules = modalModuleConfiguration.modalModules || [];
-		const defaultSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, (modalModuleConfiguration.defaultSettings || {}));
+	static forRoot(modalModuleConfiguration?: KxRootModalModuleDeclaration) {
+		const configuration = modalModuleConfiguration || {};
+		const components = configuration.modalComponents || [];
+		const modules = configuration.modalModules || [];
+		const defaultSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, (configuration.defaultSettings || {}));
 
-		this.enrichModalComponentContainer(modalModuleConfiguration.modalComponents);
+		this.enrichModalComponentContainer(components);
 
 		@NgModule({
 			imports: [
@@ -31,8 +33,8 @@ export class KxModalModule {
 				{
 					provide: KxModalInstanceService,
 					deps: [ComponentFactoryResolver, Injector],
-					useFactory: (cfr: ComponentFactoryResolver, i: Injector) => {
-						return new KxModalInstanceService(this.kxModalComponentDeclarationContainer, cfr, i);
+					useFactory: (componentFactoryResolver: ComponentFactoryResolver, injector: Injector) => {
+						return new KxModalInstanceService(this.kxModalComponentDeclarationContainer, componentFactoryResolver, injector);
 					}
 				},
 
@@ -60,9 +62,12 @@ export class KxModalModule {
 		return ModalForRootModule;
 	}
 
-	static forChild(modalModuleConfiguration: KxChildModalModuleDeclaration) {
-		const modules = modalModuleConfiguration.modalModules || [];
-		this.enrichModalComponentContainer(modalModuleConfiguration.modalComponents);
+	static forChild(modalModuleConfiguration?: KxChildModalModuleDeclaration) {
+		const configuration = modalModuleConfiguration || {};
+		const components = configuration.modalComponents || [];
+		const modules = configuration.modalModules || [];
+
+		this.enrichModalComponentContainer(components);
 
 		@NgModule({
 			imports: [

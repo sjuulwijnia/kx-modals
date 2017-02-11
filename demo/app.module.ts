@@ -17,13 +17,7 @@ import { KxModalModule } from "../src";
 		BrowserModule,
 
 		// modals
-		KxModalModule.forRoot({
-			modalComponents: [
-				{ modalComponent: ConfirmModalComponent },
-				{ modalComponent: NotifyModalComponent },
-				{ modalComponent: WaitModalComponent }
-			]
-		})
+		KxModalModule.forRoot()
 	],
 
 	declarations: [
