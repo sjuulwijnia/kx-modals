@@ -1,8 +1,8 @@
 <div class="modal fade show" [style.z-index]="modalZIndex" [ngClass]="modalClasses" [@kxModalComponent]="modalAnimationState"
-	(click)="onBackdropClick($event)">
+ (click)="onBackdropClick($event)">
 	<div class="modal-dialog" [ngClass]="modalDialogClasses">
-		<div class="modal-content" (click)="onBackdropClickCancel($event)">
+		<div (click)="onBackdropClickCancel($event)">
 			<template #kxModal></template>
 		</div>
 	</div>
-	</div>
+</div>

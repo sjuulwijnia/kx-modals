@@ -1,19 +1,21 @@
-<div class="modal-header">
-	<h5 class="modal-title">
-		{{ title }}
-	</h5>
-</div>
+<div class="modal-content">
+	<div class="modal-header">
+		<h5 class="modal-title">
+			{{ title }}
+		</h5>
+	</div>
 
-<div class="modal-body" *ngIf="body">
-	{{ body }}
-</div>
+	<div class="modal-body" *ngIf="body">
+		{{ body }}
+	</div>
 
-<div class="modal-footer">
-	<button class="btn btn-default btn-sm" (click)="onDecline()" autofocus>
+	<div class="modal-footer">
+		<button class="btn btn-default btn-sm" (click)="onDecline()" autofocus>
 		NOPE!
 	</button>
 
-	<button class="btn btn-success btn-sm" (click)="onConfirm()">
+		<button class="btn btn-success btn-sm" (click)="onConfirm()">
 		AIGHT!
 	</button>
+	</div>
 </div>
