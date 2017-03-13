@@ -6,6 +6,7 @@ import { KxModalComponent, KxModalContainerComponent, KxModalInstanceService } f
 import { KxModalComponentContainer, KxModalDeclaration, KxChildModalModuleDeclaration, KxRootModalModuleDeclaration } from "./modal-internal";
 
 import { DEFAULT_MODAL_SETTINGS, DEFAULT_MODAL_SETTINGS_PROVIDER } from "./modal-internal";
+import { GLOBAL_MODAL_STYLE, GLOBAL_MODAL_STYLE_PROVIDER } from "./modal-internal";
 
 import "rxjs/add/observable/throw";
 import "rxjs/add/operator/debounceTime";
@@ -17,7 +18,9 @@ export class KxModalModule {
 		const configuration = modalModuleConfiguration || {};
 		const components = configuration.modalComponents || [];
 		const modules = configuration.modalModules || [];
+
 		const defaultSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, (configuration.defaultSettings || {}));
+		const globalStyleSettings = Object.assign({}, GLOBAL_MODAL_STYLE, (configuration.globalStyleSettings || {}));
 
 		this.enrichModalComponentContainer(components);
 
@@ -41,6 +44,11 @@ export class KxModalModule {
 				{
 					provide: DEFAULT_MODAL_SETTINGS_PROVIDER,
 					useValue: defaultSettings
+				},
+
+				{
+					provide: GLOBAL_MODAL_STYLE_PROVIDER,
+					useValue: globalStyleSettings
 				}
 			],
 

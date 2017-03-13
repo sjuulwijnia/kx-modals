@@ -35,7 +35,7 @@ export class ModalService implements IKxModalService {
 
 		return this.create(ConfirmModalComponent, {
 			modalSettings: {
-				modalSize: 'sm',
+				modalDialogClasses: 'modal-sm',
 
 				dismissCausesError: !!modalValues.errorOnDecline
 			},
@@ -55,7 +55,7 @@ export class ModalService implements IKxModalService {
 
 		return this.create(NotifyModalComponent, {
 			modalSettings: {
-				modalSize: 'sm'
+				modalDialogClasses: 'modal-sm'
 			},
 			modalValues
 		});
@@ -73,7 +73,7 @@ export class ModalService implements IKxModalService {
 
 		return this.create(WaitModalComponent, {
 			modalSettings: {
-				modalSize: 'sm',
+				modalDialogClasses: 'modal-sm',
 
 				dismissByClick: false,
 				dismissByEscape: false

@@ -1,4 +1,4 @@
-import { Component, ComponentRef, HostListener, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ComponentRef, HostListener, Inject, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { animate, state, style, transition, trigger } from "@angular/core";
 
 import {
@@ -16,6 +16,11 @@ import {
 	MODAL_OBSERVER_PROPERTY,
 	MODAL_SETTINGS_PROPERTY
 } from "../../modal-external";
+
+import {
+	GLOBAL_MODAL_STYLE_PROVIDER,
+	KxModalStyleSettings
+} from "../modal.models-internal";
 
 @Component({
 	selector: 'kx-modal',
@@ -76,8 +81,8 @@ export class KxModalComponent implements OnInit {
 		return this._modalIndex;
 	}
 
-	modalClasses: string[] = [];
-	modalDialogClasses: string[] = [];
+	modalClasses: string = null;
+	modalDialogClasses: string = null;
 
 	private modalComponentRef: ComponentRef<KxModalBaseComponent<any>> = null;
 	private modalComponent: any = null;
@@ -87,7 +92,8 @@ export class KxModalComponent implements OnInit {
 	}
 
 	constructor(
-		private modalInstanceService: KxModalInstanceService
+		private modalInstanceService: KxModalInstanceService,
+		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) private globalStyleSettings: KxModalStyleSettings
 	) { }
 
 	ngOnInit() {
@@ -96,8 +102,8 @@ export class KxModalComponent implements OnInit {
 
 		this.resolveModalComponentValues();
 
-		this.modalClasses.push(`modal-${this.modalConfiguration.options.modalSettings.modalClasses}`);
-		this.modalDialogClasses.push(`modal-${this.modalConfiguration.options.modalSettings.modalSize}`);
+		this.modalClasses = `${this.globalStyleSettings.containerClasses} ${this.modalConfiguration.options.modalSettings.modalContainerClasses}`;
+		this.modalDialogClasses = `${this.globalStyleSettings.dialogClasses} ${this.modalConfiguration.options.modalSettings.modalDialogClasses}`;
 
 		this.viewContainerRef.insert(this.modalComponentRef.hostView);
 	}

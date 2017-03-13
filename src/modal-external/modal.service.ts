@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 
 import { KxModalBaseComponent } from "./modal-base.component";
 import { KxModalInstanceService } from "../modal-internal";
-import { DEFAULT_MODAL_SETTINGS_PROVIDER, IKxModalSettings } from "../modal-internal";
+import { DEFAULT_MODAL_SETTINGS_PROVIDER, KxModalSettings } from "../modal-internal";
 import { IKxModalOptions, IKxModalService } from "./modal.models";
 
 import { Observable } from "rxjs/Observable";
@@ -17,7 +17,7 @@ export class KxModalService implements IKxModalService {
 	}
 
 	constructor(
-		@Inject(DEFAULT_MODAL_SETTINGS_PROVIDER) private defaultModalSettings: IKxModalSettings,
+		@Inject(DEFAULT_MODAL_SETTINGS_PROVIDER) private defaultModalSettings: KxModalSettings,
 		private modalInstanceService: KxModalInstanceService
 	) { }
 

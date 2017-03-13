@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 
 import { Observer } from "rxjs/Observer";
 
-import { IKxModalSettings } from "./modal.models";
+import { KxModalSettings } from "./modal.models";
 
 export const MODAL_OBSERVER_PROPERTY = '$$modalObserver';
 export const MODAL_SETTINGS_PROPERTY = '$$modalSettings';
@@ -16,8 +16,8 @@ export abstract class KxModalBaseComponent<T> {
 		return this.$$modalObserver;
 	}
 
-	private $$modalSettings: IKxModalSettings = null;
-	public get modalSettings(): IKxModalSettings {
+	private $$modalSettings: KxModalSettings = null;
+	public get modalSettings(): KxModalSettings {
 		return this.$$modalSettings;
 	}
 
