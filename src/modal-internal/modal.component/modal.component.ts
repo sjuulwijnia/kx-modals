@@ -81,7 +81,7 @@ export class KxModalComponent implements OnInit {
 		return this._modalIndex;
 	}
 
-	modalClasses: string = null;
+	modalContainerClasses: string = null;
 	modalDialogClasses: string = null;
 
 	private modalComponentRef: ComponentRef<KxModalBaseComponent<any>> = null;
@@ -102,7 +102,7 @@ export class KxModalComponent implements OnInit {
 
 		this.resolveModalComponentValues();
 
-		this.modalClasses = `${this.globalStyleSettings.containerClasses} ${this.modalConfiguration.options.modalSettings.modalContainerClasses}`;
+		this.modalContainerClasses = `${this.globalStyleSettings.containerClasses} ${this.modalConfiguration.options.modalSettings.modalContainerClasses}`;
 		this.modalDialogClasses = `${this.globalStyleSettings.dialogClasses} ${this.modalConfiguration.options.modalSettings.modalDialogClasses}`;
 
 		this.viewContainerRef.insert(this.modalComponentRef.hostView);

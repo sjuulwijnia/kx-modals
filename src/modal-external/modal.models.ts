@@ -16,16 +16,16 @@ export interface KxModalSettings {
 	modalDialogClasses?: string;
 
 	/**
-	 * Whether pressing escape should close this modal when it is the top-most modal.
-	 * Defaults to true.
-	 */
-	dismissByEscape?: boolean;
-
-	/**
 	 * Whether pressing the backdrop (or anywhere outside the modal, more specifically) should close this modal when it is the top-most modal.
 	 * Defaults to true.
 	 */
 	dismissByClick?: boolean;
+
+	/**
+	 * Whether pressing escape should close this modal when it is the top-most modal.
+	 * Defaults to true.
+	 */
+	dismissByEscape?: boolean;
 
 	/**
 	 * Whether dismissByEscape and dismissByClick should throw an error when triggered. If true, make sure the error is caught using a .catch(...) on the Observable.
