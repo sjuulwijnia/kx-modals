@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ComponentFactory, ComponentFactoryResolver, Inject, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ComponentRef, ComponentFactory, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { animate, state, style, transition, trigger } from "@angular/core";
 
 import { KxModalComponent } from "../modal.component";
@@ -9,11 +9,6 @@ import {
 	KX_MODAL_STATE_SHOW
 } from "../modal.models-internal";
 import { KxModalInstanceService } from "../modal-instance.service";
-
-import {
-	GLOBAL_MODAL_STYLE_PROVIDER,
-	KxModalStyleSettings
-} from "../modal.models-internal";
 
 import { Subject } from "rxjs/Subject";
 
@@ -64,13 +59,11 @@ export class KxModalContainerComponent implements OnInit {
 
 	constructor(
 		componentFactoryResolver: ComponentFactoryResolver,
-		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) globalStyleSettings: KxModalStyleSettings,
-
 		private modalInstanceService: KxModalInstanceService
 	) {
 		this.modalContainerComponentFactory = componentFactoryResolver.resolveComponentFactory(KxModalComponent);
 
-		this.kxModalBackdropClasses = globalStyleSettings.backdropClasses;
+		this.kxModalBackdropClasses = modalInstanceService.globalStyleSettings.backdropClasses;
 	}
 
 	ngOnInit() {

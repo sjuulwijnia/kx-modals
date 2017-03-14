@@ -11,7 +11,9 @@ import {
 export class KxModalComponentContainer {
 	private container: { [componentName: string]: any } = {};
 
-	addDeclarations(modalComponents: KxModalDeclaration[]) {
+	constructor(modalComponents: KxModalDeclaration[]) {
+		modalComponents = modalComponents || [];
+
 		for (let modalDeclaration of modalComponents) {
 			let componentName = modalDeclaration.modalComponentName || modalDeclaration.modalComponent.prototype.constructor.name;
 			this.container[componentName] = modalDeclaration.modalComponent;

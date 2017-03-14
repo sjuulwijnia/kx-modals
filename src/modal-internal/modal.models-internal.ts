@@ -26,6 +26,8 @@ export const GLOBAL_MODAL_STYLE: KxModalStyleSettings = {
 	dialogClasses: 'modal-dialog'
 };
 
+export const MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER = new OpaqueToken("kxModalComponentDeclarationContainer");
+
 export interface KxModalConfiguration<RETURN_TYPE> {
 	component: any;
 	options: IKxModalOptions;

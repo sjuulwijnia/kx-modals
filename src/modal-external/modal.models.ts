@@ -82,11 +82,6 @@ interface KxModalModuleDeclaration {
 	 * Contains all ModalComponents that you want to be able to be called by name rather than by class declaration.
 	 */
 	modalComponents?: KxModalDeclaration[];
-
-	/**
-	 * All modules that are required by the internally created modals. Can generally be left empty.
-	 */
-	modalModules?: any[];
 }
 
 export interface KxChildModalModuleDeclaration extends KxModalModuleDeclaration { }

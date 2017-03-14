@@ -1,8 +1,9 @@
-import { ComponentRef, ComponentFactoryResolver, Injectable, Injector, ReflectiveInjector } from "@angular/core";
+import { ComponentRef, ComponentFactoryResolver, Injectable, Injector, ReflectiveInjector, Inject } from '@angular/core';
 
-import { KxModalBaseComponent } from "../modal-external";
-import { KxModalComponentContainer } from "./modal-declaration-container";
-import { IKxModalOptions, KxModalConfiguration, IKxModalService } from "./modal.models-internal";
+import { KxModalBaseComponent, KxModalStyleSettings } from "../modal-external";
+import { KxModalComponentContainer } from './modal-declaration-container';
+import { IKxModalOptions, KxModalConfiguration, IKxModalService, MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER } from './modal.models-internal';
+import { GLOBAL_MODAL_STYLE, GLOBAL_MODAL_STYLE_PROVIDER, KxModalDeclaration } from './modal.models-internal';
 
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
@@ -20,12 +21,23 @@ export class KxModalInstanceService implements IKxModalService {
 		return this.modalInstanceCount;
 	}
 
+	private _globalStyleSettings: KxModalStyleSettings = null;
+	public get globalStyleSettings() {
+		return this._globalStyleSettings;
+	}
+
+	private modalComponentDeclarationContainer: KxModalComponentContainer = null;
+
 	constructor(
-		private modalComponentDeclarationContainer: KxModalComponentContainer,
+		@Inject(MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER) modalComponentDeclarations: KxModalDeclaration[],
+		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) globalStyleSettings: KxModalStyleSettings,
 
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private injector: Injector
-	) { }
+	) {
+		this._globalStyleSettings = Object.assign({}, GLOBAL_MODAL_STYLE, globalStyleSettings || {});
+		this.modalComponentDeclarationContainer = new KxModalComponentContainer(modalComponentDeclarations);
+	}
 
 	public bindToModalInstance(modalInstanceCountSubject: Observable<number>): Observable<KxModalConfiguration<any>> {
 		modalInstanceCountSubject.subscribe(modalInstanceCount => {
