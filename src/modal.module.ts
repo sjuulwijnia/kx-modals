@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Injector, NgModule } from "@angular/core";
+import { ComponentFactoryResolver, Injector, ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 import { KxModalService } from "./modal-external";
@@ -11,28 +11,43 @@ import { GLOBAL_MODAL_STYLE, GLOBAL_MODAL_STYLE_PROVIDER } from "./modal-interna
 import "rxjs/add/observable/throw";
 import "rxjs/add/operator/debounceTime";
 
+@NgModule({
+	imports: [
+		CommonModule
+	],
+
+	providers: [
+		KxModalService
+	],
+
+	declarations: [
+		KxModalComponent,
+		KxModalContainerComponent
+	],
+
+	entryComponents: [
+		KxModalComponent
+	],
+
+	exports: [
+		KxModalContainerComponent
+	]
+})
 export class KxModalModule {
 	private static kxModalComponentDeclarationContainer = new KxModalComponentContainer();
 
-	static forRoot(modalModuleConfiguration?: KxRootModalModuleDeclaration) {
+	static forRoot(modalModuleConfiguration?: KxRootModalModuleDeclaration): ModuleWithProviders {
 		const configuration = modalModuleConfiguration || {};
 		const components = configuration.modalComponents || [];
-		const modules = configuration.modalModules || [];
 
 		const defaultSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, (configuration.defaultSettings || {}));
 		const globalStyleSettings = Object.assign({}, GLOBAL_MODAL_STYLE, (configuration.globalStyleSettings || {}));
 
 		this.enrichModalComponentContainer(components);
 
-		@NgModule({
-			imports: [
-				CommonModule,
-				...modules
-			],
-
+		return {
+			ngModule: KxModalModule,
 			providers: [
-				KxModalService,
-
 				{
 					provide: KxModalInstanceService,
 					deps: [ComponentFactoryResolver, Injector],
@@ -50,42 +65,19 @@ export class KxModalModule {
 					provide: GLOBAL_MODAL_STYLE_PROVIDER,
 					useValue: globalStyleSettings
 				}
-			],
-
-			declarations: [
-				KxModalComponent,
-				KxModalContainerComponent
-			],
-
-			entryComponents: [
-				KxModalComponent
-			],
-
-			exports: [
-				KxModalContainerComponent
 			]
-		})
-		class ModalForRootModule { }
-
-		return ModalForRootModule;
+		};
 	}
 
-	static forChild(modalModuleConfiguration?: KxChildModalModuleDeclaration) {
+	static forChild(modalModuleConfiguration?: KxChildModalModuleDeclaration): ModuleWithProviders {
 		const configuration = modalModuleConfiguration || {};
 		const components = configuration.modalComponents || [];
-		const modules = configuration.modalModules || [];
 
 		this.enrichModalComponentContainer(components);
 
-		@NgModule({
-			imports: [
-				CommonModule,
-				...modules
-			]
-		})
-		class ModalForChildModule { }
-
-		return ModalForChildModule;
+		return {
+			ngModule: KxModalModule
+		};
 	}
 
 	private static enrichModalComponentContainer(modalComponents: KxModalDeclaration[]) {
