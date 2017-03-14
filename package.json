@@ -1,6 +1,6 @@
 {
 	"name": "kx-modals",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Angular 2 modals done right.",
 	"main": "index.js",
 	"scripts": {
