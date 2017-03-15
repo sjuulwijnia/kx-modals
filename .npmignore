@@ -1,6 +1,9 @@
 /demo/
-/src/
 /.vscode/
 
-webpack.config.js
-tsconfig.json
+.gitignore
+webpack.demo.js
+tsconfig.ngc.json
+tsconfig.root.json
+
+index.ts

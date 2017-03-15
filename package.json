@@ -1,20 +1,21 @@
 {
 	"name": "kx-modals",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "Angular 2 modals done right.",
 	"main": "./index.js",
 	"scripts": {
 		"start": "npm run dev",
 		"dev": "webpack-dev-server --config ./webpack.demo.js",
 		"webpack": "webpack --config ./webpack.demo.js",
-		"build": "ngc -p ./dist.tsconfig.json",
+		"build": "npm run build:ngc && npm run build:root",
+		"build:ngc": "ngc -p ./tsconfig.ngc.json",
+		"build:root": "tsc -p ./tsconfig.root.json",
 		"prebuild": "rimraf \"dist/**/*\"",
-		"postbuild": "npm run postbuild:clean-src && npm run postbuild:copy",
-		"postbuild:clean-src": "rimraf \"src/**/*.ngfactory.ts\" \"src/**/*.ngsummary.json\"",
-		"postbuild:copy": "cpy LICENSE package.json README.md dist"
+		"postbuild": "rimraf \"**/*.ngfactory.ts\" \"**/*.ngsummary.json\"",
+		"ngc": "ngc --help"
 	},
 	"author": "khlox",
-	"license": "ISC",
+	"license": "MIT",
 	"homepage": "https://github.com/sjuulwijnia/kx-modals",
 	"bugs": {
 		"url": "https://github.com/sjuulwijnia/kx-modals/issues"
