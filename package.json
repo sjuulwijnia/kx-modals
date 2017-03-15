@@ -24,17 +24,17 @@
 		"url": "https://github.com/sjuulwijnia/kx-modals.git"
 	},
 	"peerDependencies": {
-		"@angular/common": "4.0.0-beta.7",
-		"@angular/compiler": "4.0.0-beta.7",
-		"@angular/core": "4.0.0-beta.7"
+		"@angular/common": "^4.0.0-beta.7",
+		"@angular/compiler": "^4.0.0-beta.7",
+		"@angular/core": "^4.0.0-beta.7"
 	},
 	"devDependencies": {
-		"@angular/common": "4.0.0-beta.7",
-		"@angular/compiler": "4.0.0-beta.7",
-		"@angular/compiler-cli": "4.0.0-beta.7",
-		"@angular/core": "4.0.0-beta.7",
-		"@angular/platform-browser": "4.0.0-beta.7",
-		"@angular/platform-browser-dynamic": "4.0.0-beta.7",
+		"@angular/common": "^4.0.0-beta.7",
+		"@angular/compiler": "^4.0.0-beta.7",
+		"@angular/compiler-cli": "^4.0.0-beta.7",
+		"@angular/core": "^4.0.0-beta.7",
+		"@angular/platform-browser": "^4.0.0-beta.7",
+		"@angular/platform-browser-dynamic": "^4.0.0-beta.7",
 		"@types/core-js": "0.9.35",
 		"@types/node": "6.0.55",
 		"angular2-template-loader": "0.6.2",
