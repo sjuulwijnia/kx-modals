@@ -1,9 +1,24 @@
 import { ComponentRef, ComponentFactoryResolver, Injectable, Injector, ReflectiveInjector, Inject } from '@angular/core';
 
-import { KxModalBaseComponent, KxModalStyleSettings } from "../modal-external";
+import { KxModalBaseComponent } from "../modal-base.component";
+import { KxModalStyleSettings, KxModalSettings } from "../modal.models";
 import { KxModalComponentContainer } from './modal-declaration-container';
-import { IKxModalOptions, KxModalConfiguration, IKxModalService, MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER } from './modal.models-internal';
-import { GLOBAL_MODAL_STYLE, GLOBAL_MODAL_STYLE_PROVIDER, KxModalDeclaration } from './modal.models-internal';
+import {
+	KxModalConfiguration,
+	MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER,
+
+	GLOBAL_MODAL_STYLE,
+	GLOBAL_MODAL_STYLE_PROVIDER,
+
+	DEFAULT_MODAL_SETTINGS,
+	DEFAULT_MODAL_SETTINGS_PROVIDER
+} from './modal.models-internal';
+
+import {
+	KxModalOptions,
+	IKxModalService,
+	KxModalDeclaration
+} from '../modal.models';
 
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
@@ -26,16 +41,23 @@ export class KxModalInstanceService implements IKxModalService {
 		return this._globalStyleSettings;
 	}
 
+	private _defaultModalSettings: KxModalSettings = null;
+	public get defaultModalSettings() {
+		return this._defaultModalSettings;
+	}
+
 	private modalComponentDeclarationContainer: KxModalComponentContainer = null;
 
 	constructor(
 		@Inject(MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER) modalComponentDeclarations: KxModalDeclaration[],
 		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) globalStyleSettings: KxModalStyleSettings,
+		@Inject(DEFAULT_MODAL_SETTINGS_PROVIDER) defaultModalSettings: KxModalSettings,
 
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private injector: Injector
 	) {
 		this._globalStyleSettings = Object.assign({}, GLOBAL_MODAL_STYLE, globalStyleSettings || {});
+		this._defaultModalSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, defaultModalSettings || {});
 		this.modalComponentDeclarationContainer = new KxModalComponentContainer(modalComponentDeclarations);
 	}
 
@@ -48,7 +70,7 @@ export class KxModalInstanceService implements IKxModalService {
 		return this.modalInstanceContainerSubject;
 	}
 
-	public create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: IKxModalOptions): Observable<RETURN_TYPE> {
+	public create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE> {
 		if (!this.modalInstanceContainerSubject) {
 			return Observable.throw(new Error("NO KX-MODAL-CONTAINER FOUND IN DOM"));
 		}

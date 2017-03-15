@@ -3,51 +3,56 @@ import { animate, state, style, transition, trigger } from "@angular/core";
 
 import {
 	KxModalConfiguration,
-	KX_MODAL_ANIMATION_TIME,
-	KX_MODAL_STATE_HIDE,
 	KX_MODAL_STATE_SHOW
-} from "../modal.models-internal";
-import { KxModalInstanceService } from "../modal-instance.service";
-import { KxModalBaseComponent } from "../../modal-external";
+} from "./modal.models-internal";
+import { KxModalInstanceService } from "./modal-instance.service";
 
 import {
+	KxModalBaseComponent,
 	MODAL_COUNT_PROPERTY,
 	MODAL_INDEX_PROPERTY,
 	MODAL_OBSERVER_PROPERTY,
 	MODAL_SETTINGS_PROPERTY
-} from "../../modal-external";
+} from "../modal-base.component";
 
 @Component({
 	selector: 'kx-modal',
-	templateUrl: './modal.component.html',
-	styleUrls: ['./modal.component.css'],
+	template: `
+<div [style.z-index]="modalZIndex" [ngClass]="modalContainerClasses" [@kxModalComponent]="modalAnimationState" (click)="onBackdropClick($event)">
+	<div [ngClass]="modalDialogClasses">
+		<div (click)="onBackdropClickCancel($event)">
+			<template #kxModal></template>
+		</div>
+	</div>
+</div>
+	`,
 
 	animations: [
 		trigger('kxModalComponent', [
-			state(KX_MODAL_STATE_SHOW,
+			state('kxModalAnimationShow',
 				style({
 					transform: 'translateY(0)',
 					opacity: 1
 				})
 			),
-			state(KX_MODAL_STATE_HIDE,
+			state('kxModalAnimationHide',
 				style({
 					transform: 'translateY(-5%)',
 					opacity: 0
 				})
 			),
 
-			transition(`void => ${KX_MODAL_STATE_SHOW}`, [
+			transition(`void => kxModalAnimationShow`, [
 				style({
 					transform: 'translateY(-5%)',
 					opacity: 0
 				}),
 
-				animate(`${KX_MODAL_ANIMATION_TIME}ms ease-out`)
+				animate(`200ms ease-out`)
 			]),
 
-			transition(`${KX_MODAL_STATE_SHOW} => ${KX_MODAL_STATE_HIDE}`, [
-				animate(`${KX_MODAL_ANIMATION_TIME}ms ease-out`)
+			transition(`kxModalAnimationShow => kxModalAnimationHide`, [
+				animate(`200ms ease-out`)
 			])
 		])
 	]
@@ -154,5 +159,4 @@ export class KxModalComponent implements OnInit {
 			}
 		}
 	}
-	/* EVENT HANDLING END */
 }

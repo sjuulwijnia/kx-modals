@@ -5,14 +5,7 @@
 		"moduleResolution": "node",
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"sourceMap": true,
-		"outDir": "../dist",
-		"declaration": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true
-	},
-	"exclude": [
-		"node_modules",
-		"**/*-aot.ts"
-	]
+	}
 }

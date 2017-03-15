@@ -1,5 +1,3 @@
-import { Component } from "@angular/core";
-
 import { Observer } from "rxjs/Observer";
 
 import { KxModalSettings } from "./modal.models";
@@ -9,7 +7,6 @@ export const MODAL_SETTINGS_PROPERTY = '$$modalSettings';
 export const MODAL_INDEX_PROPERTY = '$$modalIndex';
 export const MODAL_COUNT_PROPERTY = '$$modalCount';
 
-@Component({})
 export abstract class KxModalBaseComponent<T> {
 	private $$modalObserver: Observer<T> = null;
 	public get modalObserver(): Observer<T> {

@@ -1,0 +1,6 @@
+/demo/
+/src/
+/.vscode/
+
+webpack.config.js
+tsconfig.json

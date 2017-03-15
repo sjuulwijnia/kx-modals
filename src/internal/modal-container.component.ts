@@ -1,44 +1,50 @@
 import { Component, ComponentRef, ComponentFactory, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { animate, state, style, transition, trigger } from "@angular/core";
 
-import { KxModalComponent } from "../modal.component";
+import { KxModalComponent } from "./modal.component";
 import {
 	KxModalConfiguration,
 	KX_MODAL_ANIMATION_TIME,
 	KX_MODAL_STATE_HIDE,
 	KX_MODAL_STATE_SHOW
-} from "../modal.models-internal";
-import { KxModalInstanceService } from "../modal-instance.service";
+} from "./modal.models-internal";
+import { KxModalInstanceService } from "./modal-instance.service";
 
 import { Subject } from "rxjs/Subject";
 
 @Component({
 	selector: 'kx-modal-container',
-	templateUrl: './modal-container.component.html',
+	template: `
+<div>
+	<template #kxModalContainer></template>
+
+	<div [hidden]="modalComponentCount === 0" [ngClass]="kxModalBackdropClasses" [@kxModalBackdrop]="kxModalBackdrop"></div>
+</div>
+	`,
 
 	animations: [
 		trigger('kxModalBackdrop', [
-			state(KX_MODAL_STATE_SHOW,
+			state('kxModalAnimationShow',
 				style({
 					opacity: 0.5
 				})
 			),
-			state(KX_MODAL_STATE_HIDE,
+			state('kxModalAnimationHide',
 				style({
 					opacity: 0.1
 				})
 			),
 
-			transition(`void => ${KX_MODAL_STATE_SHOW}`, [
+			transition(`void => kxModalAnimationShow`, [
 				style({
 					opacity: 0.1
 				}),
 
-				animate(`${KX_MODAL_ANIMATION_TIME}ms`)
+				animate(`200ms`)
 			]),
 
-			transition(`${KX_MODAL_STATE_SHOW} => ${KX_MODAL_STATE_HIDE}`, [
-				animate(`${KX_MODAL_ANIMATION_TIME}ms`)
+			transition(`kxModalAnimationShow => kxModalAnimationHide`, [
+				animate(`200ms`)
 			])
 		])
 	]

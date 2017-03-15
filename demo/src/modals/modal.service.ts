@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { KxModalService, IKxModalOptions, IKxModalService } from "../../src";
+import { KxModalService, KxModalOptions, IKxModalService } from "kx-modals";
 
 import { ConfirmModalComponent, IConfirmModalConfiguration } from "./confirm-modal.component";
 import { NotifyModalComponent, INotifyModalConfiguration } from "./notify-modal.component";
@@ -19,7 +19,7 @@ export class ModalService implements IKxModalService {
 		private kxModalService: KxModalService
 	) { }
 
-	public create(modalComponent: any, modalOptions: IKxModalOptions) {
+	public create(modalComponent: any, modalOptions: KxModalOptions) {
 		return this.kxModalService.create(modalComponent, modalOptions);
 	}
 

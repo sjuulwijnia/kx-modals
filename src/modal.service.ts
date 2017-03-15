@@ -1,9 +1,11 @@
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 
 import { KxModalBaseComponent } from "./modal-base.component";
-import { KxModalInstanceService } from "../modal-internal";
-import { DEFAULT_MODAL_SETTINGS_PROVIDER, KxModalSettings } from "../modal-internal";
-import { IKxModalOptions, IKxModalService } from "./modal.models";
+import { KxModalInstanceService } from "./internal/modal-instance.service";
+import {
+	KxModalOptions,
+	IKxModalService
+} from "./modal.models";
 
 import { Observable } from "rxjs/Observable";
 
@@ -17,18 +19,17 @@ export class KxModalService implements IKxModalService {
 	}
 
 	constructor(
-		@Inject(DEFAULT_MODAL_SETTINGS_PROVIDER) private defaultModalSettings: KxModalSettings,
 		private modalInstanceService: KxModalInstanceService
 	) { }
 
-	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: IKxModalOptions): Observable<RETURN_TYPE> {
+	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE> {
 		if (!modalComponent) {
 			return Observable.throw(new Error(`UNKNOWN COMPONENT REQUESTED: ${modalComponent}`));
 		}
 
 		modalOptions = modalOptions || {};
 		modalOptions.modalValues = modalOptions.modalValues || {};
-		modalOptions.modalSettings = Object.assign({}, this.defaultModalSettings, modalOptions.modalSettings || {});
+		modalOptions.modalSettings = Object.assign({}, this.modalInstanceService.defaultModalSettings, modalOptions.modalSettings || {});
 
 		return this.modalInstanceService.create<RETURN_TYPE>(modalComponent, modalOptions);
 	}

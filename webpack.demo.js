@@ -1,20 +1,21 @@
-var Webpack = require("webpack");
-var HtmlPlugin = require("html-webpack-plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var Webpack = require('webpack');
+var HtmlPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var path = require("path");
+var path = require('path');
 
-var DIST_FOLDER = path.join(__dirname, "dist");
+var DIST_FOLDER = path.join(__dirname, 'demo', 'dist');
+var SRC_FOLDER = path.join(__dirname, 'demo', 'src');
 
 module.exports = {
 	entry: {
-		'app': "./demo/app.ts",
-		'app.css': "./demo/app.css.ts"
+		'app': path.join(SRC_FOLDER, 'app.ts'),
+		'app.css': path.join(SRC_FOLDER, 'app.css.ts')
 	},
 
 	output: {
 		path: DIST_FOLDER,
-		filename: "[name].js"
+		filename: '[name].js'
 	},
 
 	resolve: {
@@ -40,7 +41,7 @@ module.exports = {
 			// EXTRA
 			{
 				test: /\.css$/i,
-				loader: ExtractTextPlugin.extract("css-loader"),
+				loader: ExtractTextPlugin.extract('css-loader'),
 				exclude: /\.component\.css$/i
 			}
 		]
@@ -57,7 +58,7 @@ module.exports = {
 	plugins: [
 		new HtmlPlugin({
 			filename: 'index.html',
-			template: './demo/index.html',
+			template: path.join(SRC_FOLDER, 'index.html'),
 
 			chunks: ['app']
 		}),

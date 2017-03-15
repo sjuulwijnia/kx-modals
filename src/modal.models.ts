@@ -34,7 +34,7 @@ export interface KxModalSettings {
 	dismissCausesError?: boolean;
 }
 
-export interface IKxModalOptions {
+export interface KxModalOptions {
 	/**
 	 * The values that should be passed on to this individual modal. These are available in and after the OnInit cycle.
 	 */
@@ -61,7 +61,7 @@ export interface IKxModalService {
 	 * Creates the given ModalComponent using the given option.
 	 * Returns an Observable to subscribe to for the result.
 	 */
-	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: IKxModalOptions): Observable<RETURN_TYPE>;
+	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE>;
 }
 
 export interface KxModalDeclaration {
@@ -77,7 +77,7 @@ export interface KxModalDeclaration {
 	modalComponentName?: string;
 };
 
-interface KxModalModuleDeclaration {
+export interface KxModalModuleDeclaration {
 	/**
 	 * Contains all ModalComponents that you want to be able to be called by name rather than by class declaration.
 	 */

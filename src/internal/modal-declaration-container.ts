@@ -1,12 +1,12 @@
-import { KxModalBaseComponent } from "../modal-external";
-import { KxModalDeclaration } from "./modal.models-internal";
+import { KxModalDeclaration } from "../modal.models";
 
 import {
+	KxModalBaseComponent,
 	MODAL_COUNT_PROPERTY,
 	MODAL_INDEX_PROPERTY,
 	MODAL_OBSERVER_PROPERTY,
 	MODAL_SETTINGS_PROPERTY
-} from "../modal-external";
+} from "../modal-base.component";
 
 export class KxModalComponentContainer {
 	private container: { [componentName: string]: any } = {};

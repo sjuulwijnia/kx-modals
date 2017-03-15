@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { KxModalBaseComponent } from "../../../src";
+import { KxModalBaseComponent } from "kx-modals";
 
 @Component({
 	selector: 'notify-modal',
