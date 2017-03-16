@@ -132,13 +132,13 @@ export class KxModalComponent implements OnInit {
 
 	/* EVENT HANDLING START */
 	public onBackdropClick($event: MouseEvent) {
-		if (!$event.defaultPrevented) {
+		if (!$event['kxModals.preventBackdropClick']) {
 			this.handleDismiss(this.modalConfiguration.options.modalSettings.dismissByClick, 'click');
 		}
 	}
 
 	public onBackdropClickCancel($event: MouseEvent) {
-		$event.preventDefault();
+		$event['kxModals.preventBackdropClick'] = true;
 	}
 
 	@HostListener('document:keydown.escape', ['$event'])

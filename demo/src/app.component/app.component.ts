@@ -33,7 +33,7 @@ export class AppComponent {
 		this.modalService
 			.notify({
 				title: `Heads up!`,
-				body: `For this is a notification!`
+				body: `For this is a notification!<br/><a href="https://github.com/sjuulwijnia/kx-modals" target="_blank">Check GitHub!</a>`
 			})
 			.subscribe({
 				complete: () => {
