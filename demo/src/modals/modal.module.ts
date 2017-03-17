@@ -15,20 +15,20 @@ import { WaitModalComponent } from './wait-modal.component/wait-modal.component'
 		KxModalModule.forRoot(
 			{
 				// optionally set global styling here, e.g.:
-				// 	defaultSettings: {
-				// 		modalContainerClasses: 'my-custom-container-class-that-can-be-overridden-on-individual-basis',
-				// 		modalDialogClasses: 'my-custom-dialog-class-that-can-be-overridden-on-individual-basis',
+				// defaultSettings: {
+				// 	modalContainerClasses: 'my-custom-container-class-that-can-be-overridden-on-individual-basis',
+				// 	modalDialogClasses: 'my-custom-dialog-class-that-can-be-overridden-on-individual-basis',
 
-				// 		dismissByClick: true,
-				// 		dismissByEscape: true,
-				// 		dismissCausesError: false
-				// 	},
+				// 	dismissByClick: true,
+				// 	dismissByEscape: true,
+				// 	dismissCausesError: false
+				// },
 
-				// 	globalStyleSettings: {
-				// 		backdropClasses: 'my-custom-backdrop-class',
-				// 		containerClasses: 'my-custom-container-class',
-				// 		dialogClasses: 'my-custom-dialog-class'
-				// 	}
+				// globalStyleSettings: {
+				// 	backdropClasses: 'my-custom-backdrop-class',
+				// 	containerClasses: 'my-custom-container-class',
+				// 	dialogClasses: 'my-custom-dialog-class'
+				// }
 			}
 		)
 	],
