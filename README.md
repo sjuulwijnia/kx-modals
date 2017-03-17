@@ -115,6 +115,6 @@ Now you're set to use ``kx-modals`` in your project!
   }).subscribe(...);
   ```
 * Using Bootstrap 3, Bootstrap 4 or Foundation 6? Use one of the default global styles rather than your own:
-  * ``globalStyleSettings: 'bootstrap3'`` (default)
-  * ``globalStyleSettings: 'bootstrap4'``
+  * ``globalStyleSettings: 'bootstrap3'``
+  * ``globalStyleSettings: 'bootstrap4'`` (default)
   * ``globalStyleSettings: 'foundation6'``
