@@ -1,61 +1,66 @@
 {
-  "name": "kx-modals",
-  "version": "0.2.2",
-  "description": "Angular 2 modals done right.",
-  "main": "./index.js",
-  "scripts": {
-    "start": "npm run dev",
-    "dev": "webpack-dev-server --config ./webpack.demo.js",
-    "webpack": "webpack --config ./webpack.demo.js",
-    "build": "npm run build:ngc && npm run build:root",
-    "build:ngc": "ngc -p ./tsconfig.ngc.json",
-    "build:root": "tsc -p ./tsconfig.root.json",
-    "prebuild": "rimraf \"dist/**/*\"",
-    "postbuild": "rimraf \"**/*.ngfactory.ts\" \"**/*.ngsummary.json\"",
-    "ngc": "ngc --help"
-  },
-  "author": "khlox",
-  "license": "MIT",
-  "homepage": "https://github.com/sjuulwijnia/kx-modals",
-  "bugs": {
-    "url": "https://github.com/sjuulwijnia/kx-modals/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sjuulwijnia/kx-modals.git"
-  },
-  "peerDependencies": {
-    "@angular/common": "^4.0.0-beta.7",
-    "@angular/compiler": "^4.0.0-beta.7",
-    "@angular/core": "^4.0.0-beta.7"
-  },
-  "devDependencies": {
-    "@angular/common": "4.0.0-beta.7",
-    "@angular/compiler": "4.0.0-beta.7",
-    "@angular/compiler-cli": "4.0.0-beta.7",
-    "@angular/core": "4.0.0-beta.7",
-    "@angular/platform-browser": "4.0.0-beta.7",
-    "@angular/platform-browser-dynamic": "4.0.0-beta.7",
-    "@types/core-js": "0.9.35",
-    "@types/node": "6.0.55",
-    "angular2-template-loader": "0.6.2",
-    "bootstrap": "4.0.0-alpha.6",
-    "core-js": "2.4.1",
-    "cpy-cli": "1.0.1",
-    "css-loader": "0.27.3",
-    "extract-text-webpack-plugin": "1.0.1",
-    "file-loader": "0.10.1",
-    "foundation-sites": "^6.3.1",
-    "html-loader": "0.4.5",
-    "html-webpack-plugin": "2.28.0",
-    "raw-loader": "0.5.1",
-    "rimraf": "2.6.1",
-    "rxjs": "5.2.0",
-    "style-loader": "0.13.2",
-    "ts-loader": "2.0.1",
-    "typescript": "2.2.1",
-    "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.2",
-    "zone.js": "0.7.2"
-  }
+	"name": "kx-modals",
+	"version": "0.3.0",
+	"description": "Angular 2 modals done right.",
+	"main": "./index.js",
+	"keywords": [
+		"angular 2",
+		"angular2",
+		"modal",
+		"modals"
+	],
+	"scripts": {
+		"start": "npm run dev",
+		"dev": "webpack-dev-server --config ./webpack.demo.js",
+		"webpack": "webpack --config ./webpack.demo.js",
+		"build": "npm run build:ngc && npm run build:root",
+		"build:ngc": "ngc -p ./tsconfig.ngc.json",
+		"build:root": "tsc -p ./tsconfig.root.json",
+		"prebuild": "rimraf \"dist/**/*\"",
+		"postbuild": "rimraf \"**/*.ngfactory.ts\" \"**/*.ngsummary.json\""
+	},
+	"author": "khlox",
+	"license": "MIT",
+	"homepage": "https://github.com/sjuulwijnia/kx-modals",
+	"bugs": {
+		"url": "https://github.com/sjuulwijnia/kx-modals/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sjuulwijnia/kx-modals.git"
+	},
+	"peerDependencies": {
+		"@angular/common": "^4.0.0-beta.7",
+		"@angular/compiler": "^4.0.0-beta.7",
+		"@angular/core": "^4.0.0-beta.7"
+	},
+	"devDependencies": {
+		"@angular/common": "4.0.0-beta.7",
+		"@angular/compiler": "4.0.0-beta.7",
+		"@angular/compiler-cli": "4.0.0-beta.7",
+		"@angular/core": "4.0.0-beta.7",
+		"@angular/platform-browser": "4.0.0-beta.7",
+		"@angular/platform-browser-dynamic": "4.0.0-beta.7",
+		"@types/core-js": "0.9.35",
+		"@types/node": "6.0.55",
+		"angular2-template-loader": "0.6.2",
+		"bootstrap": "4.0.0-alpha.6",
+		"core-js": "2.4.1",
+		"cpy-cli": "1.0.1",
+		"css-loader": "0.27.3",
+		"extract-text-webpack-plugin": "1.0.1",
+		"file-loader": "0.10.1",
+		"foundation-sites": "^6.3.1",
+		"html-loader": "0.4.5",
+		"html-webpack-plugin": "2.28.0",
+		"raw-loader": "0.5.1",
+		"rimraf": "2.6.1",
+		"rxjs": "5.2.0",
+		"style-loader": "0.13.2",
+		"ts-loader": "2.0.1",
+		"typescript": "2.2.1",
+		"webpack": "1.14.0",
+		"webpack-dev-server": "1.16.2",
+		"zone.js": "0.7.2"
+	}
 }
