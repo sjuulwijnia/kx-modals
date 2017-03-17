@@ -7,9 +7,7 @@ import { KxModalContainerComponent } from "./private/modal-container.component";
 import { KxModalInstanceService } from "./private/modal-instance.service";
 
 import {
-	DEFAULT_MODAL_SETTINGS_PROVIDER,
-	GLOBAL_MODAL_STYLE_PROVIDER,
-	MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER
+	ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER
 } from "./private/modal.models-private";
 
 import {
@@ -42,25 +40,15 @@ import "rxjs/add/operator/debounceTime";
 	]
 })
 export class KxModalModule {
-	static forRoot(modalModuleConfiguration: KxRootModalModuleDeclaration): ModuleWithProviders {
+	static forRoot(modalModuleConfiguration?: KxRootModalModuleDeclaration): ModuleWithProviders {
 		return {
 			ngModule: KxModalModule,
 			providers: [
 				KxModalInstanceService,
 
 				{
-					provide: MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER,
-					useValue: modalModuleConfiguration.modalComponents
-				},
-
-				{
-					provide: DEFAULT_MODAL_SETTINGS_PROVIDER,
-					useValue: modalModuleConfiguration.defaultSettings
-				},
-
-				{
-					provide: GLOBAL_MODAL_STYLE_PROVIDER,
-					useValue: modalModuleConfiguration.globalStyleSettings
+					provide: ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER,
+					useValue: modalModuleConfiguration
 				}
 			]
 		};

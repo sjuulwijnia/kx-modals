@@ -2,7 +2,6 @@ export { KxModalBaseComponent } from "./modal-base.component";
 export {
 	KxModalOptions,
 	IKxModalService,
-	KxChildModalModuleDeclaration,
 	KxModalDeclaration,
 	KxModalSettings,
 	KxModalStyleSettings,

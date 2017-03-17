@@ -77,15 +77,6 @@ export interface KxModalDeclaration {
 	modalComponentName?: string;
 };
 
-export interface KxModalModuleDeclaration {
-	/**
-	 * Contains all ModalComponents that you want to be able to be called by name rather than by class declaration.
-	 */
-	modalComponents?: KxModalDeclaration[];
-}
-
-export interface KxChildModalModuleDeclaration extends KxModalModuleDeclaration { }
-
 export interface KxModalStyleSettings {
 	/**
 	 * The classes that are used for the backdrop.
@@ -106,13 +97,18 @@ export interface KxModalStyleSettings {
 	dialogClasses?: string;
 };
 
-export type KxGlobalStyleSettings = 
+export type KxGlobalStyleSettings =
 	KxModalStyleSettings |
 	'bootstrap3' |
 	'bootstrap4' |
 	'foundation6';
 
-export interface KxRootModalModuleDeclaration extends KxModalModuleDeclaration {
+export interface KxRootModalModuleDeclaration {
+	/**
+	 * Contains all ModalComponents that you want to be able to be called by name rather than by class declaration.
+	 */
+	modalComponents?: KxModalDeclaration[];
+
 	/**
 	 * The default settings object used for the modals that can be overridden by each modal.
 	 */

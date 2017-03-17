@@ -5,15 +5,13 @@ import { KxModalStyleSettings, KxModalSettings } from "../modal.models";
 import { KxModalComponentContainer } from './modal-declaration-container';
 import {
 	KxModalConfiguration,
-	MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER,
+	ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER,
 
 	GLOBAL_MODAL_STYLE_BOOTSTRAP3,
 	GLOBAL_MODAL_STYLE_BOOTSTRAP4,
 	GLOBAL_MODAL_STYLE_FOUNDATION6,
-	GLOBAL_MODAL_STYLE_PROVIDER,
 
-	DEFAULT_MODAL_SETTINGS,
-	DEFAULT_MODAL_SETTINGS_PROVIDER
+	DEFAULT_MODAL_SETTINGS
 } from './modal.models-private';
 
 import {
@@ -21,7 +19,8 @@ import {
 
 	KxGlobalStyleSettings,
 	KxModalOptions,
-	KxModalDeclaration
+
+	KxRootModalModuleDeclaration
 } from '../modal.models';
 
 import { Subject } from "rxjs/Subject";
@@ -53,17 +52,16 @@ export class KxModalInstanceService implements IKxModalService {
 	private modalComponentDeclarationContainer: KxModalComponentContainer = null;
 
 	constructor(
-		@Inject(MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER) modalComponentDeclarations: KxModalDeclaration[],
-		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) globalStyleSettings: KxGlobalStyleSettings,
-		@Inject(DEFAULT_MODAL_SETTINGS_PROVIDER) defaultModalSettings: KxModalSettings,
+		@Inject(ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER) rootModalConfiguration: KxRootModalModuleDeclaration,
 
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private injector: Injector
 	) {
-		this.applyGlobalSettings(globalStyleSettings);
+		rootModalConfiguration = rootModalConfiguration || {};
 
-		this._defaultModalSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, defaultModalSettings || {});
-		this.modalComponentDeclarationContainer = new KxModalComponentContainer(modalComponentDeclarations);
+		this.applyGlobalSettings(rootModalConfiguration.globalStyleSettings);
+		this._defaultModalSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, rootModalConfiguration.defaultSettings || {});
+		this.modalComponentDeclarationContainer = new KxModalComponentContainer(rootModalConfiguration.modalComponents);
 	}
 
 	public bindToModalInstance(modalInstanceCountSubject: Observable<number>): Observable<KxModalConfiguration<any>> {
@@ -117,24 +115,24 @@ export class KxModalInstanceService implements IKxModalService {
 	}
 
 	private applyGlobalSettings(globalStyleSettings: KxGlobalStyleSettings) {
-		if (typeof(globalStyleSettings) === 'string') {
+		if (typeof (globalStyleSettings) === 'string') {
 			switch (globalStyleSettings) {
-				case 'bootstrap4': 
+				case 'bootstrap4':
 					this._globalStyleSettings = GLOBAL_MODAL_STYLE_BOOTSTRAP4;
-				break;
+					break;
 
-				case 'foundation6': 
+				case 'foundation6':
 					this._globalStyleSettings = GLOBAL_MODAL_STYLE_FOUNDATION6;
-				break;
+					break;
 
 				case 'bootstrap3':
 				default:
 					this._globalStyleSettings = GLOBAL_MODAL_STYLE_BOOTSTRAP3;
-				break;
+					break;
 			}
-		} else if (!!globalStyleSettings && typeof(globalStyleSettings === 'object')) {
+		} else if (!!globalStyleSettings && typeof (globalStyleSettings === 'object')) {
 			this._globalStyleSettings = Object.assign(
-				<KxModalStyleSettings>{ 
+				<KxModalStyleSettings>{
 					backdropClasses: '',
 					containerClasses: '',
 					dialogClasses: ''
