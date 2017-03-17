@@ -7,7 +7,9 @@ import {
 	KxModalConfiguration,
 	MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER,
 
-	GLOBAL_MODAL_STYLE,
+	GLOBAL_MODAL_STYLE_BOOTSTRAP3,
+	GLOBAL_MODAL_STYLE_BOOTSTRAP4,
+	GLOBAL_MODAL_STYLE_FOUNDATION6,
 	GLOBAL_MODAL_STYLE_PROVIDER,
 
 	DEFAULT_MODAL_SETTINGS,
@@ -15,8 +17,10 @@ import {
 } from './modal.models-internal';
 
 import {
-	KxModalOptions,
 	IKxModalService,
+
+	KxGlobalStyleSettings,
+	KxModalOptions,
 	KxModalDeclaration
 } from '../modal.models';
 
@@ -50,13 +54,14 @@ export class KxModalInstanceService implements IKxModalService {
 
 	constructor(
 		@Inject(MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER) modalComponentDeclarations: KxModalDeclaration[],
-		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) globalStyleSettings: KxModalStyleSettings,
+		@Inject(GLOBAL_MODAL_STYLE_PROVIDER) globalStyleSettings: KxGlobalStyleSettings,
 		@Inject(DEFAULT_MODAL_SETTINGS_PROVIDER) defaultModalSettings: KxModalSettings,
 
 		private componentFactoryResolver: ComponentFactoryResolver,
 		private injector: Injector
 	) {
-		this._globalStyleSettings = Object.assign({}, GLOBAL_MODAL_STYLE, globalStyleSettings || {});
+		this.applyGlobalSettings(globalStyleSettings);
+
 		this._defaultModalSettings = Object.assign({}, DEFAULT_MODAL_SETTINGS, defaultModalSettings || {});
 		this.modalComponentDeclarationContainer = new KxModalComponentContainer(modalComponentDeclarations);
 	}
@@ -109,5 +114,35 @@ export class KxModalInstanceService implements IKxModalService {
 		const resolvedInputs = ReflectiveInjector.resolve(inputProviders);
 
 		return ReflectiveInjector.fromResolvedProviders(resolvedInputs, this.injector);
+	}
+
+	private applyGlobalSettings(globalStyleSettings: KxGlobalStyleSettings) {
+		if (typeof(globalStyleSettings) === 'string') {
+			switch (globalStyleSettings) {
+				case 'bootstrap4': 
+					this._globalStyleSettings = GLOBAL_MODAL_STYLE_BOOTSTRAP4;
+				break;
+
+				case 'foundation6': 
+					this._globalStyleSettings = GLOBAL_MODAL_STYLE_FOUNDATION6;
+				break;
+
+				case 'bootstrap3':
+				default:
+					this._globalStyleSettings = GLOBAL_MODAL_STYLE_BOOTSTRAP3;
+				break;
+			}
+		} else if (!!globalStyleSettings && typeof(globalStyleSettings === 'object')) {
+			this._globalStyleSettings = Object.assign(
+				<KxModalStyleSettings>{ 
+					backdropClasses: '',
+					containerClasses: '',
+					dialogClasses: ''
+				},
+				globalStyleSettings
+			);
+		} else {
+			this._globalStyleSettings = GLOBAL_MODAL_STYLE_BOOTSTRAP4;
+		}
 	}
 }

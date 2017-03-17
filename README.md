@@ -75,10 +75,10 @@ A simple implementation of modals in Angular 2, using Bootstrap 4's modal style 
   }
   ```
 
-Now you're set the use ``kx-modals`` in your project!
+Now you're set to use ``kx-modals`` in your project!
 
 ## Tips
-* Add the ``KxModalModule`` to a separate modal module and wrap the ``KxModalService`` by an own defined service. Add any modals that can be reused (such as a confirmation modal) to this module and add functions for them to your own modal service. For an example, look at the ([demo](https://github.com/sjuulwijnia/kx-modals/tree/master/demo/src/modals)).
+* Add the ``KxModalModule`` to a separate modal module and wrap the ``KxModalService`` by an own defined service. Add any modals that can be reused (such as a confirmation modal) to this module and add functions for them to your own modal service. For an example, look at the ([demo source](https://github.com/sjuulwijnia/kx-modals/tree/master/demo/src/modals)).
 * Override the default styling or settings by passing your own to the ``KxModalModule``:
   ```
   KxModalModule.forRoot({
@@ -114,3 +114,7 @@ Now you're set the use ``kx-modals`` in your project!
     }
   }).subscribe(...);
   ```
+* Using Bootstrap 3, Bootstrap 4 or Foundation 6? Use one of the default global styles rather than your own:
+  * ``globalStyleSettings: 'bootstrap3'`` (default)
+  * ``globalStyleSettings: 'bootstrap4'``
+  * ``globalStyleSettings: 'foundation6'``

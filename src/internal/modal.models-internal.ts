@@ -18,10 +18,22 @@ export const DEFAULT_MODAL_SETTINGS: KxModalSettings = {
 };
 
 export const GLOBAL_MODAL_STYLE_PROVIDER = "kxModalGlobalStyleSettings";
-export const GLOBAL_MODAL_STYLE: KxModalStyleSettings = {
-	backdropClasses: 'modal-backdrop fade show',
-	containerClasses: 'modal fade show',
+export const GLOBAL_MODAL_STYLE_BOOTSTRAP3: KxModalStyleSettings = {
+	backdropClasses: 'modal-backdrop',
+	containerClasses: 'modal',
 	dialogClasses: 'modal-dialog'
+};
+
+export const GLOBAL_MODAL_STYLE_BOOTSTRAP4: KxModalStyleSettings = {
+	backdropClasses: 'modal-backdrop',
+	containerClasses: 'modal',
+	dialogClasses: 'modal-dialog'
+};
+
+export const GLOBAL_MODAL_STYLE_FOUNDATION6: KxModalStyleSettings = {
+	backdropClasses: 'kx-modals-backdrop',
+	containerClasses: 'kx-modals-container',
+	dialogClasses: 'kx-modals-dialog reveal'
 };
 
 export const MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER = "kxModalComponentDeclarationContainer";

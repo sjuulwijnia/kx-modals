@@ -21,6 +21,9 @@ import { Subject } from "rxjs/Subject";
 	<div [hidden]="modalComponentCount === 0" [ngClass]="kxModalBackdropClasses" [@kxModalBackdrop]="kxModalBackdrop"></div>
 </div>
 	`,
+	styles: [
+		`.kx-modals-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background-color: #000; z-index: 1040; }`
+	],
 
 	animations: [
 		trigger('kxModalBackdrop', [

@@ -89,13 +89,13 @@ export interface KxChildModalModuleDeclaration extends KxModalModuleDeclaration 
 export interface KxModalStyleSettings {
 	/**
 	 * The classes that are used for the backdrop.
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-backdrop fade show'.
+	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-backdrop'.
 	 */
 	backdropClasses?: string;
 
 	/**
 	 * The classes that are used for the outer <div> that is containing the modal. This one is usually used to set the location of the modal, and is extended by setting the KxModalSettings.modalContainerClasses when creating an individual modal. 
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal fade show'.
+	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal'.
 	 */
 	containerClasses?: string;
 
@@ -106,6 +106,12 @@ export interface KxModalStyleSettings {
 	dialogClasses?: string;
 };
 
+export type KxGlobalStyleSettings = 
+	KxModalStyleSettings |
+	'bootstrap3' |
+	'bootstrap4' |
+	'foundation6';
+
 export interface KxRootModalModuleDeclaration extends KxModalModuleDeclaration {
 	/**
 	 * The default settings object used for the modals that can be overridden by each modal.
@@ -114,6 +120,7 @@ export interface KxRootModalModuleDeclaration extends KxModalModuleDeclaration {
 
 	/**
 	 * The settings object used for the global styling of all modals used by this application. Put simple, it concerns the backdrop that is used and how the container of the modals is styled.
+	 * Default: 'bootstrap4'
 	 */
-	globalStyleSettings?: KxModalStyleSettings;
+	globalStyleSettings?: KxGlobalStyleSettings;
 }
