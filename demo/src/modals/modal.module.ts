@@ -12,7 +12,7 @@ import { WaitModalComponent } from './wait-modal.component/wait-modal.component'
 	imports: [
 		CommonModule,
 
-		KxModalModule.forRoot({ })
+		KxModalModule.forRoot()
 	],
 
 	declarations: [
