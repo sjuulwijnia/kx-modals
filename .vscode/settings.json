@@ -5,7 +5,13 @@
 		"**/.svn": true,
 		"**/.hg": true,
 		"**/.DS_Store": true,
-		"**/npm-debug.log.*": true
+		"src/**/*.ngsummary.json": true,
+		"src/**/*.ngfactory.ts": true,
+		"demo/dist": true
 	},
+	"editor.detectIndentation": false,
+	"editor.renderWhitespace": "boundary",
+	"editor.insertSpaces": false,
+	"editor.trimAutoWhitespace": true,
 	"typescript.tsdk": "./node_modules/typescript/lib"
 }
