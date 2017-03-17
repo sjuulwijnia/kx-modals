@@ -1,14 +1,11 @@
 <div>
-	<!-- required for the modals to function -->
-	<kx-modal-container></kx-modal-container>
-
-	<nav class="navbar bg-faded">
+	<nav class="navbar bg-faded top-bar">
 		<div class="container">
-			<ul class="nav navbar-nav">
+			<span class="navbar-brand top-bar-title">
+				KX-MODALS
+			</span>
+			<ul class="nav navbar-nav menu">
 				<li class="nav-item">
-					<a class="nav-link">KX-MODALS</a>
-				</li>
-				<li class="nav-item active">
 					<a class="nav-link">
 						Angular 2 modals done <em>right</em>.
 					</a>
@@ -57,11 +54,11 @@ export class AppModule {{ '{ }' }}</code></pre>
 				Modals that would normally require you to confirm an action, such as deleting an item.
 			</p>
 			
-			<button class="btn btn-default" (click)="onConfirm()">
+			<button class="btn btn-default button hollow secondary" (click)="onConfirm()">
 				CONFIRM
 			</button>
 
-			<button class="btn btn-default" (click)="onDramaticConfirm()">
+			<button class="btn btn-default button hollow secondary" (click)="onDramaticConfirm()">
 				DRAMATIC CONFIRM
 			</button>
 		</div>
@@ -71,14 +68,14 @@ export class AppModule {{ '{ }' }}</code></pre>
 				Code
 			</h5>
 			<div class="row">
-				<div class="col-6">
+				<div class="col-12 col-lg-6 small-12 large-6 columns">
 					<h6>
 						<code>confirm-modal.component.ts</code>
 					</h6>
 					<pre><code>{{ CODE_CONFIRM_MODAL_TS }}</code></pre>
 				</div>
 
-				<div class="col-6">
+				<div class="col-12 col-lg-6 small-12 large-6 columns">
 					<h6>
 						<code>confirm-modal.component.html</code>
 					</h6>
@@ -95,19 +92,19 @@ export class AppModule {{ '{ }' }}</code></pre>
 				Modals that would notify you of something important.
 			</p>
 			
-			<button class="btn btn-default" (click)="onNotify('info')">
+			<button class="btn btn-default button hollow secondary" (click)="onNotify('info')">
 				NOTIFY
 			</button>
 			
-			<button class="btn btn-default" (click)="onNotify('success')">
+			<button class="btn btn-default button hollow secondary" (click)="onNotify('success')">
 				SUCCESS!
 			</button>
 			
-			<button class="btn btn-default" (click)="onNotify('warning')">
+			<button class="btn btn-default button hollow secondary" (click)="onNotify('warning')">
 				WARNING!
 			</button>
 			
-			<button class="btn btn-default" (click)="onNotify('danger')">
+			<button class="btn btn-default button hollow secondary" (click)="onNotify('danger')">
 				DANGER!
 			</button>
 		</div>
@@ -117,14 +114,14 @@ export class AppModule {{ '{ }' }}</code></pre>
 				Code
 			</h5>
 			<div class="row">
-				<div class="col-6">
+				<div class="col-12 col-lg-6 small-12 large-6 columns">
 					<h6>
 						<code>notify-modal.component.ts</code>
 					</h6>
 					<pre><code>{{ CODE_NOTIFY_MODAL_TS }}</code></pre>
 				</div>
 
-				<div class="col-6">
+				<div class="col-12 col-lg-6 small-12 large-6 columns">
 					<h6>
 						<code>notify-modal.component.html</code>
 					</h6>
@@ -141,15 +138,15 @@ export class AppModule {{ '{ }' }}</code></pre>
 				Modals that would force you to wait for an action to complete.
 			</p>
 			
-			<button class="btn btn-default" (click)="onWait(1000)">
+			<button class="btn btn-default button hollow secondary" (click)="onWait(1000)">
 				WAIT 1 SECOND
 			</button>
 			
-			<button class="btn btn-default" (click)="onWait(5000)">
+			<button class="btn btn-default button hollow secondary" (click)="onWait(5000)">
 				WAIT 5 SECONDS
 			</button>
 			
-			<button class="btn btn-default" (click)="onWait(10000)">
+			<button class="btn btn-default button hollow secondary" (click)="onWait(10000)">
 				WAIT 10 SECONDS
 			</button>
 		</div>
@@ -159,14 +156,14 @@ export class AppModule {{ '{ }' }}</code></pre>
 				Code
 			</h5>
 			<div class="row">
-				<div class="col-6">
+				<div class="col-12 col-lg-6 small-12 large-6 columns">
 					<h6>
 						<code>wait-modal.component.ts</code>
 					</h6>
 					<pre><code>{{ CODE_WAIT_MODAL_TS }}</code></pre>
 				</div>
 
-				<div class="col-6">
+				<div class="col-12 col-lg-6 small-12 large-6 columns">
 					<h6>
 						<code>wait-modal.component.html</code>
 					</h6>
@@ -176,3 +173,6 @@ export class AppModule {{ '{ }' }}</code></pre>
 		</div>
 	</div>
 </div>
+
+<!-- required for the modals to function -->
+<kx-modal-container></kx-modal-container>
