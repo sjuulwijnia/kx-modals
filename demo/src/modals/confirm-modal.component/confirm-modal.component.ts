@@ -10,6 +10,9 @@ export class ConfirmModalComponent extends KxModalBaseComponent<void> implements
 	public body: string = null;
 	public errorOnDecline: boolean = false;
 
+	public acceptLabel: string = 'YES';
+	public declineLabel: string = 'NO';
+
 	public onConfirm() {
 		this.closeSuccess();
 	}
@@ -27,4 +30,7 @@ export interface IConfirmModalConfiguration {
 	title: string;
 	body?: string;
 	errorOnDecline?: boolean;
+
+	acceptLabel?: string;
+	declineLabel?: string;
 }

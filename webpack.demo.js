@@ -38,6 +38,12 @@ module.exports = {
 				loader: 'raw-loader'
 			},
 
+			// DEMO
+			{
+				test: /\?raw$/i,
+				loader: 'raw-loader'
+			},
+
 			// EXTRA
 			{
 				test: /\.css$/i,
