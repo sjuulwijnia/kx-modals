@@ -7,7 +7,7 @@ import {
 	KX_MODAL_ANIMATION_TIME,
 	KX_MODAL_STATE_HIDE,
 	KX_MODAL_STATE_SHOW
-} from "./modal.models-internal";
+} from "./modal.models-private";
 import { KxModalInstanceService } from "./modal-instance.service";
 
 import { Subject } from "rxjs/Subject";

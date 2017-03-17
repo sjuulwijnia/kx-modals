@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { KxModalBaseComponent } from "./modal-base.component";
-import { KxModalInstanceService } from "./internal/modal-instance.service";
+import { KxModalInstanceService } from "./private/modal-instance.service";
 import {
 	KxModalOptions,
 	IKxModalService

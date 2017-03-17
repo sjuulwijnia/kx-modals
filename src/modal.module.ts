@@ -2,15 +2,15 @@ import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 import { KxModalService } from "./modal.service";
-import { KxModalComponent } from "./internal/modal.component";
-import { KxModalContainerComponent } from "./internal/modal-container.component";
-import { KxModalInstanceService } from "./internal/modal-instance.service";
+import { KxModalComponent } from "./private/modal.component";
+import { KxModalContainerComponent } from "./private/modal-container.component";
+import { KxModalInstanceService } from "./private/modal-instance.service";
 
 import {
 	DEFAULT_MODAL_SETTINGS_PROVIDER,
 	GLOBAL_MODAL_STYLE_PROVIDER,
 	MODAL_COMPONENT_DECLARATION_CONTAINER_PROVIDER
-} from "./internal/modal.models-internal";
+} from "./private/modal.models-private";
 
 import {
 	KxRootModalModuleDeclaration

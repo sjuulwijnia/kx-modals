@@ -1,4 +1,3 @@
-// import { OpaqueToken } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 
 import { KxModalOptions, KxModalSettings, KxModalStyleSettings } from "../modal.models";

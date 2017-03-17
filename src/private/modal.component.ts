@@ -4,7 +4,7 @@ import { animate, state, style, transition, trigger } from "@angular/core";
 import {
 	KxModalConfiguration,
 	KX_MODAL_STATE_SHOW
-} from "./modal.models-internal";
+} from "./modal.models-private";
 import { KxModalInstanceService } from "./modal-instance.service";
 
 import {

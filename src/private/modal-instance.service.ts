@@ -14,7 +14,7 @@ import {
 
 	DEFAULT_MODAL_SETTINGS,
 	DEFAULT_MODAL_SETTINGS_PROVIDER
-} from './modal.models-internal';
+} from './modal.models-private';
 
 import {
 	IKxModalService,
