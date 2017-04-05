@@ -1,6 +1,8 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+
 import { KxModalModule } from 'kx-modals';
 import { ModalService } from './modal.service';
 
@@ -11,6 +13,7 @@ import { WaitModalComponent } from './wait-modal.component/wait-modal.component'
 @NgModule({
 	imports: [
 		CommonModule,
+		BrowserAnimationsModule,
 
 		KxModalModule.forRoot()
 	],

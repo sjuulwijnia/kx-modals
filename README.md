@@ -1,5 +1,5 @@
 # kx-modals
-A simple implementation of modals in Angular 2, using Bootstrap 4's modal style by default.
+A simple implementation of modals in Angular.
 
 ## Quick start
 * Add the package to your project by using ``npm install kx-modals --save``. After that, just complete the following steps:
@@ -53,7 +53,7 @@ A simple implementation of modals in Angular 2, using Bootstrap 4's modal style 
       }
   }
   ```
-* Call the modal by using the ``KxModalService`` from any component:
+* Call the modal by using the ``KxModalService`` from any component or service:
   ```
   import { Component } from '@angular/core';
   import { KxModalService } from 'kx-modals';
@@ -78,7 +78,7 @@ A simple implementation of modals in Angular 2, using Bootstrap 4's modal style 
 Now you're set to use ``kx-modals`` in your project!
 
 ## Tips
-* Add the ``KxModalModule`` to a separate modal module and wrap the ``KxModalService`` by an own defined service. Add any modals that can be reused (such as a confirmation modal) to this module and add functions for them to your own modal service. For an example, look at the ([demo source](https://github.com/sjuulwijnia/kx-modals/tree/master/demo/src/modals)).
+* Add the ``KxModalModule`` to a separate modal module and wrap the ``KxModalService`` by an own defined service. Add any modals that can be reused (such as a confirmation modal) to this module and add functions for them to your own modal service. For an example, look at the [demo source](https://github.com/sjuulwijnia/kx-modals/tree/master/demo/src/modals).
 * Override the default styling or settings by passing your own to the ``KxModalModule``:
   ```
   KxModalModule.forRoot({

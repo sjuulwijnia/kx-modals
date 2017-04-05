@@ -21,7 +21,7 @@ import {
 <div [style.z-index]="modalZIndex" [ngClass]="modalContainerClasses" [@kxModalComponent]="modalAnimationState" (click)="onBackdropClick($event)">
 	<div [ngClass]="modalDialogClasses">
 		<div (click)="onBackdropClickCancel($event)">
-			<template #kxModal></template>
+			<ng-template #kxModal></ng-template>
 		</div>
 	</div>
 </div>

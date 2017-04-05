@@ -7,7 +7,7 @@
 			<ul class="nav navbar-nav menu">
 				<li class="nav-item">
 					<a class="nav-link">
-						Angular 2 modals done <em>right</em>.
+						Angular modals done <em>right</em>.
 					</a>
 				</li>
 			</ul>
@@ -20,7 +20,7 @@
 				Configuration
 			</h4>
 			<p>
-				Configuration for the <code>kx-modals</code> library to work is really simple, you just include the <code>KxModalModule</code> into your root module (usually <code>app.module.ts</code>) and add it to the imports list, as such:
+				Configuration for the <code>kx-modals</code> library to work is really simple, you just include the <code>KxModalModule</code>				into your root module (usually <code>app.module.ts</code>) and add it to the imports list, as such:
 			</p>
 
 			<h6>
@@ -40,9 +40,10 @@
 export class AppModule {{ '{ }' }}</code></pre>
 
 			<p>
-				After having done this, make sure you've included the <code>&lt;kx-modal-container&gt;</code> <i>somewhere</i> in your application, though preferably somewhere in your root component. After that is done, you can use the <code>KxModalService</code> anywhere in your application to create a modal component. The only thing your component has to comply to, is that it is derived from the <code>KxModalBaseComponent</code> class.
-				<br/><br/>
-				For an example of how to use this, just look at one of the modal examples below.
+				After having done this, make sure you've included the <code>&lt;kx-modal-container&gt;</code> <i>somewhere</i> in your
+				application, though preferably somewhere in your root component. After that is done, you can use the <code>KxModalService</code>				anywhere in your application to create a modal component. The only thing your component has to comply to, is that it
+				is derived from the <code>KxModalBaseComponent</code> class.
+				<br/><br/> For an example of how to use this, just look at one of the modal examples below.
 			</p>
 		</div>
 
@@ -53,7 +54,7 @@ export class AppModule {{ '{ }' }}</code></pre>
 			<p>
 				Modals that would normally require you to confirm an action, such as deleting an item.
 			</p>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onConfirm()">
 				CONFIRM
 			</button>
@@ -91,24 +92,24 @@ export class AppModule {{ '{ }' }}</code></pre>
 			<p>
 				Modals that would notify you of something important.
 			</p>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onNotify('info')">
 				NOTIFY
 			</button>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onNotify('success')">
 				SUCCESS!
 			</button>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onNotify('warning')">
 				WARNING!
 			</button>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onNotify('danger')">
 				DANGER!
 			</button>
 		</div>
-		
+
 		<div class="top-offset-1">
 			<h5>
 				Code
@@ -137,20 +138,20 @@ export class AppModule {{ '{ }' }}</code></pre>
 			<p>
 				Modals that would force you to wait for an action to complete.
 			</p>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onWait(1000)">
 				WAIT 1 SECOND
 			</button>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onWait(5000)">
 				WAIT 5 SECONDS
 			</button>
-			
+
 			<button class="btn btn-default button hollow secondary" (click)="onWait(10000)">
 				WAIT 10 SECONDS
 			</button>
 		</div>
-		
+
 		<div class="top-offset-1">
 			<h5>
 				Code

@@ -16,7 +16,7 @@ import { Subject } from "rxjs/Subject";
 	selector: 'kx-modal-container',
 	template: `
 <div>
-	<template #kxModalContainer></template>
+	<ng-template #kxModalContainer></ng-template>
 
 	<div [hidden]="modalComponentCount === 0" [ngClass]="kxModalBackdropClasses" [@kxModalBackdrop]="kxModalBackdrop"></div>
 </div>
