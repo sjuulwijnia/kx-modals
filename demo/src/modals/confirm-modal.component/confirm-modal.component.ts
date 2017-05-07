@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { KxModalBaseComponent } from "kx-modals";
+import { KxModalBaseComponent } from "../../../../src";
 
 @Component({
 	selector: 'confirm-modal',

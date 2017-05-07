@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { KxModalBaseComponent } from "kx-modals";
+import { KxModalBaseComponent } from "../../../../src";
 
 import { Subscription } from "rxjs/Subscription";
 

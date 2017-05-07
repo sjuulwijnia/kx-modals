@@ -19,7 +19,19 @@ export class AppComponent {
 
 	constructor(
 		private modalService: ModalService
-	) { }
+	) {
+		this.modalService
+			.onAnyModalOpened
+			.subscribe(() => {
+				console.log('* A modal has been opened');
+			});
+
+		this.modalService
+			.onAllModalsClosed
+			.subscribe(() => {
+				console.log('* All modals have been closed');
+			})
+	}
 
 	onConfirm() {
 		this.modalService
@@ -51,7 +63,7 @@ export class AppComponent {
 				error: () => {
 					console.log(`Better be safe than sorry.`);
 				}
-			})
+			});
 	}
 
 	onNotify(type: 'info' | 'success' | 'warning' | 'danger' = 'info') {

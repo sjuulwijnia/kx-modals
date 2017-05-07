@@ -96,6 +96,7 @@ Now you're set to use ``kx-modals`` in your project!
       // optionally set global styling here, e.g.:
       globalStyleSettings: {
           backdropClasses: 'my-custom-backdrop-class',
+          bodyClasses: 'my-custom-body-class',
           containerClasses: 'my-custom-container-class',
           dialogClasses: 'my-custom-dialog-class'
       }

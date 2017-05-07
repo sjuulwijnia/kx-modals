@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { KxModalService, KxModalOptions, IKxModalService } from "kx-modals";
+import { KxModalService, KxModalOptions, IKxModalService } from "../../../src";
+import { Observable } from "rxjs/Observable";
 
 import { ConfirmModalComponent, IConfirmModalConfiguration } from "./confirm-modal.component";
 import { NotifyModalComponent, INotifyModalConfiguration } from "./notify-modal.component";
@@ -13,6 +14,14 @@ export class ModalService implements IKxModalService {
 
 	public get openModalCount(): number {
 		return this.kxModalService.openModalCount;
+	}
+
+	public get onAnyModalOpened(): Observable<void> {
+		return this.kxModalService.onAnyModalOpened;
+	}
+
+	public get onAllModalsClosed(): Observable<void> {
+		return this.kxModalService.onAllModalsClosed;
 	}
 
 	constructor(

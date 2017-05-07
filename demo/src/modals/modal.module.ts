@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { KxModalModule } from 'kx-modals';
+import { KxModalModule } from '../../../src';
 import { ModalService } from './modal.service';
 
 import { ConfirmModalComponent } from './confirm-modal.component/confirm-modal.component';
