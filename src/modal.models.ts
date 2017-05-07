@@ -50,12 +50,15 @@ export interface IKxModalService {
 	/**
 	 * Whether there are any modals currently open or not.
 	 */
-	hasOpenModals: boolean;
+	readonly hasOpenModals: boolean;
 
 	/**
 	 * The amount of modals currently open.
 	 */
-	openModalCount: number;
+	readonly openModalCount: number;
+
+	readonly onAnyModalOpened: Observable<void>;
+	readonly onAllModalsClosed: Observable<void>;
 
 	/**
 	 * Creates the given ModalComponent using the given option.
@@ -97,8 +100,16 @@ export interface KxModalStyleSettings {
 	dialogClasses?: string;
 };
 
+export interface KxModalRootModuleStyleSettings extends KxModalStyleSettings {
+	/**
+	 * The classes that are applied to the <body> element when a modal is opened.
+	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-open'.
+	 */
+	bodyClasses?: string;
+}
+
 export type KxGlobalStyleSettings =
-	KxModalStyleSettings |
+	KxModalRootModuleStyleSettings |
 	'bootstrap3' |
 	'bootstrap4' |
 	'foundation6';

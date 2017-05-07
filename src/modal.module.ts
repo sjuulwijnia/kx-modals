@@ -4,7 +4,7 @@ import { CommonModule } from "@angular/common";
 import { KxModalService } from "./modal.service";
 import { KxModalComponent } from "./private/modal.component";
 import { KxModalContainerComponent } from "./private/modal-container.component";
-import { KxModalInstanceService } from "./private/modal-instance.service";
+import { KxModalContainerService } from "./private/modal-container.service";
 
 import {
 	ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER
@@ -44,7 +44,7 @@ export class KxModalModule {
 		return {
 			ngModule: KxModalModule,
 			providers: [
-				KxModalInstanceService,
+				KxModalContainerService,
 
 				{
 					provide: ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER,

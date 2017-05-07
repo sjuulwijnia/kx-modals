@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ComponentFactory, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ComponentRef, ComponentFactory, ComponentFactoryResolver, OnInit, Renderer, ViewChild, ViewContainerRef } from "@angular/core";
 import { animate, state, style, transition, trigger } from "@angular/core";
 
 import { KxModalComponent } from "./modal.component";
@@ -8,8 +8,9 @@ import {
 	KX_MODAL_STATE_HIDE,
 	KX_MODAL_STATE_SHOW
 } from "./modal.models-private";
-import { KxModalInstanceService } from "./modal-instance.service";
+import { KxModalContainerService } from "./modal-container.service";
 
+import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 
 @Component({
@@ -57,7 +58,8 @@ export class KxModalContainerComponent implements OnInit {
 	public kxModalBackdropClasses: string = null;
 
 	private modalContainerComponentFactory: ComponentFactory<KxModalComponent>;
-	private modalContainerCountSubject: Subject<number> = new Subject<number>();
+	private modalContainerCount$: Subject<number> = new Subject<number>();
+	public modalContainerCount: Observable<number> = this.modalContainerCount$.asObservable();
 
 	@ViewChild("kxModalContainer", { read: ViewContainerRef }) private modalComponentContainer: ViewContainerRef;
 	private modalComponentRefs: ComponentRef<KxModalComponent>[] = [];
@@ -68,15 +70,17 @@ export class KxModalContainerComponent implements OnInit {
 
 	constructor(
 		componentFactoryResolver: ComponentFactoryResolver,
-		private modalInstanceService: KxModalInstanceService
+		private modalContainerService: KxModalContainerService,
+		private renderer: Renderer
 	) {
 		this.modalContainerComponentFactory = componentFactoryResolver.resolveComponentFactory(KxModalComponent);
 
-		this.kxModalBackdropClasses = modalInstanceService.globalStyleSettings.backdropClasses;
+		this.kxModalBackdropClasses = modalContainerService.globalStyleSettings.backdropClasses;
 	}
 
 	ngOnInit() {
-		this.modalInstanceService.bindToModalInstance(this.modalContainerCountSubject)
+		this.modalContainerService
+			.bindToModalContainer(this.modalContainerCount)
 			.subscribe(this.onModalCreation.bind(this));
 	}
 
@@ -88,13 +92,18 @@ export class KxModalContainerComponent implements OnInit {
 		this.kxModalBackdrop = KX_MODAL_STATE_SHOW;
 		this.modalComponentRefs.push(componentRef);
 
-		modalConfiguration.subject
+		modalConfiguration
+			.subject
 			.subscribe({
 				error: this.onModalDestroy.bind(this, componentRef),
 				complete: this.onModalDestroy.bind(this, componentRef)
 			});
 
+		this.renderer.setElementClass(document.body, this.modalContainerService.globalStyleSettings.bodyClasses, true);
+
 		this.emitModalComponentCount();
+
+		this.modalContainerService.onAnyModalOpened$.next();
 	}
 
 	private onModalDestroy(componentRef: ComponentRef<KxModalComponent>) {
@@ -113,15 +122,20 @@ export class KxModalContainerComponent implements OnInit {
 	}
 
 	private emitModalComponentCount() {
-		this.modalContainerCountSubject.next(this.modalComponentCount);
+		this.modalContainerCount$.next(this.modalComponentCount);
 
-		this.modalComponentRefs.forEach((componentRef: ComponentRef<KxModalComponent>, index: number) => {
-			componentRef.instance.modalCount = this.modalComponentRefs.length;
-			componentRef.instance.modalIndex = index;
-		});
+		this.modalComponentRefs
+			.forEach((componentRef: ComponentRef<KxModalComponent>, index: number) => {
+				componentRef.instance.modalCount = this.modalComponentRefs.length;
+				componentRef.instance.modalIndex = index;
+			});
 
 		if (this.modalComponentRefs.length === 0) {
+			this.renderer.setElementClass(document.body, this.modalContainerService.globalStyleSettings.bodyClasses, false);
+
 			this.kxModalBackdrop = KX_MODAL_STATE_HIDE;
+
+			this.modalContainerService.onAllModalsClosed$.next();
 		}
 	}
 }

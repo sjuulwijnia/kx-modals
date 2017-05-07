@@ -5,7 +5,7 @@ import {
 	KxModalConfiguration,
 	KX_MODAL_STATE_SHOW
 } from "./modal.models-private";
-import { KxModalInstanceService } from "./modal-instance.service";
+import { KxModalContainerService } from "./modal-container.service";
 
 import {
 	KxModalBaseComponent,
@@ -96,7 +96,7 @@ export class KxModalComponent implements OnInit {
 	}
 
 	constructor(
-		private modalInstanceService: KxModalInstanceService
+		private modalInstanceService: KxModalContainerService
 	) { }
 
 	ngOnInit() {

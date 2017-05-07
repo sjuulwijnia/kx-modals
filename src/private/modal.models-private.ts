@@ -1,6 +1,6 @@
 import { Subject } from "rxjs/Subject";
 
-import { KxModalOptions, KxModalSettings, KxModalStyleSettings } from "../modal.models";
+import { KxModalOptions, KxModalSettings, KxModalRootModuleStyleSettings } from "../modal.models";
 
 export const KX_MODAL_ANIMATION_TIME = 200; // ms
 export const KX_MODAL_STATE_HIDE = 'kxModalAnimationHide';
@@ -17,19 +17,22 @@ export const DEFAULT_MODAL_SETTINGS: KxModalSettings = {
 	dismissCausesError: false
 };
 
-export const GLOBAL_MODAL_STYLE_BOOTSTRAP3: KxModalStyleSettings = {
+export const GLOBAL_MODAL_STYLE_BOOTSTRAP3: KxModalRootModuleStyleSettings = {
+	bodyClasses: 'modal-open',
 	backdropClasses: 'modal-backdrop',
 	containerClasses: 'modal',
 	dialogClasses: 'modal-dialog'
 };
 
-export const GLOBAL_MODAL_STYLE_BOOTSTRAP4: KxModalStyleSettings = {
+export const GLOBAL_MODAL_STYLE_BOOTSTRAP4: KxModalRootModuleStyleSettings = {
+	bodyClasses: 'modal-open',
 	backdropClasses: 'modal-backdrop',
 	containerClasses: 'modal',
 	dialogClasses: 'modal-dialog'
 };
 
-export const GLOBAL_MODAL_STYLE_FOUNDATION6: KxModalStyleSettings = {
+export const GLOBAL_MODAL_STYLE_FOUNDATION6: KxModalRootModuleStyleSettings = {
+	bodyClasses: 'modal-open',
 	backdropClasses: 'kx-modals-backdrop',
 	containerClasses: 'kx-modals-container',
 	dialogClasses: 'kx-modals-dialog reveal'

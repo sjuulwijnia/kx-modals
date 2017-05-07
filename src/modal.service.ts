@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { KxModalBaseComponent } from "./modal-base.component";
-import { KxModalInstanceService } from "./private/modal-instance.service";
+import { KxModalContainerService } from "./private/modal-container.service";
 import {
 	KxModalOptions,
 	IKxModalService
@@ -12,14 +12,22 @@ import { Observable } from "rxjs/Observable";
 @Injectable()
 export class KxModalService implements IKxModalService {
 	public get hasOpenModals(): boolean {
-		return this.modalInstanceService.hasOpenModals;
+		return this.modalContainerService.hasOpenModals;
 	}
 	public get openModalCount(): number {
-		return this.modalInstanceService.openModalCount;
+		return this.modalContainerService.openModalCount;
+	}
+
+	public get onAnyModalOpened(): Observable<void> {
+		return this.modalContainerService.onAnyModalOpened;
+	}
+
+	public get onAllModalsClosed(): Observable<void> {
+		return this.modalContainerService.onAllModalsClosed;
 	}
 
 	constructor(
-		private modalInstanceService: KxModalInstanceService
+		private modalContainerService: KxModalContainerService
 	) { }
 
 	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE> {
@@ -29,8 +37,8 @@ export class KxModalService implements IKxModalService {
 
 		modalOptions = modalOptions || {};
 		modalOptions.modalValues = modalOptions.modalValues || {};
-		modalOptions.modalSettings = Object.assign({}, this.modalInstanceService.defaultModalSettings, modalOptions.modalSettings || {});
+		modalOptions.modalSettings = Object.assign({}, this.modalContainerService.defaultModalSettings, modalOptions.modalSettings || {});
 
-		return this.modalInstanceService.create<RETURN_TYPE>(modalComponent, modalOptions);
+		return this.modalContainerService.create<RETURN_TYPE>(modalComponent, modalOptions);
 	}
 }

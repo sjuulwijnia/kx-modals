@@ -1,7 +1,7 @@
 import { ComponentRef, ComponentFactoryResolver, Injectable, Injector, ReflectiveInjector, Inject } from '@angular/core';
 
 import { KxModalBaseComponent } from "../modal-base.component";
-import { KxModalStyleSettings, KxModalSettings } from "../modal.models";
+import { KxModalRootModuleStyleSettings, KxModalSettings } from "../modal.models";
 import { KxModalComponentContainer } from './modal-declaration-container';
 import {
 	KxModalConfiguration,
@@ -27,20 +27,27 @@ import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
 @Injectable()
-export class KxModalInstanceService implements IKxModalService {
+export class KxModalContainerService implements IKxModalService {
 	private modalInstanceContainerSubject: Subject<KxModalConfiguration<any>> = null;
-	private modalInstanceCount: number = 0;
+	private modalCount: number = 0;
+
 
 	public get hasOpenModals(): boolean {
 		return this.openModalCount > 0;
 	}
 
 	public get openModalCount(): number {
-		return this.modalInstanceCount;
+		return this.modalCount;
 	}
 
-	private _globalStyleSettings: KxModalStyleSettings = null;
-	public get globalStyleSettings() {
+	public onAnyModalOpened$: Subject<void> = new Subject<void>();
+	public readonly onAnyModalOpened: Observable<void> = this.onAnyModalOpened$.asObservable();
+
+	public onAllModalsClosed$: Subject<void> = new Subject<void>();
+	public readonly onAllModalsClosed: Observable<void> = this.onAllModalsClosed$.asObservable();
+
+	private _globalStyleSettings: KxModalRootModuleStyleSettings = null;
+	public get globalStyleSettings(): KxModalRootModuleStyleSettings {
 		return this._globalStyleSettings;
 	}
 
@@ -64,9 +71,9 @@ export class KxModalInstanceService implements IKxModalService {
 		this.modalComponentDeclarationContainer = new KxModalComponentContainer(rootModalConfiguration.modalComponents);
 	}
 
-	public bindToModalInstance(modalInstanceCountSubject: Observable<number>): Observable<KxModalConfiguration<any>> {
-		modalInstanceCountSubject.subscribe(modalInstanceCount => {
-			this.modalInstanceCount = modalInstanceCount;
+	public bindToModalContainer(modalCount$: Observable<number>): Observable<KxModalConfiguration<any>> {
+		modalCount$.subscribe(modalCount => {
+			this.modalCount = modalCount;
 		})
 		this.modalInstanceContainerSubject = new Subject<KxModalConfiguration<any>>();
 
@@ -132,7 +139,8 @@ export class KxModalInstanceService implements IKxModalService {
 			}
 		} else if (!!globalStyleSettings && typeof (globalStyleSettings === 'object')) {
 			this._globalStyleSettings = Object.assign(
-				<KxModalStyleSettings>{
+				<KxModalRootModuleStyleSettings>{
+					bodyClasses: '',
 					backdropClasses: '',
 					containerClasses: '',
 					dialogClasses: ''
