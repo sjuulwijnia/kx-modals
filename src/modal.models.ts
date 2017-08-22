@@ -1,133 +1,62 @@
-import { Observable } from "rxjs/Observable";
+import { IKxModalStylingAnimation } from './modal.configuration';
 
-import { KxModalBaseComponent } from "./modal-base.component";
-
-export interface KxModalSettings {
+export interface IKxModalConfiguration {
 	/**
-	 * Extension on the global KxModalStyleSettings.containerClasses that applies to this individual modal only.
-	 * Defaults to empty.
+	 * Settings to be used for this modal.
 	 */
-	modalContainerClasses?: string;
+	settings?: IKxModalConfigurationSettings;
 
 	/**
-	 * Extension on the global KxModalStyleSettings.dialogClasses that applies to this individual modal only.
-	 * Defaults to empty.
+	 * Additional styling to be used for this modal.
+	 * * Classes will be added to the default classes.
+	 * * Animations will override the default animations.
 	 */
-	modalDialogClasses?: string;
+	styling?: string | IKxModalStylingAnimation;
 
 	/**
-	 * Whether pressing the backdrop (or anywhere outside the modal, more specifically) should close this modal when it is the top-most modal.
-	 * Defaults to true.
+	 * Values that will be passed on to the modal. These values will share the same keys on the passed object as on the modal.
 	 */
-	dismissByClick?: boolean;
-
-	/**
-	 * Whether pressing escape should close this modal when it is the top-most modal.
-	 * Defaults to true.
-	 */
-	dismissByEscape?: boolean;
-
-	/**
-	 * Whether dismissByEscape and dismissByClick should throw an error when triggered. If true, make sure the error is caught using a .catch(...) on the Observable.
-	 * Defaults to false.
-	 */
-	dismissCausesError?: boolean;
+	values?: IKxModalConfigurationValues;
 }
 
-export interface KxModalOptions {
+/**
+ * Settings to be used for this modal.
+ */
+export interface IKxModalConfigurationSettings {
 	/**
-	 * The values that should be passed on to this individual modal. These are available in and after the OnInit cycle.
+	 * Whether this modal should close when the escape key is pressed.
 	 */
-	modalValues?: { [key: string]: any };
+	closeOnEscape?: boolean;
 
 	/**
-	 * The settings that are used for this individual modal. All omitted settings are set to their defaults.
+	 * Whether this modal should close when the backdrop is clicked.
 	 */
-	modalSettings?: KxModalSettings;
+	closeOnBackdropClick?: boolean;
+
+	/**
+	 * Whether closing the modal by pressing escape or clicking on the backdrop should cause an error.
+	 */
+	closeCausesError?: boolean;
+
+	/**
+	 * Whether to animate the modal if it opens or closes.
+	 * Won't have any effect if NoopAnimationsModule is used.
+	 * 
+	 * *Default: true*
+	 */
+	animate?: boolean;
+
+	/**
+	 * Whether to animate the backdrop if this is the modal that creates the backdrop or removes the backdrop.
+	 * Won't have any effect if NoopAnimationsModule is used.
+	 * 
+	 * *Default: true*
+	 */
+	animateBackdrop?: boolean;
 }
-
-export interface IKxModalService {
-	/**
-	 * Whether there are any modals currently open or not.
-	 */
-	readonly hasOpenModals: boolean;
-
-	/**
-	 * The amount of modals currently open.
-	 */
-	readonly openModalCount: number;
-
-	readonly onAnyModalOpened: Observable<void>;
-	readonly onAllModalsClosed: Observable<void>;
-
-	/**
-	 * Creates the given ModalComponent using the given option.
-	 * Returns an Observable to subscribe to for the result.
-	 */
-	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE>;
-}
-
-export interface KxModalDeclaration {
-	/**
-	 * The ModalComponent to register to the service, allowing this ModalComponent to be called by name rather than by class declaration.
-	 */
-	modalComponent: any;
-
-	/**
-	 * The name that the ModalComponent should register under and should be called by. If omitted, it uses the name of the ModalComponent itself.
-	 * Example: if your ModalComponent is named 'ConfirmModalComponent' and this field is omitted, it will register under 'ConfirmModalComponent'.
-	 */
-	modalComponentName?: string;
-};
-
-export interface KxModalStyleSettings {
-	/**
-	 * The classes that are used for the backdrop.
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-backdrop'.
-	 */
-	backdropClasses?: string;
-
-	/**
-	 * The classes that are used for the outer <div> that is containing the modal. This one is usually used to set the location of the modal, and is extended by setting the KxModalSettings.modalContainerClasses when creating an individual modal. 
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal'.
-	 */
-	containerClasses?: string;
-
-	/**
-	 * The classes that are used for the inner <div> that is containing the modal. This one is usually used to set the outer styling characteristics of the modal, and is extended by setting the KxModalSettings.modalDialogClasses when creating an individual modal. 
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-dialog'.
-	 */
-	dialogClasses?: string;
-};
-
-export interface KxModalRootModuleStyleSettings extends KxModalStyleSettings {
-	/**
-	 * The classes that are applied to the <body> element when a modal is opened.
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-open'.
-	 */
-	bodyClasses?: string;
-}
-
-export type KxGlobalStyleSettings =
-	KxModalRootModuleStyleSettings |
-	'bootstrap3' |
-	'bootstrap4' |
-	'foundation6';
-
-export interface KxRootModalModuleDeclaration {
-	/**
-	 * Contains all ModalComponents that you want to be able to be called by name rather than by class declaration.
-	 */
-	modalComponents?: KxModalDeclaration[];
-
-	/**
-	 * The default settings object used for the modals that can be overridden by each modal.
-	 */
-	defaultSettings?: KxModalSettings;
-
-	/**
-	 * The settings object used for the global styling of all modals used by this application. Put simple, it concerns the backdrop that is used and how the container of the modals is styled.
-	 * Default: 'bootstrap4'
-	 */
-	globalStyleSettings?: KxGlobalStyleSettings;
+/**
+ * Values that will be passed on to the modal. These values will share the same keys on the passed object as on the modal.
+ */
+export interface IKxModalConfigurationValues {
+	[key: string]: any;
 }

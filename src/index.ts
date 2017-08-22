@@ -1,11 +1,21 @@
-export { KxModalBaseComponent } from "./modal-base.component";
+export { KxModalComponent } from './modal.component';
 export {
-	KxModalOptions,
+	BOOTSTRAP3,
+	BOOTSTRAP4,
+	FOUNDATION6,
+
+	IKxModalStyling,
+	IKxModalStylingAnimation
+} from './modal.configuration';
+export { KxModalModule } from './modal.module';
+
+export {
+	IKxModalConfiguration,
+	IKxModalConfigurationSettings,
+	IKxModalConfigurationValues
+} from './modal.models';
+
+export {
 	IKxModalService,
-	KxModalDeclaration,
-	KxModalSettings,
-	KxModalStyleSettings,
-	KxRootModalModuleDeclaration
-} from "./modal.models";
-export { KxModalService } from "./modal.service";
-export { KxModalModule } from "./modal.module";
+	KxModalService
+} from './modal.service';

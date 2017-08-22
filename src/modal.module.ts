@@ -1,54 +1,49 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-
-import { KxModalService } from "./modal.service";
-import { KxModalComponent } from "./private/modal.component";
-import { KxModalContainerComponent } from "./private/modal-container.component";
-import { KxModalContainerService } from "./private/modal-container.service";
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import {
-	ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER
-} from "./private/modal.models-private";
+	KxModalContainerComponent,
+	KxModalContainerService
+} from './private';
 
-import {
-	KxRootModalModuleDeclaration
-} from "./modal.models";
-
-import "rxjs/add/observable/throw";
-import "rxjs/add/operator/debounceTime";
+import { KxModalService } from './modal.service';
+import { IKxModalStyling, MODAL_STYLING_TOKEN } from './modal.configuration';
 
 @NgModule({
 	imports: [
 		CommonModule
 	],
 
-	providers: [
-		KxModalService
-	],
-
 	declarations: [
-		KxModalComponent,
 		KxModalContainerComponent
 	],
 
-	entryComponents: [
-		KxModalComponent
+	providers: [
+		KxModalContainerService,
+		KxModalService
 	],
 
 	exports: [
 		KxModalContainerComponent
 	]
 })
-export class KxModalModule {
-	static forRoot(modalModuleConfiguration?: KxRootModalModuleDeclaration): ModuleWithProviders {
-		return {
-			ngModule: KxModalModule,
-			providers: [
-				KxModalContainerService,
+export class KxModalRootModule { }
 
+@NgModule({
+	providers: [
+		KxModalService
+	]
+})
+export class KxModalModule {
+	constructor() { }
+
+	public static forRoot(modalStyling: IKxModalStyling = {}): ModuleWithProviders {
+		return {
+			ngModule: KxModalRootModule,
+			providers: [
 				{
-					provide: ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER,
-					useValue: modalModuleConfiguration
+					provide: MODAL_STYLING_TOKEN,
+					useValue: modalStyling
 				}
 			]
 		};

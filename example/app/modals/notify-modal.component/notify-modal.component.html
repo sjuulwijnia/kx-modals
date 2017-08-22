@@ -1,0 +1,15 @@
+<fieldset class="modal-content" [disabled]="isAnimating || !isTopModal">
+	<div class="modal-header">
+		{{ title }}
+	</div>
+
+	<div *ngIf="!!body" class="modal-body">
+		{{ body }}
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-default" (click)="onClose()">
+			{{ okLabel }}
+		</button>
+	</div>
+</fieldset>

@@ -1,121 +1,28 @@
 # kx-modals
-A simple implementation of modals in Angular.
 
-## Quick start
-* Add the package to your project by using ``npm install kx-modals --save``. After that, just complete the following steps:
-* Add the ``KxModalModule`` to your root module (usually ``app.module.ts``):
-  ```
-  import { KxModalModule } from 'kx-modals';
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.1.
 
-  @NgModule({
-      imports: [
-        KxModalModule.forRoot({
-            // configuration
-        }),
-        ...
-      ],
-      ...
-  })
-  export class AppModule { }
-  ```
-* Add the ``KxModalContainerComponent`` to the HTML of your root component (usually the ``app.component.html``):
-  ```
-  ...
-  <kx-modal-container></kx-modal-container>
-  ...
-  ```
-* Create a modal component by extending the ``KxModalBaseComponent``:
-  ```
-  import { Component } from '@angular/core';
-  import { KxModalBaseComponent } from 'kx-modals';
+## Development server
 
-  @Component({
-      selector: 'example-modal',
-      template: `
-        <div class="modal-container">
-            <div class="modal-header">
-                Hello world!
-            </div>
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-            <div class="modal-body">
-                This is just an example modal! Have fun!
-            </div>
+## Code scaffolding
 
-            <div class="modal-footer">
-                <button class="btn btn-default" (click)="onClose()">Close</button>
-            </div>
-        </div>
-      `
-  })
-  export class ExampleModalComponent extends KxModalBaseComponent<void> {
-      onClose() {
-          this.closeSilent();
-      }
-  }
-  ```
-* Call the modal by using the ``KxModalService`` from any component or service:
-  ```
-  import { Component } from '@angular/core';
-  import { KxModalService } from 'kx-modals';
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-  import { ExampleModalComponent } from './example-modal.component';
+## Build
 
-  @Component({
-      selector: "example",
-      template: "<button class="btn btn-default" (click)="open()">Open that example modal!</button>"
-  })
-  export class ExampleComponent {
-    constructor(
-        private modalService: KxModalService
-    ) { }
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-    public open() {
-        this.modalService.create(ExampleModalComponent);
-    }
-  }
-  ```
+## Running unit tests
 
-Now you're set to use ``kx-modals`` in your project!
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Tips
-* Add the ``KxModalModule`` to a separate modal module and wrap the ``KxModalService`` by an own defined service. Add any modals that can be reused (such as a confirmation modal) to this module and add functions for them to your own modal service. For an example, look at the [demo source](https://github.com/sjuulwijnia/kx-modals/tree/master/demo/src/modals).
-* Override the default styling or settings by passing your own to the ``KxModalModule``:
-  ```
-  KxModalModule.forRoot({
-      // optionally set default modal styling here, e.g.:
-      defaultSettings: {
-          // these two are added to respective globalStyleSettings classes
-          modalContainerClasses: 'my-custom-container-class-that-can-be-overridden-on-individual-basis',
-          modalDialogClasses: 'my-custom-dialog-class-that-can-be-overridden-on-individual-basis',
+## Running end-to-end tests
 
-          dismissByClick: true,
-          dismissByEscape: true,
-          dismissCausesError: false
-      },
-      
-      // optionally set global styling here, e.g.:
-      globalStyleSettings: {
-          backdropClasses: 'my-custom-backdrop-class',
-          bodyClasses: 'my-custom-body-class',
-          containerClasses: 'my-custom-container-class',
-          dialogClasses: 'my-custom-dialog-class'
-      }
-  })
-  ```
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Before running the tests make sure you are serving the app via `ng serve`.
 
-  The ``defaultSettings`` can be overridden when calling the ``KxModalService.create`` function:
-  ```
-  this.modalService.create(ExampleModalComponent, {
-    modalSetting: {
-        modalContainerClasses: 'my-custom-container-class',
-        modalDialogClasses: 'my-custom-dialog-class',
+## Further help
 
-        dismissByClick: false,
-        dismissByEscape: false
-    }
-  }).subscribe(...);
-  ```
-* Using Bootstrap 3, Bootstrap 4 or Foundation 6? Use one of the default global styles rather than your own:
-  * ``globalStyleSettings: 'bootstrap3'``
-  * ``globalStyleSettings: 'bootstrap4'`` (default)
-  * ``globalStyleSettings: 'foundation6'``
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
