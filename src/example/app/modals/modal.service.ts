@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { animate, style } from '@angular/animations';
 
-import { IKxModalConfiguration, IKxModalService, KxModalComponent, KxModalService } from '../../../src';
+import { IKxModalConfiguration, IKxModalService, KxModalComponent, KxModalService } from '../../../lib';
 
 import { ConfirmModalComponent, ConfirmModalConfiguration } from './confirm-modal.component';
 import { NotifyModalComponent, NotifyModalConfiguration } from './notify-modal.component';

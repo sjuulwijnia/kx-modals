@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
 import { ModalModule } from './modals';
-import { KxModalModule, BOOTSTRAP3 } from '../../src';
+import { KxModalModule, BOOTSTRAP3 } from '../../lib';
 
 @NgModule({
 	declarations: [

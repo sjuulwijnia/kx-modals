@@ -1,10 +1,8 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {
-	KxModalContainerComponent,
-	KxModalContainerService
-} from './private';
+import { KxModalContainerComponent } from './private/modal-container.component/modal-container.component';
+import { KxModalContainerService } from './private/modal-container.service';
 
 import { KxModalService } from './modal.service';
 import { IKxModalStyling, MODAL_STYLING_TOKEN } from './modal.configuration';

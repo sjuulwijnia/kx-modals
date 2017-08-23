@@ -5,6 +5,10 @@
 /tmp
 /out-tsc
 
+# src
+src/**/*.js
+src/**/*.map
+
 # dependencies
 /node_modules
 

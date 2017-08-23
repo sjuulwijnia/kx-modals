@@ -5,8 +5,8 @@
 	},
 	"apps": [
 		{
-			"root": "example",
-			"outDir": "dist",
+			"root": "src/example",
+			"outDir": "out-tsc/example",
 			"assets": [
 				"assets",
 				"favicon.ico"
@@ -19,8 +19,8 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "kx",
 			"styles": [
-				"../node_modules/bootstrap/dist/css/bootstrap.min.css",
-				"../node_modules/bootstrap/dist/css/bootstrap-theme.min.css",
+				"../../node_modules/bootstrap/dist/css/bootstrap.min.css",
+				"../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css",
 				"styles.scss"
 			],
 			"scripts": [],

@@ -4,7 +4,7 @@ import {
 	Injector
 } from '@angular/core';
 
-import { KxModalContainerService } from './private/index';
+import { KxModalContainerService } from './private';
 import { KxModalComponent } from './modal.component';
 import {
 	IKxModalService,
