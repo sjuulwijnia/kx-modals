@@ -13,6 +13,18 @@ import { Subject } from 'rxjs/Subject';
 export class KxModalContainerService implements IKxModalContainerCreator {
 	private containerComponent: IKxModalContainerCreator = null;
 
+	public get hasModals(): boolean {
+		return this.modalCount > 0;
+	}
+
+	public get modalCount(): number {
+		if (!this.containerComponent) {
+			return 0;
+		}
+
+		return this.containerComponent.modalCount;
+	}
+
 	/**
 	 * Creates a modal using the given *configuration*. Delegates this to the KxModalContainerComponent if registered, errors otherwise.
 	 *

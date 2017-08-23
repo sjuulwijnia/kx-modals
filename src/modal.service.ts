@@ -7,16 +7,14 @@ import {
 import { KxModalContainerService } from './private/index';
 import { KxModalComponent } from './modal.component';
 import {
+	IKxModalService,
+
 	IKxModalConfiguration,
 	IKxModalConfigurationSettings,
 	IKxModalConfigurationValues
 } from './modal.models';
 
 import { Observable } from 'rxjs/Observable';
-
-export interface IKxModalService {
-	create<T>(modalComponent: typeof KxModalComponent, modalConfiguration?: IKxModalConfiguration): KxModalComponent<T>;
-}
 
 @Injectable()
 export class KxModalService implements IKxModalService {
@@ -25,6 +23,14 @@ export class KxModalService implements IKxModalService {
 		private readonly injector: Injector,
 		private readonly kxModalContainerService: KxModalContainerService
 	) { }
+
+	public get hasModals(): boolean {
+		return this.modalCount > 0;
+	}
+
+	public get modalCount(): number {
+		return this.kxModalContainerService.modalCount;
+	}
 
 	/**
 	 * Creates a modal.
@@ -43,6 +49,10 @@ export class KxModalService implements IKxModalService {
 		modalConfiguration.settings = {
 			animate: true,
 			animateBackdrop: true,
+
+			closeOnBackdropClick: true,
+			closeOnEscape: true,
+			closeCausesError: false,
 
 			...(modalConfiguration.settings || {})
 		};

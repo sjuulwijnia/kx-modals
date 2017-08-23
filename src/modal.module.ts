@@ -9,6 +9,8 @@ import {
 import { KxModalService } from './modal.service';
 import { IKxModalStyling, MODAL_STYLING_TOKEN } from './modal.configuration';
 
+import 'rxjs/add/observable/fromevent';
+
 @NgModule({
 	imports: [
 		CommonModule

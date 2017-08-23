@@ -8,6 +8,16 @@ import { NotifyModalComponent, NotifyModalConfiguration } from './notify-modal.c
 
 @Injectable()
 export class ModalService implements IKxModalService {
+
+	public get hasModals(): boolean {
+		return this.modalCount > 0;
+	}
+
+	public get modalCount(): number {
+		return this.kxModalService.modalCount;
+	}
+
+
 	constructor(
 		public readonly kxModalService: KxModalService
 	) { }
@@ -42,25 +52,22 @@ export class ModalService implements IKxModalService {
 		return this.create(NotifyModalComponent, {
 			values: values,
 
-			settings: {
-				animate: false
-			},
-
 			styling: {
 				class: 'modal-sm',
 				in: [
 					style({
 						opacity: 0,
-						transform: 'rotateZ(-360deg)'
+						transform: 'rotateZ(-225deg) scale(0)'
 					}),
 					animate('300ms ease-in', style({
 						opacity: 1,
-						transform: 'rotateZ(0)'
+						transform: 'rotateZ(0) scale(1)'
 					}))
 				],
 				out: [
 					animate('300ms ease-in', style({
-						opacity: 0
+						opacity: 0,
+						transform: 'rotateZ(225deg) scale(10)'
 					}))
 				]
 			}

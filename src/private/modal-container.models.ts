@@ -1,7 +1,7 @@
 import { ComponentFactoryResolver, Injector } from '@angular/core';
 
 import { KxModalComponent } from '../modal.component';
-import { IKxModalConfiguration } from '../modal.models';
+import { IKxModalConfiguration, IKxModalContainerService } from '../modal.models';
 
 export interface IKxModalComponentCreationConfiguration extends IKxModalConfiguration {
 	component: typeof KxModalComponent;
@@ -9,7 +9,7 @@ export interface IKxModalComponentCreationConfiguration extends IKxModalConfigur
 	injector: Injector;
 }
 
-export interface IKxModalContainerCreator {
+export interface IKxModalContainerCreator extends IKxModalContainerService {
 	/**
 	 * Creates a modal using the given *configuration*.
 	 *

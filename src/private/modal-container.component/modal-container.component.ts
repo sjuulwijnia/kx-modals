@@ -1,7 +1,11 @@
-import { animate, state, style, transition, trigger, AnimationBuilder, AnimationFactory, AnimationMetadata } from '@angular/animations';
+import {
+	animate, state, style, transition, trigger,
+	AnimationBuilder, AnimationFactory, AnimationMetadata
+} from '@angular/animations';
 import {
 	Component, ComponentFactory, ComponentFactoryResolver, ComponentRef,
 	Inject,
+	OnDestroy, OnInit,
 	Renderer2,
 	ViewChild, ViewContainerRef
 } from '@angular/core';
@@ -35,7 +39,7 @@ export interface IKxModalStylingAnimationWithFactory extends modalConfiguration.
 	templateUrl: './modal-container.component.html',
 	styleUrls: ['./modal-container.component.scss']
 })
-export class KxModalContainerComponent implements IKxModalContainerCreator {
+export class KxModalContainerComponent implements IKxModalContainerCreator, OnDestroy, OnInit {
 	@ViewChild('modalContainer', { read: ViewContainerRef }) private modalComponentContainerRef: ViewContainerRef;
 	private modalComponentRefs: KxModalComponentRef<any>[] = [];
 
@@ -55,11 +59,15 @@ export class KxModalContainerComponent implements IKxModalContainerCreator {
 	}
 
 	public get hasModals(): boolean {
+		return this.modalCount > 0;
+	}
+
+	public get modalCount(): number {
 		if (!this.modalComponentContainerRef) {
-			return false;
+			return 0;
 		}
 
-		return this.modalComponentContainerRef.length > 0;
+		return this.modalComponentContainerRef.length;
 	}
 
 	protected get containerClasses(): string {
@@ -69,6 +77,12 @@ export class KxModalContainerComponent implements IKxModalContainerCreator {
 
 		return '';
 	}
+
+	private escapeKeydownSubscription = Observable
+		.fromEvent(document, 'keydown', $event => $event)
+		.subscribe($event => {
+			this.closeTopComponentByContainerEvent('closeOnEscape', $event);
+		});
 
 	constructor(
 		private readonly animationBuilder: AnimationBuilder,
@@ -85,12 +99,20 @@ export class KxModalContainerComponent implements IKxModalContainerCreator {
 		this.modalContainerStyling = this.createModalStylingPart(modalStyling.modalContainer);
 		this.modalStyling = this.createModalStylingPart(modalStyling.modal);
 
-		console.group('ANIMATION STYLINGS');
-		console.log('Body:', this.bodyStyling);
-		console.log('Backdrop:', this.modalBackdropStyling);
-		console.log('Container:', this.modalContainerStyling);
-		console.log('Modal:', this.modalStyling);
-		console.groupEnd();
+		// console.group('ANIMATION STYLINGS');
+		// console.log('Body:', this.bodyStyling);
+		// console.log('Backdrop:', this.modalBackdropStyling);
+		// console.log('Container:', this.modalContainerStyling);
+		// console.log('Modal:', this.modalStyling);
+		// console.groupEnd();
+	}
+
+	ngOnInit() {
+
+	}
+
+	ngOnDestroy() {
+		this.escapeKeydownSubscription.unsubscribe();
 	}
 
 	/**
@@ -365,21 +387,24 @@ export class KxModalContainerComponent implements IKxModalContainerCreator {
 
 	/**
 	 * Creates the backdrop for the modal if there is none.
-	 * 
+	 *
 	 * @param configuration The configuration used for the modal that created the backdrop.
 	 */
-	private createModalBackdrop(
-		configuration: IKxModalComponentCreationConfiguration
-	): void {
+	private createModalBackdrop(configuration: IKxModalComponentCreationConfiguration): void {
+
 		if (!!this.modalBackdropElement) {
 			return;
 		}
 
+		// create the element, apply classes & add to body
 		const backdrop = this.renderer.createElement('div');
 		this.applyComponentClasses(backdrop, this.modalBackdropStyling.class);
-
 		this.renderer.appendChild(this.modalComponentContainerRefParent, backdrop);
-		this.modalBackdropElement = backdrop;
+
+		// if backdrop close is configured, start listening
+		this.renderer.listen(backdrop, 'click', $event => {
+			this.closeTopComponentByContainerEvent('closeOnBackdropClick', $event);
+		});
 
 		// animate if set
 		this.playAnimation({
@@ -387,11 +412,12 @@ export class KxModalContainerComponent implements IKxModalContainerCreator {
 			animationFactory: this.modalBackdropStyling.inFactory,
 			element: backdrop
 		});
+		this.modalBackdropElement = backdrop;
 	}
 
 	/**
 	 * Deletes the backdrop from view if there's one or zero modals visible.
-	 * 
+	 *
 	 * @param configuration The configuration used for the modal that deletes the backdrop.
 	 */
 	private deleteModalBackdrop(
@@ -476,5 +502,35 @@ export class KxModalContainerComponent implements IKxModalContainerCreator {
 
 		modalComponent['$$modalCount'] = this.modalComponentRefs.length;
 		modalComponent['$$modalIndex'] = index;
+	}
+
+	/**
+	 * Takes the top KxModalComponent and closes it if the eventType is configured to close it.
+	 *
+	 * @param eventType The eventType that closes the upper componentRef.
+	 * @param $event The event that triggered the closing.
+	 */
+	private closeTopComponentByContainerEvent(
+		eventType: 'closeOnEscape' | 'closeOnBackdropClick',
+		$event: Event
+	): void {
+
+		// get the componentRef
+		const componentRef = this.modalComponentRefs[this.modalComponentRefs.length - 1];
+		if (!componentRef) {
+			return;
+		}
+
+		// check whether this instance is closed by the given eventType
+		const instance = componentRef.instance;
+		if (!!instance.configuration.settings[eventType]) {
+
+			// check whether it should generate an error
+			if (!!instance.configuration.settings.closeCausesError) {
+				instance.error('Closed by backdrop click');
+			} else {
+				instance.closeSilent();
+			}
+		}
 	}
 }

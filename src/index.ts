@@ -10,12 +10,13 @@ export {
 export { KxModalModule } from './modal.module';
 
 export {
+	IKxModalService,
+
 	IKxModalConfiguration,
 	IKxModalConfigurationSettings,
 	IKxModalConfigurationValues
 } from './modal.models';
 
 export {
-	IKxModalService,
 	KxModalService
 } from './modal.service';

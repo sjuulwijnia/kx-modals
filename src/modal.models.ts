@@ -1,4 +1,21 @@
+import { KxModalComponent } from './modal.component';
 import { IKxModalStylingAnimation } from './modal.configuration';
+
+export interface IKxModalContainerService {
+	/**
+	 * Whether there are any modals currently open or not.
+	 */
+	readonly hasModals: boolean;
+
+	/**
+	 * The amount of modals currently open.
+	 */
+	readonly modalCount: number;
+}
+
+export interface IKxModalService extends IKxModalContainerService {
+	create<T>(modalComponent: typeof KxModalComponent, modalConfiguration?: IKxModalConfiguration): KxModalComponent<T>;
+}
 
 export interface IKxModalConfiguration {
 	/**
@@ -25,23 +42,29 @@ export interface IKxModalConfiguration {
 export interface IKxModalConfigurationSettings {
 	/**
 	 * Whether this modal should close when the escape key is pressed.
+	 *
+	 * *Default: true*
 	 */
 	closeOnEscape?: boolean;
 
 	/**
 	 * Whether this modal should close when the backdrop is clicked.
+	 *
+	 * *Default: true*
 	 */
 	closeOnBackdropClick?: boolean;
 
 	/**
 	 * Whether closing the modal by pressing escape or clicking on the backdrop should cause an error.
+	 *
+	 * *Default: false*
 	 */
 	closeCausesError?: boolean;
 
 	/**
 	 * Whether to animate the modal if it opens or closes.
 	 * Won't have any effect if NoopAnimationsModule is used.
-	 * 
+	 *
 	 * *Default: true*
 	 */
 	animate?: boolean;
@@ -49,7 +72,7 @@ export interface IKxModalConfigurationSettings {
 	/**
 	 * Whether to animate the backdrop if this is the modal that creates the backdrop or removes the backdrop.
 	 * Won't have any effect if NoopAnimationsModule is used.
-	 * 
+	 *
 	 * *Default: true*
 	 */
 	animateBackdrop?: boolean;
