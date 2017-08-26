@@ -5,8 +5,8 @@
 	},
 	"apps": [
 		{
-			"root": "src/example",
-			"outDir": "out-tsc/example",
+			"root": "example",
+			"outDir": "out-tsc-example",
 			"assets": [
 				"assets",
 				"favicon.ico"
@@ -19,8 +19,7 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "kx",
 			"styles": [
-				"../../node_modules/bootstrap/dist/css/bootstrap.min.css",
-				"../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css",
+				"../semantic/dist/semantic.min.css",
 				"styles.scss"
 			],
 			"scripts": [],
@@ -38,11 +37,11 @@
 	},
 	"lint": [
 		{
-			"project": "src/tsconfig.app.json",
+			"project": "example/tsconfig.app.json",
 			"exclude": "**/node_modules/**"
 		},
 		{
-			"project": "src/tsconfig.spec.json",
+			"project": "example/tsconfig.spec.json",
 			"exclude": "**/node_modules/**"
 		},
 		{

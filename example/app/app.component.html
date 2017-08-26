@@ -1,0 +1,112 @@
+<kx-modal-container></kx-modal-container>
+<div class="ui container" style="margin-top: 15px;">
+	<div class="ui menu">
+		<div class="header item">
+			KX-MODALS
+		</div>
+	</div>
+
+	<h2>
+		Examples
+	</h2>
+	<p>
+		Here are some easy examples to quickly reuse in your own project if desired.
+	</p>
+
+	<div class="top-offset" id="confirmmodal">
+		<h3>
+			Confirm modal
+		</h3>
+		<p>
+			A simple modal to confirm an action. Can be passed a title, a body, the labels for the buttons and whether the decline action
+			should trigger an error.
+		</p>
+
+		<h5>
+			Examples
+		</h5>
+		<p>
+			Press one of the buttons to open a confirm modal.
+		</p>
+		<button class="ui button" (click)="onConfirmDelete()">Delete this?</button>
+		<button class="ui button" (click)="onConfirmSuperSure()">Are you sure?</button>
+
+		<h5>
+			Code
+		</h5>
+		<kx-app-code [codeSamples]="confirmCodeSamples"></kx-app-code>
+	</div>
+
+	<div class="top-offset" id="notifymodal">
+		<h3>
+			Notify modal
+		</h3>
+		<p>
+			A simple modal to notify the user. Can be passed a title, a body and a label for the close button.
+		</p>
+
+		<h5>
+			Examples
+		</h5>
+		<p>
+			Press one of the buttons to open a confirm modal.
+		</p>
+		<button class="ui button" (click)="onNotifySomethingHappened()">Look out!</button>
+		<button class="ui button" (click)="onNotifyImportant()">Attention!</button>
+		<button class="ui button" (click)="onNotifyBanana()">Careful (custom animation)!</button>
+
+		<h5>
+			Code
+		</h5>
+		<kx-app-code [codeSamples]="notifyCodeSamples"></kx-app-code>
+	</div>
+
+	<!-- <div class="top-offset" id="promptmodal">
+		<h3>
+			Prompt modal
+		</h3>
+		<p>
+			A simple modal to confirm an action. Can be passed a title, a body, the labels for the buttons and whether the decline action
+			should trigger an error.
+		</p>
+
+		<h5>
+			Examples
+		</h5>
+		<p>
+			Press one of the buttons to open a confirm modal.
+		</p>
+		<button class="ui button" (click)="onConfirmSure()">Are you sure?</button>
+
+		<h5>
+			Code
+		</h5>
+		<kx-app-code [codeSamples]="promptCodeSamples"></kx-app-code>
+	</div> -->
+
+	<div class="top-offset" id="waitmodal">
+		<h3>
+			Wait modal
+		</h3>
+		<p>
+			A simple modal to confirm an action. Can be passed a title, a body, whether it should be a basic modal and a subscription,
+			which on expiration will close the modal.
+		</p>
+
+		<h5>
+			Examples
+		</h5>
+		<p>
+			Press one of the buttons to open a confirm modal.
+		</p>
+		<button class="ui button" (click)="onWait(1)">Wait (1 second)</button>
+		<button class="ui button" (click)="onWait(5)">Wait (5 seconds)</button>
+		<button class="ui button" (click)="onWait(10)">Wait (10 seconds)</button>
+		<button class="ui button" (click)="onWait(10, true)">Wait (basic; 10 seconds)</button>
+
+		<h5>
+			Code
+		</h5>
+		<kx-app-code [codeSamples]="waitCodeSamples"></kx-app-code>
+	</div>
+</div>

@@ -1,0 +1,14 @@
+<i class="close icon" (click)="onClose()"></i>
+<div class="header">
+	{{ title }}
+</div>
+
+<div *ngIf="!!body" class="content">
+	{{ body }}
+</div>
+
+<div class="actions">
+	<button class="ui button" (click)="onClose()">
+		{{ okLabel }}
+	</button>
+</div>

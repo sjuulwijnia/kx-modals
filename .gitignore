@@ -5,6 +5,9 @@
 /tmp
 /out-tsc
 
+#semantic
+/semantic
+
 # src
 src/**/*.js
 src/**/*.map

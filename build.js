@@ -16,7 +16,7 @@ const inlineResources = require('./build-resources');
 const libName = require('./package.json').name;
 const rootFolder = path.join(__dirname);
 const compilationFolder = path.join(rootFolder, 'out-tsc');
-const srcFolder = path.join(rootFolder, 'src/lib');
+const srcFolder = path.join(rootFolder, 'lib');
 const distFolder = path.join(rootFolder, 'dist');
 const tempLibFolder = path.join(compilationFolder, 'lib');
 const es5OutputFolder = path.join(compilationFolder, 'lib-es5');
@@ -63,12 +63,20 @@ return Promise.resolve()
 				// The key here is library name, and the value is the the name of the global variable name
 				// the window object.
 				// See https://github.com/rollup/rollup/wiki/JavaScript-API#globals for more.
-				'@angular/core': 'ng.core'
+				'@angular/animations': 'ng.animations',
+				'@angular/core': 'ng.core',
+				'rxjs/Observable': 'Rx',
+				'rxjs/Subject': 'Rx',
+				'rxjs/add/observable/fromevent': 'Rx'
 			},
 			external: [
 				// List of dependencies
 				// See https://github.com/rollup/rollup/wiki/JavaScript-API#external for more.
-				'@angular/core'
+				'@angular/animations',
+				'@angular/core',
+				'rxjs/Observable',
+				'rxjs/Subject',
+				'rxjs/add/observable/fromevent'
 			],
 			plugins: [
 				commonjs({
