@@ -1,10 +1,10 @@
-import { ComponentRef } from '@angular/core';
+import { AfterViewInit, ComponentRef } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { IKxModalComponentCreationConfiguration } from './modal.models';
 
 export type KxModalComponentRef<T> = ComponentRef<KxModalComponent<T>>;
-export class KxModalComponent<T> extends Subject<T> {
+export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	/**
 	 * The configuration used to create this modal. Is sealed.
 	 */
@@ -44,11 +44,17 @@ export class KxModalComponent<T> extends Subject<T> {
 	/**
 	 * Creates a new KxModalComponent.
 	 * @param args These are not used. Do whatever you want with these.
-	 * However, they are required to make the modals function properly when it comes to dependency injection, so... *Keep these.*
+	 *
+	 * *However*, they are required to make the modals function properly when it comes to dependency injection, so... *Keep these.*
 	 */
 	constructor(...args: any[]) {
 		super();
 	}
+
+	/**
+	 * Dummy after view init. Needs to be here, else we can't override and call it.
+	 */
+	ngAfterViewInit() { }
 
 	/**
 	 * Silently closes this modal. Is the same as calling ``this.complete()``.

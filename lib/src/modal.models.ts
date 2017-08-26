@@ -1,5 +1,5 @@
 import { AnimationMetadata, animate, style } from '@angular/animations';
-import { ComponentFactoryResolver, Injector } from '@angular/core';
+import { ComponentFactoryResolver, ComponentRef, Injector, Renderer2 } from '@angular/core';
 
 import { KxModalComponent } from './modal.component';
 
@@ -105,8 +105,12 @@ export interface IKxModalConfigurationValues {
 export abstract class IKxModalStyling {
 	/**
 	 * The class that needs to be applied to the ``document.body`` when a modal is opened.
+	 *
+	 * ``OR``
+	 *
+	 * The styling configuration used for the ``document.body`` (IKxModalStylingAnimation).
 	 */
-	body?: string;
+	body?: string | IKxModalStylingAnimation;
 
 	/**
 	 * The class that needs to be applied to the modal backdrop (string).
@@ -119,17 +123,21 @@ export abstract class IKxModalStyling {
 
 	/**
 	 * The class that needs to be applied to the modal container.
-	 */
-	modalContainer?: string;
-
-	/**
-	 * The class that needs to be applied to all the modal (string).
 	 *
 	 * ``OR``
 	 *
-	 * The styling configuration used for the all modal (IKxModalStylingAnimation).
+	 * The styling configuration used for the modal container (IKxModalStylingAnimation).
 	 */
-	modal?: string | IKxModalStylingAnimation;
+	modalContainer?: string | IKxModalStylingAnimation;
+
+	/**
+	 * The class that needs to be applied to all the modals (string).
+	 *
+	 * ``OR``
+	 *
+	 * The styling configuration used for the all modals (IKxModalStylingAnimation).
+	 */
+	modal?: string | IKxModalStylingAnimation | IKxModalStylingAnimationWithCallbacks;
 }
 
 export interface IKxModalStylingAnimation {
@@ -147,4 +155,11 @@ export interface IKxModalStylingAnimation {
 	 * (Optional) Configure the *out* animation that is used for this part when a modal is created.
 	 */
 	out?: AnimationMetadata | AnimationMetadata[] | 'none';
+}
+
+export interface IKxModalStylingAnimationWithCallbacks extends IKxModalStylingAnimation {
+	/**
+	 * Hooks into the Angular component life cycle, and is ran when a modal's ``ngAfterViewInit`` is called.
+	 */
+	afterViewInit?: (componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) => void;
 }

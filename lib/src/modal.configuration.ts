@@ -1,4 +1,7 @@
 import { animate, style } from '@angular/animations';
+import { ComponentRef, Renderer2 } from '@angular/core/core';
+
+import { KxModalComponent } from './modal.component';
 import { IKxModalStyling } from './modal.models';
 
 /**
@@ -118,9 +121,20 @@ export const SEMANTIC2: IKxModalStyling = {
 				'opacity': 0,
 				'transform': 'scale(0.5)'
 			}))
-		]
+		],
+
+		afterViewInit: SEMANTIC2_AFTER_VIEW_INIT
 	}
 };
+
+export function SEMANTIC2_AFTER_VIEW_INIT(componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) {
+	console.log('Semantic!', componentRef, renderer);
+
+	const element = componentRef.location.nativeElement;
+	const marginOffset = -(element.scrollHeight / 2);
+
+	renderer.setStyle(element, 'margin-top', `${marginOffset}px`);
+}
 
 /**
  * Default Foundation 6 styling; based on ``v6.4.2``.

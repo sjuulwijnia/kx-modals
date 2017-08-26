@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { KxModalComponent } from 'kx-modals';
 
 @Component({
@@ -13,18 +13,8 @@ export class ConfirmModalComponent extends KxModalComponent<any> implements Afte
 	public declineLabel = 'Cancel';
 	public declineCausesError = false;
 
-	constructor(
-		private readonly elementRef: ElementRef,
-		private readonly renderer: Renderer2
-	) {
-		super();
-	}
-
 	ngAfterViewInit() {
-		const element = this.elementRef.nativeElement;
-		const marginOffset = -(element.scrollHeight / 2);
-
-		this.renderer.setStyle(this.elementRef.nativeElement, 'margin-top', `${marginOffset}px`);
+		console.log('eyo!');
 	}
 
 	public onDecline() {

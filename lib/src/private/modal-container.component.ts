@@ -21,7 +21,8 @@ import {
 	IKxModalConfigurationSettings,
 	IKxModalConfigurationValues,
 	IKxModalComponentCreationConfiguration,
-	IKxModalContainerCreator
+	IKxModalContainerCreator,
+	IKxModalStylingAnimationWithCallbacks
 } from '../modal.models';
 
 import { KxModalContainerService } from './modal-container.service';
@@ -30,7 +31,7 @@ import { KX_MODAL_STYLING_TOKEN } from '../modal.tokens';
 
 import { Observable } from 'rxjs/Observable';
 
-export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimation {
+export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimationWithCallbacks {
 	inFactory?: AnimationFactory;
 	outFactory?: AnimationFactory;
 }
@@ -168,6 +169,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 			return null;
 		}
 
+		// replace the afterViewInit(...) with the one of the configuration
+		this.replaceComponentAfterViewInit(componentRef);
+
 		// create the backdrop
 		this.createModalBackdrop(configuration);
 
@@ -222,6 +226,28 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 				componentRef.instance['$$isAnimating'] = false;
 			}
 		});
+	}
+
+	private replaceComponentAfterViewInit<T>(componentRef: KxModalComponentRef<T>) {
+		if (!this.modalStyling.afterViewInit) {
+			return;
+		}
+
+		const AFTER_VIEW_INIT = 'ngAfterViewInit';
+		const instance = componentRef.instance;
+		const instanceAfterViewInit = instance[AFTER_VIEW_INIT];
+		const modalAfterViewInit = this.modalStyling.afterViewInit.bind(instance);
+		const renderer = this.renderer;
+		if (!!instanceAfterViewInit) {
+			instance[AFTER_VIEW_INIT] = function () {
+				instanceAfterViewInit.bind(instance)();
+				modalAfterViewInit(componentRef, renderer);
+			}.bind(instance);
+		} else {
+			instance[AFTER_VIEW_INIT] = function () {
+				modalAfterViewInit(componentRef, renderer);
+			}.bind(instance);
+		}
 	}
 
 	/**

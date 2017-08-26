@@ -23,7 +23,7 @@ export class KxAppCodeComponent implements OnInit {
 	ngOnInit() {
 		this.codeSamples.forEach(codeSample => {
 			if (!!codeSample.url) {
-				const url = `https://raw.githubusercontent.com/sjuulwijnia/kx-modals/master/example/app/modals/${codeSample.url}`;
+				const url = `https://raw.githubusercontent.com/sjuulwijnia/kx-modals/develop/example/app/modals/${codeSample.url}`;
 				this.http.get(url)
 					.subscribe({
 						next: response => {
