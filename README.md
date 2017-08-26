@@ -2,7 +2,7 @@
 A simple implementation of modals in Angular.
 
 ## Quick start
-* Add the package to your project by using ``npm install kx-modals --save``. After that, just complete the following steps:
+Add the package to your project by using ``npm install kx-modals --save``. After that, just complete the following steps:
 * Create a modal component by extending the ``KxModalComponent``:
   ```typescript
   import { Component } from '@angular/core';
@@ -137,7 +137,7 @@ export const BOOTSTRAP3: IKxModalStyling = {
   modalContainer: 'modal',
   modal: {
     class: 'modal-dialog',
-    // the IN animation that is played a modal is created
+    // the IN animation that is played when a modal is created
     in: [
       style({
         opacity: 0,
@@ -148,7 +148,7 @@ export const BOOTSTRAP3: IKxModalStyling = {
         transform: 'translate(0, 0)'
       }))
     ],
-    // the OUT animation that is played a modal is created
+    // the OUT animation that is played when a modal is created
     out: [
       animate('300ms ease-out', style({
         opacity: 0,
