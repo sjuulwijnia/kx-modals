@@ -37,7 +37,7 @@ export class ModalService implements IKxModalService {
 
 		return this.create(ConfirmModalComponent, {
 			values: values,
-			styling: 'mini'
+			styling: 'tiny'
 		}) as ConfirmModalComponent;
 	}
 
@@ -53,7 +53,7 @@ export class ModalService implements IKxModalService {
 		return this.create(NotifyModalComponent, {
 			values: values,
 
-			styling: 'mini'
+			styling: 'tiny'
 		}) as NotifyModalComponent;
 	}
 
@@ -70,7 +70,7 @@ export class ModalService implements IKxModalService {
 			values: values,
 
 			styling: {
-				class: 'mini',
+				class: 'tiny',
 				in: [
 					style({
 						opacity: 0,
@@ -108,7 +108,7 @@ export class ModalService implements IKxModalService {
 				closeOnEscape: false
 			},
 
-			styling: (values.basic ? 'basic' : 'mini')
+			styling: (values.basic ? 'basic' : 'tiny')
 		}) as WaitModalComponent;
 	}
 }

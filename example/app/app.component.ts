@@ -68,7 +68,7 @@ export class KxAppComponent {
 				body: 'If you do this, you will lose this content forever.',
 
 				confirmLabel: 'Delete it!',
-				declineLabel: 'Wait, no! Don\'t!'
+				declineLabel: 'Wait, no! STOP!'
 			})
 			.subscribe();
 	}
@@ -79,7 +79,7 @@ export class KxAppComponent {
 				title: 'Are you sure?',
 				body: 'This might have some grave consequences.',
 
-				confirmLabel: 'I am sure!',
+				confirmLabel: 'I am sure.',
 				declineLabel: 'No, stop, don\'t.'
 			})
 			.subscribe(() => {

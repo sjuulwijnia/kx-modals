@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { KxModalComponent } from 'kx-modals';
 
 @Component({
-	selector: 'kx-bs3-notify-modal',
+	selector: 'kx-notify-modal',
 	templateUrl: './notify-modal.component.html'
 })
 export class NotifyModalComponent extends KxModalComponent<any> implements NotifyModalConfiguration {

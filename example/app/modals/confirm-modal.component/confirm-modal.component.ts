@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { KxModalComponent } from 'kx-modals';
 
 @Component({
-	selector: 'kx-bs3-confirm-modal',
+	selector: 'kx-confirm-modal',
 	templateUrl: './confirm-modal.component.html'
 })
 export class ConfirmModalComponent extends KxModalComponent<any> implements AfterViewInit, ConfirmModalConfiguration {

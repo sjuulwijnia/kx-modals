@@ -5,7 +5,7 @@ import { KxModalComponent } from 'kx-modals';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-	selector: 'kx-bs3-wait-modal',
+	selector: 'kx-wait-modal',
 	templateUrl: './wait-modal.component.html'
 })
 export class WaitModalComponent extends KxModalComponent<any> implements WaitModalConfiguration, OnInit {
