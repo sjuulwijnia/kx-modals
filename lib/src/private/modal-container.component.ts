@@ -26,6 +26,7 @@ import {
 	IKxModalStylingAnimationWithCallbacks
 } from '../modal.models';
 
+import { KxModalContainerAnimationManager } from './modal-container-animation-manager';
 import { KxModalContainerService } from './modal-container.service';
 
 import { KX_MODAL_STYLING_TOKEN } from '../modal.tokens';
@@ -34,7 +35,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'kx-modal-container',
-	template: `<div [class]="containerClasses"><ng-template #modalContainer></ng-template></div>`,
+	template: `<div><ng-template #modalContainer></ng-template></div>`,
 	styles: [`.kx-modal-visible { display: block; opacity: 1; }`]
 })
 export class KxModalContainerComponent implements IKxModalContainerCreator, AfterViewInit, OnDestroy, OnInit {
@@ -46,9 +47,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	private readonly modalContainerStyling: IKxModalStylingAnimationWithFactory = null;
 	private readonly modalStyling: IKxModalStylingAnimationWithFactory = null;
 
-	private modalBackdropManager: KxModalContainerStaticAnimationManager = null;
-	private modalBodyManager: KxModalContainerStaticAnimationManager = null;
-	private modalContainerManager: KxModalContainerStaticAnimationManager = null;
+	private modalBackdropManager: KxModalContainerAnimationManager = null;
+	private modalBodyManager: KxModalContainerAnimationManager = null;
+	private modalContainerManager: KxModalContainerAnimationManager = null;
 
 	public get modalComponentContainerRefParent(): HTMLElement {
 		if (!this.modalComponentContainerRef) {
@@ -72,7 +73,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 	public get containerClasses(): string {
 		if (this.hasModals) {
-			return `${this.modalContainerStyling.class} kx-modal-visible`;
+			return `${this.modalContainerStyling.classes} kx-modal-visible`;
 		}
 
 		return '';
@@ -105,14 +106,14 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	}
 
 	ngAfterViewInit() {
-		this.modalBodyManager = new KxModalContainerStaticAnimationManager(
+		this.modalBodyManager = new KxModalContainerAnimationManager(
 			this.modalComponentContainerRef,
 			document.body,
 			this.renderer,
 			this.bodyStyling
 		);
 
-		this.modalContainerManager = new KxModalContainerStaticAnimationManager(
+		this.modalContainerManager = new KxModalContainerAnimationManager(
 			this.modalComponentContainerRef,
 			this.modalComponentContainerRefParent,
 			this.renderer,
@@ -227,7 +228,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		const configurationStyling = this.createModalStylingPart(configuration.styling);
 
 		// apply global class + configuration class
-		this.addClasses(element, `${this.modalStyling.class} ${configurationStyling.class}`.trim());
+		this.addClasses(element, `${this.modalStyling.classes} ${configurationStyling.classes}`.trim());
 		this.renderer.setStyle(element, 'display', 'block');
 
 		// determine the animationFactory to be used and animate if there's one
@@ -415,9 +416,11 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		// if the styling equals a string, make it the object
 		if (typeof styling === 'string') {
 			styling = {
-				class: styling,
+				classes: styling,
 				in: 'none',
-				out: 'none'
+				inClasses: '',
+				out: 'none',
+				outClasses: ''
 			};
 		}
 
@@ -461,6 +464,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 		// create the element, apply classes & add to body
 		const backdrop = this.renderer.createElement('div');
+		this.addClasses(backdrop, this.modalBackdropStyling.classes);
 		this.renderer.appendChild(this.modalComponentContainerRefParent, backdrop);
 
 		// if backdrop close is configured, start listening
@@ -468,7 +472,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 			this.closeTopComponentByContainerEvent('closeOnBackdropClick', $event);
 		});
 
-		this.modalBackdropManager = new KxModalContainerStaticAnimationManager(
+		this.modalBackdropManager = new KxModalContainerAnimationManager(
 			this.modalComponentContainerRef,
 			backdrop,
 			this.renderer,
@@ -539,9 +543,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		}
 
 		if (modalComponentCount === 0) {
-			this.removeClasses(document.body, this.bodyStyling.class);
+			this.removeClasses(document.body, this.bodyStyling.classes);
 		} else {
-			this.addClasses(document.body, this.bodyStyling.class);
+			this.addClasses(document.body, this.bodyStyling.classes);
 		}
 	}
 
@@ -589,69 +593,5 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 				instance.closeSilent();
 			}
 		}
-	}
-}
-
-export class KxModalContainerStaticAnimationManager {
-	private _isVisible = false;
-	public get isVisible() {
-		return this._isVisible;
-	}
-
-	constructor(
-		private readonly viewContainerRef: ViewContainerRef,
-		public readonly element: HTMLElement,
-		private readonly renderer: Renderer2,
-		private readonly styling: IKxModalStylingAnimationWithFactory
-	) { }
-
-	public inAnimation(callback?: () => void): void {
-		callback = callback || (() => { });
-
-		if (this.viewContainerRef.length > 0 || !!this._isVisible) {
-			return;
-		}
-
-		// is now visible
-		this._isVisible = true;
-
-		// apply classes
-
-		// play animation
-		this.playAnimation(this.styling.inFactory, callback);
-	}
-
-	public outAnimation(callback?: () => void): void {
-		callback = callback || (() => { });
-
-		if (this.viewContainerRef.length > 0 || !this._isVisible) {
-			return;
-		}
-
-		// is now invisible
-		this._isVisible = false;
-
-		// remove classes
-
-		// play animation
-		this.playAnimation(this.styling.outFactory, callback);
-	}
-
-	private playAnimation(animationFactory: AnimationFactory, callback: () => void): void {
-		// check if there's actually an animation factory
-		if (!animationFactory) {
-			callback();
-			return;
-		}
-
-		console.log('Animate!', this.element);
-
-		// play the animation
-		const player = animationFactory.create(this.element);
-		player.onDone(() => {
-			callback();
-			player.destroy();
-		});
-		player.play();
 	}
 }

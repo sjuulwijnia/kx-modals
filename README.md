@@ -160,3 +160,5 @@ export const BOOTSTRAP3: IKxModalStyling = {
 ```
 
 As you can see, the classes are strings that will be applied to the right components, and the animations are the default Angular animations that can be found in the ``@angular/animations`` package.
+
+For more examples, look at the [configuration file](./lib/src/modal.configuration.ts) that contains all default configurations.

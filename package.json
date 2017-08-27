@@ -31,6 +31,7 @@
 		"start": "ng serve --extract-css",
 		"prebuild:aot": "npm run build",
 		"build:aot": "npm run ng build -- -prod --aot",
+		"build:semantic": "cd semantic && gulp build",
 		"*** TEST ***": "",
 		"test": "ng test",
 		"e2e": "ng e2e",

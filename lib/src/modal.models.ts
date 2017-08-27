@@ -144,7 +144,7 @@ export interface IKxModalStylingAnimation {
 	/**
 	 * The class that needs to be appended to part that is configured.
 	 */
-	class: string;
+	classes: string;
 
 	/**
 	 * (Optional) Configure the *in* animation that is used for this part when a modal is created.
@@ -152,9 +152,23 @@ export interface IKxModalStylingAnimation {
 	in?: AnimationMetadata | AnimationMetadata[] | 'none';
 
 	/**
+	 * (Optional) Configure the classes that must be applied during the *in* animation.
+	 *
+	 * Must be used in combination with the *in* animation property, or they won't be applied.
+	 */
+	inClasses?: string;
+
+	/**
 	 * (Optional) Configure the *out* animation that is used for this part when a modal is created.
 	 */
 	out?: AnimationMetadata | AnimationMetadata[] | 'none';
+
+	/**
+	 * (Optional) Configure the classes that must be applied during the *out* animation.
+	 *
+	 * Must be used in combination with the *out* animation property, or they won't be applied.
+	 */
+	outClasses?: string;
 }
 
 export interface IKxModalStylingAnimationWithCallbacks extends IKxModalStylingAnimation {

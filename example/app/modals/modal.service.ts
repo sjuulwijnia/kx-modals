@@ -70,7 +70,7 @@ export class ModalService implements IKxModalService {
 			values: values,
 
 			styling: {
-				class: 'tiny',
+				classes: 'tiny',
 				in: [
 					style({
 						opacity: 0,

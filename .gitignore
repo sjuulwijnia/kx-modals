@@ -6,7 +6,7 @@
 /out-tsc
 
 #semantic
-/semantic
+/semantic/dist
 
 # src
 src/**/*.js

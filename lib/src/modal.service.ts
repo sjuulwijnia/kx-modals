@@ -58,7 +58,7 @@ export class KxModalService implements IKxModalService {
 		};
 
 		modalConfiguration.styling = modalConfiguration.styling || {
-			class: '',
+			classes: '',
 
 			...(modalConfiguration.styling || {})
 		};

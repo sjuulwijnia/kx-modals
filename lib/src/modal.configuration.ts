@@ -12,7 +12,7 @@ import { IKxModalStyling } from './modal.models';
 export const BOOTSTRAP3: IKxModalStyling = {
 	body: 'modal-open',
 	modalBackdrop: {
-		class: 'modal-backdrop',
+		classes: 'modal-backdrop',
 		in: [
 			style({
 				opacity: 0
@@ -29,7 +29,7 @@ export const BOOTSTRAP3: IKxModalStyling = {
 	},
 	modalContainer: 'modal',
 	modal: {
-		class: 'modal-dialog',
+		classes: 'modal-dialog',
 		in: [
 			style({
 				opacity: 0,
@@ -57,7 +57,7 @@ export const BOOTSTRAP3: IKxModalStyling = {
 export const BOOTSTRAP4: IKxModalStyling = {
 	body: 'modal-open',
 	modalBackdrop: {
-		class: 'modal-backdrop',
+		classes: 'modal-backdrop',
 		in: [
 			style({
 				opacity: 0
@@ -74,7 +74,7 @@ export const BOOTSTRAP4: IKxModalStyling = {
 	},
 	modalContainer: 'modal',
 	modal: {
-		class: 'modal-dialog',
+		classes: 'modal-dialog',
 		in: [
 			style({
 				opacity: 0,
@@ -100,46 +100,55 @@ export const BOOTSTRAP4: IKxModalStyling = {
  * Includes animations.
  */
 export const SEMANTIC2: IKxModalStyling = {
-	body: 'dimmed dimmable',
+	body: {
+		classes: 'dimmed dimmable',
+		out: animate('500ms'),
+	},
 	modalBackdrop: '',
 	modalContainer: {
-		class: 'ui page dimmer',
-		in: [
-			style({
-				'opacity': 0,
-				'backgroundColor': '#fff'
-			}),
-			animate('500ms linear', style({
-				'opacity': 1,
-				'backgroundColor': '#000'
-			}))
-		],
-		out: [
-			animate('500ms linear', style({
-				'opacity': 0,
-				'background-color': '#fff'
-			}))
-		]
+		classes: 'ui page dimmer active transition',
+		in: animate('500ms'),
+		inClasses: 'animation fade in',
+		out: animate('500ms'),
+		outClasses: 'animation fade out'
+		// in: [
+		// 	style({
+		// 		'opacity': 0,
+		// 		'backgroundColor': '#fff'
+		// 	}),
+		// 	animate('500ms linear', style({
+		// 		'opacity': 1,
+		// 		'backgroundColor': '#000'
+		// 	}))
+		// ],
+		// out: [
+		// 	animate('500ms linear', style({
+		// 		'opacity': 0,
+		// 		'background-color': '#fff'
+		// 	}))
+		// ]
 	},
 	modal: {
-		class: 'ui modal',
-		in: [
-			style({
-				'opacity': 0,
-				'transform': 'scale(0.5)'
-			}),
-			animate('500ms ease', style({
-				'opacity': 1,
-				'transform': 'scale(1)',
-				'transform-origin': '50% 25%'
-			}))
-		],
-		out: [
-			animate('500ms ease', style({
-				'opacity': 0,
-				'transform': 'scale(0.5)'
-			}))
-		],
+		classes: 'ui modal',
+		in: animate('500ms'),
+		out: animate('500ms'),
+		// in: [
+		// 	style({
+		// 		'opacity': 0,
+		// 		'transform': 'scale(0.5)'
+		// 	}),
+		// 	animate('500ms ease', style({
+		// 		'opacity': 1,
+		// 		'transform': 'scale(1)',
+		// 		'transform-origin': '50% 25%'
+		// 	}))
+		// ],
+		// out: [
+		// 	animate('500ms ease', style({
+		// 		'opacity': 0,
+		// 		'transform': 'scale(0.5)'
+		// 	}))
+		// ],
 
 		afterViewInit: SEMANTIC2_AFTER_VIEW_INIT
 	}
