@@ -1,4 +1,4 @@
-import { animate, style } from '@angular/animations';
+import { animate, style, transition } from '@angular/animations';
 import { ComponentRef, Renderer2 } from '@angular/core/core';
 
 import { KxModalComponent } from './modal.component';
@@ -102,7 +102,25 @@ export const BOOTSTRAP4: IKxModalStyling = {
 export const SEMANTIC2: IKxModalStyling = {
 	body: 'dimmed dimmable',
 	modalBackdrop: '',
-	modalContainer: 'ui active page dimmer',
+	modalContainer: {
+		class: 'ui page dimmer',
+		in: [
+			style({
+				'opacity': 0,
+				'backgroundColor': '#fff'
+			}),
+			animate('500ms linear', style({
+				'opacity': 1,
+				'backgroundColor': '#000'
+			}))
+		],
+		out: [
+			animate('500ms linear', style({
+				'opacity': 0,
+				'background-color': '#fff'
+			}))
+		]
+	},
 	modal: {
 		class: 'ui modal',
 		in: [
@@ -128,8 +146,6 @@ export const SEMANTIC2: IKxModalStyling = {
 };
 
 export function SEMANTIC2_AFTER_VIEW_INIT(componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) {
-	console.log('Semantic!', componentRef, renderer);
-
 	const element = componentRef.location.nativeElement;
 	const marginOffset = -(element.scrollHeight / 2);
 

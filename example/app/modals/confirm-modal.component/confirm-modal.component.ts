@@ -1,21 +1,17 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { KxModalComponent } from 'kx-modals';
 
 @Component({
 	selector: 'kx-confirm-modal',
 	templateUrl: './confirm-modal.component.html'
 })
-export class ConfirmModalComponent extends KxModalComponent<any> implements AfterViewInit, ConfirmModalConfiguration {
+export class ConfirmModalComponent extends KxModalComponent<any> implements ConfirmModalConfiguration {
 	public title = '';
 	public body = '';
 
 	public confirmLabel = 'OK';
 	public declineLabel = 'Cancel';
 	public declineCausesError = false;
-
-	ngAfterViewInit() {
-		console.log('eyo!');
-	}
 
 	public onDecline() {
 		if (this.declineCausesError) {

@@ -1,4 +1,4 @@
-import { AnimationMetadata, animate, style } from '@angular/animations';
+import { animate, style, AnimationFactory, AnimationMetadata } from '@angular/animations';
 import { ComponentFactoryResolver, ComponentRef, Injector, Renderer2 } from '@angular/core';
 
 import { KxModalComponent } from './modal.component';
@@ -162,4 +162,9 @@ export interface IKxModalStylingAnimationWithCallbacks extends IKxModalStylingAn
 	 * Hooks into the Angular component life cycle, and is ran when a modal's ``ngAfterViewInit`` is called.
 	 */
 	afterViewInit?: (componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) => void;
+}
+
+export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimationWithCallbacks {
+	inFactory?: AnimationFactory;
+	outFactory?: AnimationFactory;
 }

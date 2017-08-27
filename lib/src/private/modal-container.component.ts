@@ -1,11 +1,11 @@
 import {
 	animate, state, style, transition, trigger,
-	AnimationBuilder, AnimationFactory, AnimationMetadata
+	AnimationBuilder, AnimationFactory, AnimationMetadata, AnimationPlayer
 } from '@angular/animations';
 import {
 	Component, ComponentFactory, ComponentFactoryResolver, ComponentRef,
 	Inject,
-	OnDestroy, OnInit,
+	AfterViewInit, OnDestroy, OnInit,
 	Renderer2,
 	ViewChild, ViewContainerRef
 } from '@angular/core';
@@ -22,6 +22,7 @@ import {
 	IKxModalConfigurationValues,
 	IKxModalComponentCreationConfiguration,
 	IKxModalContainerCreator,
+	IKxModalStylingAnimationWithFactory,
 	IKxModalStylingAnimationWithCallbacks
 } from '../modal.models';
 
@@ -31,17 +32,12 @@ import { KX_MODAL_STYLING_TOKEN } from '../modal.tokens';
 
 import { Observable } from 'rxjs/Observable';
 
-export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimationWithCallbacks {
-	inFactory?: AnimationFactory;
-	outFactory?: AnimationFactory;
-}
-
 @Component({
 	selector: 'kx-modal-container',
 	template: `<div [class]="containerClasses"><ng-template #modalContainer></ng-template></div>`,
-	styles: [`.kx-modal-visible { display: block; }`]
+	styles: [`.kx-modal-visible { display: block; opacity: 1; }`]
 })
-export class KxModalContainerComponent implements IKxModalContainerCreator, OnDestroy, OnInit {
+export class KxModalContainerComponent implements IKxModalContainerCreator, AfterViewInit, OnDestroy, OnInit {
 	@ViewChild('modalContainer', { read: ViewContainerRef }) private modalComponentContainerRef: ViewContainerRef;
 	private modalComponentRefs: KxModalComponentRef<any>[] = [];
 
@@ -50,7 +46,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 	private readonly modalContainerStyling: IKxModalStylingAnimationWithFactory = null;
 	private readonly modalStyling: IKxModalStylingAnimationWithFactory = null;
 
-	private modalBackdropElement: HTMLElement = null;
+	private modalBackdropManager: KxModalContainerStaticAnimationManager = null;
+	private modalBodyManager: KxModalContainerStaticAnimationManager = null;
+	private modalContainerManager: KxModalContainerStaticAnimationManager = null;
 
 	public get modalComponentContainerRefParent(): HTMLElement {
 		if (!this.modalComponentContainerRef) {
@@ -104,6 +102,22 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 
 	ngOnInit() {
 
+	}
+
+	ngAfterViewInit() {
+		this.modalBodyManager = new KxModalContainerStaticAnimationManager(
+			this.modalComponentContainerRef,
+			document.body,
+			this.renderer,
+			this.bodyStyling
+		);
+
+		this.modalContainerManager = new KxModalContainerStaticAnimationManager(
+			this.modalComponentContainerRef,
+			this.modalComponentContainerRefParent,
+			this.renderer,
+			this.modalContainerStyling
+		);
 	}
 
 	ngOnDestroy() {
@@ -174,6 +188,8 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 
 		// create the backdrop
 		this.createModalBackdrop(configuration);
+		this.modalBodyManager.inAnimation();
+		this.modalContainerManager.inAnimation();
 
 		// values have to be inserted BEFORE the component is inserted into the containerref
 		// this ensures the values are available on a ngOnInit hook
@@ -351,6 +367,8 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 
 		// delete the modal backdrop
 		this.deleteModalBackdrop(configuration);
+		this.modalBodyManager.outAnimation();
+		this.modalContainerManager.outAnimation();
 
 		// get styling
 		const configurationStyling = this.createModalStylingPart(configuration.styling);
@@ -437,13 +455,12 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 	 */
 	private createModalBackdrop(configuration: IKxModalComponentCreationConfiguration): void {
 
-		if (!!this.modalBackdropElement) {
+		if (!!this.modalBackdropManager) {
 			return;
 		}
 
 		// create the element, apply classes & add to body
 		const backdrop = this.renderer.createElement('div');
-		this.addClasses(backdrop, this.modalBackdropStyling.class);
 		this.renderer.appendChild(this.modalComponentContainerRefParent, backdrop);
 
 		// if backdrop close is configured, start listening
@@ -451,13 +468,14 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 			this.closeTopComponentByContainerEvent('closeOnBackdropClick', $event);
 		});
 
-		// animate if set
-		this.playAnimation({
-			animate: configuration.settings.animateBackdrop,
-			animationFactory: this.modalBackdropStyling.inFactory,
-			element: backdrop
-		});
-		this.modalBackdropElement = backdrop;
+		this.modalBackdropManager = new KxModalContainerStaticAnimationManager(
+			this.modalComponentContainerRef,
+			backdrop,
+			this.renderer,
+			this.modalBackdropStyling
+		);
+
+		this.modalBackdropManager.inAnimation();
 	}
 
 	/**
@@ -465,23 +483,17 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 	 *
 	 * @param configuration The configuration used for the modal that deletes the backdrop.
 	 */
-	private deleteModalBackdrop(
-		configuration: IKxModalComponentCreationConfiguration
-	): void {
-		if (this.modalComponentContainerRef.length > 1 || !this.modalBackdropElement) {
+	private deleteModalBackdrop(configuration: IKxModalComponentCreationConfiguration): void {
+
+		if (this.modalComponentContainerRef.length > 1 || !this.modalBackdropManager) {
 			return;
 		}
 
-		const backdrop = this.modalBackdropElement;
-		this.modalBackdropElement = null;
+		const backdropManager = this.modalBackdropManager;
+		this.modalBackdropManager = null;
 
-		this.playAnimation({
-			animate: configuration.settings.animateBackdrop,
-			animationFactory: this.modalBackdropStyling.outFactory,
-			element: backdrop,
-			callback: () => {
-				this.renderer.removeChild(this.modalComponentContainerRefParent, backdrop);
-			}
+		backdropManager.outAnimation(() => {
+			this.renderer.removeChild(this.modalComponentContainerRefParent, backdropManager.element);
 		});
 	}
 
@@ -577,5 +589,69 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, OnDe
 				instance.closeSilent();
 			}
 		}
+	}
+}
+
+export class KxModalContainerStaticAnimationManager {
+	private _isVisible = false;
+	public get isVisible() {
+		return this._isVisible;
+	}
+
+	constructor(
+		private readonly viewContainerRef: ViewContainerRef,
+		public readonly element: HTMLElement,
+		private readonly renderer: Renderer2,
+		private readonly styling: IKxModalStylingAnimationWithFactory
+	) { }
+
+	public inAnimation(callback?: () => void): void {
+		callback = callback || (() => { });
+
+		if (this.viewContainerRef.length > 0 || !!this._isVisible) {
+			return;
+		}
+
+		// is now visible
+		this._isVisible = true;
+
+		// apply classes
+
+		// play animation
+		this.playAnimation(this.styling.inFactory, callback);
+	}
+
+	public outAnimation(callback?: () => void): void {
+		callback = callback || (() => { });
+
+		if (this.viewContainerRef.length > 0 || !this._isVisible) {
+			return;
+		}
+
+		// is now invisible
+		this._isVisible = false;
+
+		// remove classes
+
+		// play animation
+		this.playAnimation(this.styling.outFactory, callback);
+	}
+
+	private playAnimation(animationFactory: AnimationFactory, callback: () => void): void {
+		// check if there's actually an animation factory
+		if (!animationFactory) {
+			callback();
+			return;
+		}
+
+		console.log('Animate!', this.element);
+
+		// play the animation
+		const player = animationFactory.create(this.element);
+		player.onDone(() => {
+			callback();
+			player.destroy();
+		});
+		player.play();
 	}
 }
