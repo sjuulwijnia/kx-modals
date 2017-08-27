@@ -100,55 +100,21 @@ export const BOOTSTRAP4: IKxModalStyling = {
  * Includes animations.
  */
 export const SEMANTIC2: IKxModalStyling = {
-	body: {
-		classes: 'dimmed dimmable',
-		out: animate('500ms'),
-	},
+	body: '',
 	modalBackdrop: '',
 	modalContainer: {
-		classes: 'ui page dimmer active transition',
+		classes: 'ui transition active page dimmer',
 		in: animate('500ms'),
-		inClasses: 'animation fade in',
+		inClasses: 'animating fade in',
 		out: animate('500ms'),
-		outClasses: 'animation fade out'
-		// in: [
-		// 	style({
-		// 		'opacity': 0,
-		// 		'backgroundColor': '#fff'
-		// 	}),
-		// 	animate('500ms linear', style({
-		// 		'opacity': 1,
-		// 		'backgroundColor': '#000'
-		// 	}))
-		// ],
-		// out: [
-		// 	animate('500ms linear', style({
-		// 		'opacity': 0,
-		// 		'background-color': '#fff'
-		// 	}))
-		// ]
+		outClasses: 'animating fade out'
 	},
 	modal: {
-		classes: 'ui modal',
+		classes: 'ui transition active modal',
 		in: animate('500ms'),
+		inClasses: 'animating scale in',
 		out: animate('500ms'),
-		// in: [
-		// 	style({
-		// 		'opacity': 0,
-		// 		'transform': 'scale(0.5)'
-		// 	}),
-		// 	animate('500ms ease', style({
-		// 		'opacity': 1,
-		// 		'transform': 'scale(1)',
-		// 		'transform-origin': '50% 25%'
-		// 	}))
-		// ],
-		// out: [
-		// 	animate('500ms ease', style({
-		// 		'opacity': 0,
-		// 		'transform': 'scale(0.5)'
-		// 	}))
-		// ],
+		outClasses: 'animating scale out',
 
 		afterViewInit: SEMANTIC2_AFTER_VIEW_INIT
 	}

@@ -119,7 +119,7 @@ export class KxAppComponent {
 
 	public onNotifyBanana() {
 		this.modalService
-			.notifyCustomAnimation({
+			.notifyCustomOutAnimation({
 				title: 'Careful!',
 				body: 'There\'s a banana there!',
 

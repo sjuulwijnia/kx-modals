@@ -41,8 +41,6 @@ export class ModalService implements IKxModalService {
 		}) as ConfirmModalComponent;
 	}
 
-	public notify(title: string): NotifyModalComponent;
-	public notify(configuration: NotifyModalConfiguration): NotifyModalComponent;
 	public notify(values: string | NotifyModalConfiguration): NotifyModalComponent {
 		if (typeof values === 'string') {
 			values = {
@@ -57,9 +55,7 @@ export class ModalService implements IKxModalService {
 		}) as NotifyModalComponent;
 	}
 
-	public notifyCustomAnimation(title: string): NotifyModalComponent;
-	public notifyCustomAnimation(configuration: NotifyModalConfiguration): NotifyModalComponent;
-	public notifyCustomAnimation(values: string | NotifyModalConfiguration): NotifyModalComponent {
+	public notifyCustomOutAnimation(values: string | NotifyModalConfiguration): NotifyModalComponent {
 		if (typeof values === 'string') {
 			values = {
 				title: values
@@ -91,8 +87,6 @@ export class ModalService implements IKxModalService {
 		}) as NotifyModalComponent;
 	}
 
-	public wait(title: string): WaitModalComponent;
-	public wait(configuration: WaitModalConfiguration): WaitModalComponent;
 	public wait(values: string | WaitModalConfiguration): WaitModalComponent {
 		if (typeof values === 'string') {
 			values = {
