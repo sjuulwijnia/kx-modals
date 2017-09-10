@@ -42,16 +42,6 @@ export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	private $$isAnimating = false;
 
 	/**
-	 * Creates a new KxModalComponent.
-	 * @param args These are not used. Do whatever you want with these.
-	 *
-	 * *However*, they are required to make the modals function properly when it comes to dependency injection, so... *Keep these.*
-	 */
-	constructor(...args: any[]) {
-		super();
-	}
-
-	/**
 	 * Dummy after view init. Needs to be here, else we can't override and call it.
 	 */
 	ngAfterViewInit() { }

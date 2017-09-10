@@ -10,7 +10,7 @@
 			"dom"
 		],
 		"outDir": "../out-tsc-example",
-		"target": "es5",
+		"target": "es2016",
 		"module": "es2015",
 		"types": [],
 		"typeRoots": [
