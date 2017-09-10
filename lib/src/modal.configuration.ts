@@ -100,7 +100,7 @@ export const BOOTSTRAP4: IKxModalStyling = {
  * Includes animations.
  */
 export const SEMANTIC2: IKxModalStyling = {
-	body: '',
+	body: 'dimmable dimmed',
 	modalBackdrop: '',
 	modalContainer: {
 		classes: 'ui transition active page dimmer',
