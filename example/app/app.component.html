@@ -49,7 +49,7 @@
 			Examples
 		</h5>
 		<p>
-			Press one of the buttons to open a confirm modal.
+			Press one of the buttons to open a notify modal.
 		</p>
 		<button class="ui button" (click)="onNotifySomethingHappened()">Look out!</button>
 		<button class="ui button" (click)="onNotifyImportant()">Attention!</button>
@@ -86,6 +86,28 @@
 
 	<div class="top-offset" id="waitmodal">
 		<h3>
+			Stacking modal
+		</h3>
+		<p>
+			A modal that can stack multiple times.
+		</p>
+
+		<h5>
+			Examples
+		</h5>
+		<p>
+			Press the button to open a stacking modal.
+		</p>
+		<button class="ui button" (click)="onStack()">Stack it!</button>
+
+		<h5>
+			Code
+		</h5>
+		<kx-app-code [codeSamples]="stackingCodeSamples"></kx-app-code>
+	</div>
+
+	<div class="top-offset" id="waitmodal">
+		<h3>
 			Wait modal
 		</h3>
 		<p>
@@ -97,7 +119,7 @@
 			Examples
 		</h5>
 		<p>
-			Press one of the buttons to open a confirm modal.
+			Press one of the buttons to open a wait modal.
 		</p>
 		<button class="ui button" (click)="onWait(1)">Wait (1 second)</button>
 		<button class="ui button" (click)="onWait(5)">Wait (5 seconds)</button>

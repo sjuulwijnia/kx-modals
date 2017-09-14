@@ -46,6 +46,17 @@ export class KxAppComponent {
 		}
 	];
 
+	public stackingCodeSamples: ICodeSample[] = [
+		{
+			title: 'stacking-modal.component.ts',
+			url: 'stacking-modal.component/stacking-modal.component.ts'
+		},
+		{
+			title: 'stacking-modal.component.html',
+			url: 'stacking-modal.component/stacking-modal.component.html'
+		}
+	];
+
 	public waitCodeSamples: ICodeSample[] = [
 		{
 			title: 'wait-modal.component.ts',
@@ -93,6 +104,10 @@ export class KxAppComponent {
 					})
 					.subscribe();
 			});
+	}
+
+	public onStack() {
+		this.modalService.stacking().subscribe();
 	}
 
 	public onNotifySomethingHappened() {

@@ -1,10 +1,10 @@
 
 
-import { AnimationFactory } from '@angular/animations';
+import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { ViewContainerRef, Renderer2 } from '@angular/core';
 
 import { KxModalComponent, KxModalComponentRef } from '../../modal.component';
-import { IKxModalStylingAnimationWithFactory } from '../../modal.models';
+import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
 import { KxModalBaseAnimationManager } from './base-animation-manager';
 
 export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationManager {
@@ -13,13 +13,20 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		return this._isVisible;
 	}
 
+	private globalStyling: IKxModalStylingAnimationWithFactory = null;
+	private localStyling: IKxModalStylingAnimationWithFactory = null;
+
 	constructor(
+		animationBuilder: AnimationBuilder,
+		globalStyling: string | IKxModalStylingAnimation,
+		localStyling: string | IKxModalStylingAnimation,
 		renderer: Renderer2,
-		private readonly componentRef: KxModalComponentRef<any>,
-		private readonly localStyling: IKxModalStylingAnimationWithFactory,
-		private readonly globalStyling: IKxModalStylingAnimationWithFactory
+		private readonly componentRef: KxModalComponentRef<any>
 	) {
-		super(componentRef.location.nativeElement, renderer);
+		super(componentRef.location.nativeElement, animationBuilder, renderer);
+
+		this.globalStyling = this.createModalStylingPart(globalStyling);
+		this.localStyling = this.createModalStylingPart(localStyling);
 	}
 
 	/**
@@ -62,10 +69,12 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 	 *
 	 * @param callback The callback that needs to be called when the animation is done.
 	 */
-	public outAnimation(callback: () => void = (() => { })): boolean {
+	public outAnimation(configuration: {
+		callback?: () => void
+	}): boolean {
 
 		// configure callbacks
-		const outerCallback = callback;
+		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
 			this.removeClasses(`${this.globalStyling.outClasses} ${this.localStyling.outClasses}`);
@@ -86,6 +95,9 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 
 		// play animation
 		const isAnimating = this.playAnimation(animationFactory, innerCallback);
+
+		console.log('out!', isAnimating);
+
 		this.componentRef.instance['$$isAnimating'] = isAnimating;
 
 		return isAnimating;

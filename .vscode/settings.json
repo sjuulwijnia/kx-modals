@@ -9,7 +9,7 @@
 		"src/**/*.ngfactory.ts": true,
 		"demo/dist": true
 	},
-	"editor.detectIndentation": false,
+	"editor.detectIndentation": true,
 	"editor.renderWhitespace": "boundary",
 	"editor.insertSpaces": false,
 	"editor.trimAutoWhitespace": true,

@@ -1,14 +1,21 @@
-import { AnimationFactory } from '@angular/animations';
+import { AnimationBuilder, AnimationFactory, AnimationMetadata } from '@angular/animations';
 import { Renderer2 } from '@angular/core';
+
+import { IKxModalStylingAnimationWithFactory } from '../../modal.models';
 
 export abstract class KxModalBaseAnimationManager {
 	constructor(
 		public readonly element: HTMLElement,
-		protected readonly renderer: Renderer2
+		protected readonly animationBuilder: AnimationBuilder,
+		protected readonly renderer: Renderer2,
 	) { }
 
 	public abstract inAnimation(callback?: () => void): boolean;
-	public abstract outAnimation(callback?: () => void): boolean;
+
+	public abstract outAnimation(configuration: {
+		containerElementCount?: number,
+		callback?: () => void
+	}): boolean;
 
 	/**
 	 * Plays the animation given by the *animationFactory* on this manager's element.
@@ -26,6 +33,8 @@ export abstract class KxModalBaseAnimationManager {
 
 		// play the animation
 		const player = animationFactory.create(this.element);
+		console.log(player);
+
 		player.onDone(() => {
 			callback();
 			player.destroy();
@@ -76,5 +85,58 @@ export abstract class KxModalBaseAnimationManager {
 
 			this.renderer.removeClass(this.element, clazz);
 		}
+	}
+
+	/**
+	 * Creates the *IKxModalStylingAnimationWithFactory* that contains all styling information for this part.
+	 *
+	 * @param styling The style object to be enriched.
+	 * @return The *IKxModalStylingAnimationWithFactory* containing all styling information for this part.
+	 */
+	protected createModalStylingPart(
+		styling: string | IKxModalStylingAnimationWithFactory
+	): IKxModalStylingAnimationWithFactory {
+
+		// if there's no styling, make it a string
+		if (!styling) {
+			styling = '';
+		}
+
+		// if the styling equals a string, make it the object
+		if (typeof styling === 'string') {
+			styling = {
+				classes: styling,
+				in: 'none',
+				inClasses: '',
+				out: 'none',
+				outClasses: ''
+			};
+		}
+
+		// compose the result using the object
+		return {
+			...styling,
+
+			inFactory: this.createModalAnimationpart(styling.in),
+			outFactory: this.createModalAnimationpart(styling.out)
+		};
+	}
+
+	/**
+	 * Creates an *AnimationFactory* based on the given *animations*.
+	 *
+	 * @param animations The animations to create an *AnimationFactory* of.
+	 * @return The created *AnimationFactory* or if there are no animations.
+	 */
+	protected createModalAnimationpart(
+		animations: AnimationMetadata | AnimationMetadata[] | 'none' = 'none'
+	): AnimationFactory {
+
+		// check if there's an animation available, if not, return null
+		if (!animations || animations === 'none') {
+			return null;
+		}
+
+		return this.animationBuilder.build(animations);
 	}
 }

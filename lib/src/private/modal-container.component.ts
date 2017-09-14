@@ -17,13 +17,13 @@ import {
 import {
 	IKxModalStyling,
 	IKxModalStylingAnimation,
+	IKxModalStylingAnimationWithFactory,
+	IKxModalStylingAnimationWithCallbacks,
 	IKxModalConfiguration,
 	IKxModalConfigurationSettings,
 	IKxModalConfigurationValues,
 	IKxModalComponentCreationConfiguration,
-	IKxModalContainerCreator,
-	IKxModalStylingAnimationWithFactory,
-	IKxModalStylingAnimationWithCallbacks
+	IKxModalContainerCreator
 } from '../modal.models';
 
 import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers';
@@ -45,10 +45,10 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	@ViewChild('modalContainer', { read: ViewContainerRef }) private modalComponentContainerRef: ViewContainerRef;
 	private modalComponentRefConfigurations: KxModalComponentRefConfiguration<any>[] = [];
 
-	private readonly bodyStyling: IKxModalStylingAnimationWithFactory = null;
-	private readonly modalBackdropStyling: IKxModalStylingAnimationWithFactory = null;
-	private readonly modalContainerStyling: IKxModalStylingAnimationWithFactory = null;
-	private readonly modalStyling: IKxModalStylingAnimationWithFactory = null;
+	private readonly bodyStyling: string | IKxModalStylingAnimation = null;
+	private readonly modalBackdropStyling: string | IKxModalStylingAnimation = null;
+	private readonly modalContainerStyling: string | IKxModalStylingAnimation = null;
+	private readonly modalStyling: string | IKxModalStylingAnimationWithCallbacks = null;
 
 	private modalBackdropManager: KxModalContainerStaticAnimationManager = null;
 	private modalBodyManager: KxModalContainerStaticAnimationManager = null;
@@ -76,7 +76,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 	public get containerClasses(): string {
 		if (this.hasModals) {
-			return `${this.modalContainerStyling.classes} kx-modal-visible`;
+			return `${this.modalContainerManager.styling.classes} kx-modal-visible`;
 		}
 
 		return '';
@@ -98,10 +98,10 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	) {
 		this.modalContainerService.registerContainerComponent(this);
 
-		this.bodyStyling = this.createModalStylingPart(modalModuleStyling.body);
-		this.modalBackdropStyling = this.createModalStylingPart(modalModuleStyling.modalBackdrop);
-		this.modalContainerStyling = this.createModalStylingPart(modalModuleStyling.modalContainer);
-		this.modalStyling = this.createModalStylingPart(modalModuleStyling.modal);
+		this.bodyStyling = modalModuleStyling.body;
+		this.modalBackdropStyling = modalModuleStyling.modalBackdrop;
+		this.modalContainerStyling = modalModuleStyling.modalContainer;
+		this.modalStyling = modalModuleStyling.modal;
 	}
 
 	ngOnInit() {
@@ -110,17 +110,19 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 	ngAfterViewInit() {
 		this.modalBodyManager = new KxModalContainerStaticAnimationManager(
+			this.animationBuilder,
 			document.body,
 			this.renderer,
-			this.modalComponentContainerRef,
-			this.bodyStyling
+			this.bodyStyling,
+			this.modalComponentContainerRef
 		);
 
 		this.modalContainerManager = new KxModalContainerStaticAnimationManager(
+			this.animationBuilder,
 			this.modalComponentContainerRefParent,
 			this.renderer,
-			this.modalComponentContainerRef,
-			this.modalContainerStyling
+			this.modalContainerStyling,
+			this.modalComponentContainerRef
 		);
 	}
 
@@ -150,9 +152,6 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 			`);
 			}) as KxModalComponent<T>;
 		}
-
-		// add the component to the list of configurations
-		this.modalComponentRefConfigurations.push(componentRefConfiguration);
 
 		// subscribe on the componentRef.instance
 		// we need the subscribe().add(...) call in order to remove the modal from view again
@@ -244,10 +243,11 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		// this.attachComponentStyles(componentRef, configuration);
 		const localStyling = this.createModalStylingPart(configuration.styling);
 		const componentRefAnimationManager = new KxModalContainerModalAnimationManager(
-			this.renderer,
-			componentRef,
+			this.animationBuilder,
+			this.modalStyling,
 			localStyling,
-			this.modalStyling
+			this.renderer,
+			componentRef
 		);
 
 		componentRefAnimationManager.inAnimation();
@@ -257,14 +257,19 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 			$event['KX-MODALS-CANCELLED'] = true;
 		});
 
+		const componentRefConfiguration: KxModalComponentRefConfiguration<T> = {
+			index: this.modalComponentContainerRef.length,
+			componentRef,
+			componentRefAnimationManager
+		};
+
+		// add the component to the list of configurations
+		this.modalComponentRefConfigurations.push(componentRefConfiguration);
 
 		// update the entire container
 		this.updateContainer();
 
-		return {
-			componentRef,
-			componentRefAnimationManager
-		};
+		return componentRefConfiguration;
 	}
 
 	/**
@@ -273,7 +278,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 * @param componentRef The KxModalComponentRef which ``ngAfterViewInit`` should be augmented.
 	 */
 	private replaceComponentAfterViewInit<T>(componentRef: KxModalComponentRef<T>): void {
-		if (!this.modalStyling.afterViewInit) {
+		if (typeof (this.modalStyling) === 'string' || !this.modalStyling.afterViewInit) {
 			return;
 		}
 
@@ -329,23 +334,28 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 		// delete the modal backdrop
 		this.deleteModalBackdrop(configuration);
-		this.modalBodyManager.outAnimation();
-		this.modalContainerManager.outAnimation();
-
-		// apply outgoing classes
-		componentRefConfiguration.componentRefAnimationManager.outAnimation(() => {
-			// get the component index
-			const componentRefIndex = this.modalComponentRefConfigurations.indexOf(componentRefConfiguration);
-			if (componentRefIndex === -1) {
-				return;
-			}
-
-			this.modalComponentRefConfigurations.splice(componentRefIndex, 1);
-			componentRefConfiguration.componentRef.hostView.destroy();
-
-			// update the entire container
-			this.updateContainer();
+		this.modalBodyManager.outAnimation({
+			containerElementCount: this.modalComponentRefConfigurations.length
 		});
+		this.modalContainerManager.outAnimation({
+			containerElementCount: this.modalComponentRefConfigurations.length
+		});
+
+		console.log('destroy before!', componentRefConfiguration.index, this.modalComponentRefConfigurations.length);
+		// apply outgoing classes
+		componentRefConfiguration.componentRefAnimationManager.outAnimation({
+			callback: () => {
+				console.log('destroy after!', componentRefConfiguration.index, this.modalComponentRefConfigurations.length);
+				// componentRefConfiguration.componentRef.hostView.destroy();
+				this.modalComponentContainerRef.remove();
+			}
+		});
+
+		// remove it from the configurations
+		this.modalComponentRefConfigurations.splice(componentRefConfiguration.index, 1);
+
+		// update the entire container
+		this.updateContainer();
 	}
 
 	/**
@@ -422,10 +432,11 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		});
 
 		this.modalBackdropManager = new KxModalContainerStaticAnimationManager(
+			this.animationBuilder,
 			backdrop,
 			this.renderer,
-			this.modalComponentContainerRef,
-			this.modalBackdropStyling
+			this.modalBackdropStyling,
+			this.modalComponentContainerRef
 		);
 
 		this.modalBackdropManager.inAnimation();
@@ -438,15 +449,18 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 */
 	private deleteModalBackdrop(configuration: IKxModalComponentCreationConfiguration): void {
 
-		if (this.modalComponentContainerRef.length > 1 || !this.modalBackdropManager) {
+		if (this.modalComponentRefConfigurations.length > 1 || !this.modalBackdropManager) {
 			return;
 		}
 
 		const backdropManager = this.modalBackdropManager;
 		this.modalBackdropManager = null;
 
-		backdropManager.outAnimation(() => {
-			this.renderer.removeChild(this.modalComponentContainerRefParent, backdropManager.element);
+		backdropManager.outAnimation({
+			containerElementCount: this.modalComponentRefConfigurations.length,
+			callback: () => {
+				this.renderer.removeChild(this.modalComponentContainerRefParent, backdropManager.element);
+			}
 		});
 	}
 
@@ -474,10 +488,12 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 		modalComponent['$$modalCount'] = this.modalComponentRefConfigurations.length;
 		modalComponent['$$modalIndex'] = index;
+		modalComponentRefConfiguration.index = index;
 	}
 }
 
 export interface KxModalComponentRefConfiguration<T> {
+	index: number;
 	componentRef: KxModalComponentRef<T>;
 	componentRefAnimationManager: KxModalContainerModalAnimationManager;
 }

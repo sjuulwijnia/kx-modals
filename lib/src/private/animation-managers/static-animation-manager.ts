@@ -1,9 +1,9 @@
 
 
-import { AnimationFactory } from '@angular/animations';
+import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { ViewContainerRef, Renderer2 } from '@angular/core';
 
-import { IKxModalStylingAnimationWithFactory } from '../../modal.models';
+import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
 import { KxModalBaseAnimationManager } from './base-animation-manager';
 
 export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimationManager {
@@ -12,13 +12,18 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 		return this._isVisible;
 	}
 
+	public styling: IKxModalStylingAnimationWithFactory = null;
+
 	constructor(
+		animationBuilder: AnimationBuilder,
 		element: HTMLElement,
 		renderer: Renderer2,
-		private readonly viewContainerRef: ViewContainerRef,
-		private readonly styling: IKxModalStylingAnimationWithFactory
+		styling: string | IKxModalStylingAnimation,
+		private readonly viewContainerRef: ViewContainerRef
 	) {
-		super(element, renderer);
+		super(element, animationBuilder, renderer);
+
+		this.styling = this.createModalStylingPart(styling);
 	}
 
 	/**
@@ -54,16 +59,19 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 	 *
 	 * @param callback The callback that needs to be called when the animation is done.
 	 */
-	public outAnimation(callback?: () => void): boolean {
+	public outAnimation(configuration: {
+		containerElementCount?: number,
+		callback?: () => void
+	}): boolean {
 
 		// configure callbacks
-		const outerCallback = callback || (() => { });
+		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
 			this.removeClasses(`${this.styling.outClasses} ${this.styling.classes}`);
 		};
 
-		if (this.viewContainerRef.length > 1 || !this._isVisible) {
+		if (configuration.containerElementCount > 1 || !this._isVisible) {
 			return false;
 		}
 

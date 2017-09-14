@@ -1,10 +1,14 @@
-import { AfterViewInit, ComponentRef } from '@angular/core';
+import { AfterViewInit, ComponentRef, HostBinding } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { IKxModalComponentCreationConfiguration } from './modal.models';
 
 export type KxModalComponentRef<T> = ComponentRef<KxModalComponent<T>>;
 export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
+	@HostBinding('style.zIndex') public get styleZIndex(): number {
+		return 1041 - ((this.$$modalCount - this.$$modalIndex) * 2);
+	}
+
 	/**
 	 * The configuration used to create this modal. Is sealed.
 	 */

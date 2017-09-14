@@ -5,6 +5,7 @@ import { IKxModalConfiguration, IKxModalService, KxModalComponent, KxModalServic
 
 import { ConfirmModalComponent, ConfirmModalConfiguration } from './confirm-modal.component';
 import { NotifyModalComponent, NotifyModalConfiguration } from './notify-modal.component';
+import { StackingModalComponent, StackingModalConfiguration } from './stacking-modal.component';
 import { WaitModalComponent, WaitModalConfiguration } from './wait-modal.component';
 
 @Injectable()
@@ -26,8 +27,6 @@ export class ModalService implements IKxModalService {
 		return this.kxModalService.create<T>(modalComponent, modalConfiguration);
 	}
 
-	public confirm(title: string): ConfirmModalComponent;
-	public confirm(configuration: ConfirmModalConfiguration): ConfirmModalComponent;
 	public confirm(values: string | ConfirmModalConfiguration): ConfirmModalComponent {
 		if (typeof values === 'string') {
 			values = {
@@ -85,6 +84,10 @@ export class ModalService implements IKxModalService {
 				]
 			}
 		}) as NotifyModalComponent;
+	}
+
+	public stacking(): StackingModalComponent {
+		return this.create(StackingModalComponent) as StackingModalComponent;
 	}
 
 	public wait(values: string | WaitModalConfiguration): WaitModalComponent {
