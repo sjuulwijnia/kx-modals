@@ -95,9 +95,6 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 
 		// play animation
 		const isAnimating = this.playAnimation(animationFactory, innerCallback);
-
-		console.log('out!', isAnimating);
-
 		this.componentRef.instance['$$isAnimating'] = isAnimating;
 
 		return isAnimating;

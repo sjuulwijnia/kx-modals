@@ -33,8 +33,6 @@ export abstract class KxModalBaseAnimationManager {
 
 		// play the animation
 		const player = animationFactory.create(this.element);
-		console.log(player);
-
 		player.onDone(() => {
 			callback();
 			player.destroy();

@@ -341,11 +341,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 			containerElementCount: this.modalComponentRefConfigurations.length
 		});
 
-		console.log('destroy before!', componentRefConfiguration.index, this.modalComponentRefConfigurations.length);
 		// apply outgoing classes
 		componentRefConfiguration.componentRefAnimationManager.outAnimation({
 			callback: () => {
-				console.log('destroy after!', componentRefConfiguration.index, this.modalComponentRefConfigurations.length);
 				// componentRefConfiguration.componentRef.hostView.destroy();
 				this.modalComponentContainerRef.remove();
 			}
