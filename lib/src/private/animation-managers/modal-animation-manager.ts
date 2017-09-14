@@ -27,10 +27,10 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 	 *
 	 * @param callback The callback that needs to be called when the animation is done.
 	 */
-	public inAnimation(callback?: () => void): boolean {
+	public inAnimation(callback: () => void = (() => { })): boolean {
 
 		// configure callbacks
-		const outerCallback = callback || (() => { });
+		const outerCallback = callback;
 		const innerCallback = () => {
 			outerCallback();
 			this.componentRef.instance['$$isAnimating'] = false;
@@ -62,10 +62,10 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 	 *
 	 * @param callback The callback that needs to be called when the animation is done.
 	 */
-	public outAnimation(callback?: () => void): boolean {
+	public outAnimation(callback: () => void = (() => { })): boolean {
 
 		// configure callbacks
-		const outerCallback = callback || (() => { });
+		const outerCallback = callback;
 		const innerCallback = () => {
 			outerCallback();
 			this.removeClasses(`${this.globalStyling.outClasses} ${this.localStyling.outClasses}`);

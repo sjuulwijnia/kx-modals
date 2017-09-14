@@ -220,7 +220,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		}
 
 		// create the component from the factory; will error if it fails to initialize (missing dependencies, etc.)
-		const componentRef = componentFactory.create(configuration.injector);
+		const componentRef = componentFactory.create(configuration.injector) as KxModalComponentRef<T>;
 		if (!componentRef) {
 			return null;
 		}

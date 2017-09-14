@@ -8,7 +8,7 @@ export {
 	BOOTSTRAP4,
 	FOUNDATION6,
 	SEMANTIC2
-} from './modal.configuration';
+} from './configurations';
 
 export {
 	KxModalModule,
