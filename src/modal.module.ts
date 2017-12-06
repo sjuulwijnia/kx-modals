@@ -8,7 +8,7 @@ import { IKxModalStyling } from './modal.models';
 
 import { KX_MODAL_STYLING_TOKEN } from './modal.tokens';
 
-import 'rxjs/add/observable/fromevent';
+import 'rxjs/add/observable/fromEvent';
 
 @NgModule({
 	declarations: [

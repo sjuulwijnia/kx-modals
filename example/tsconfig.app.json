@@ -20,7 +20,7 @@
 		"rootDir": "../",
 		"paths": {
 			"kx-modals": [
-				"../lib"
+				"../index.ts"
 			]
 		}
 	},

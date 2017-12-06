@@ -1,0 +1,27 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"noImplicitAny": false,
+		"declaration": true,
+		"stripInternal": true,
+		"outDir": "dist",
+		"suppressImplicitAnyIndexErrors": true
+	},
+	"exclude": [
+		".vscode",
+		"e2e",
+		"example",
+		"factories",
+		"node_modules",
+		"semantic",
+		"**/*-aot.ts"
+	],
+	"files": [
+		"./index.ts"
+	],
+	"angularCompilerOptions": {
+		"strictMetadataEmit": true,
+		"skipMetadataEmit": false,
+		"preserveWhitespaces": false
+	}
+}

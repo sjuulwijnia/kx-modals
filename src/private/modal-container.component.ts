@@ -26,12 +26,13 @@ import {
 	IKxModalContainerCreator
 } from '../modal.models';
 
-import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers';
+import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers/index';
 import { KxModalContainerService } from './modal-container.service';
 
 import { KX_MODAL_STYLING_TOKEN } from '../modal.tokens';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
 	selector: 'kx-modal-container',
@@ -82,11 +83,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		return '';
 	}
 
-	private escapeKeydownSubscription = Observable
-		.fromEvent(document, 'keydown', $event => $event)
-		.subscribe($event => {
-			this.closeTopComponentByContainerEvent('closeOnEscape', $event);
-		});
+	private escapeKeydownSubscription: Subscription = null;
 
 	constructor(
 		private readonly animationBuilder: AnimationBuilder,
@@ -105,7 +102,11 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	}
 
 	ngOnInit() {
-
+		this.escapeKeydownSubscription = Observable
+			.fromEvent(document, 'keydown', $event => $event)
+			.subscribe($event => {
+				this.closeTopComponentByContainerEvent('closeOnEscape', $event);
+			});
 	}
 
 	ngAfterViewInit() {
@@ -344,8 +345,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		// apply outgoing classes
 		componentRefConfiguration.componentRefAnimationManager.outAnimation({
 			callback: () => {
-				// componentRefConfiguration.componentRef.hostView.destroy();
-				this.modalComponentContainerRef.remove();
+				this.modalComponentContainerRef.remove(this.modalComponentContainerRef.indexOf(componentRefConfiguration.componentRef.hostView));
 			}
 		});
 
