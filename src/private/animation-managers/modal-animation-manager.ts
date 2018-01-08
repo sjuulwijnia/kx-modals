@@ -3,7 +3,7 @@
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { ComponentRef, ViewContainerRef, Renderer2 } from '@angular/core';
 
-import { KxModalComponent, KxModalComponentRef } from '../../modal.component';
+import { KxModalComponent } from '../../modal.component';
 import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
 import { KxModalBaseAnimationManager } from './base-animation-manager';
 

@@ -5,14 +5,16 @@ import {
 } from '@angular/core';
 
 import { KxModalContainerService } from './private/modal-container.service';
-import { KxModalComponent } from './modal.component';
+import {
+	KxModalComponent,
+	KxModalComponentType
+} from './modal.component';
 import {
 	IKxModalService,
 
 	IKxModalConfiguration,
 	IKxModalConfigurationSettings,
-	IKxModalConfigurationValues,
-	IKxModalComponentType
+	IKxModalConfigurationValues
 } from './modal.models';
 
 import { Observable } from 'rxjs/Observable';
@@ -42,7 +44,7 @@ export class KxModalService implements IKxModalService {
 	 * *Default: empty (undefined)*
 	 */
 	public create<T extends KxModalComponent<D>, D>(
-		modalComponent: IKxModalComponentType<T, D>,
+		modalComponent: KxModalComponentType<T, D>,
 		modalConfiguration?: IKxModalConfiguration
 	): T {
 		modalConfiguration = modalConfiguration || {};

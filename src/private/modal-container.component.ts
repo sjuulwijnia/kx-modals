@@ -11,8 +11,7 @@ import {
 } from '@angular/core';
 
 import {
-	KxModalComponent,
-	KxModalComponentRef
+	KxModalComponent
 } from '../modal.component';
 import {
 	IKxModalStyling,
@@ -151,14 +150,12 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 				Are you sure it has been added to the entryComponent of the containing NgModule?
 				Can all dependencies be resolved?
 			`);
-			}) as any;
-			// TODO: fix any
+			}) as T;
 		}
 
 		// subscribe on the componentRef.instance
 		// we need the subscribe().add(...) call in order to remove the modal from view again
-		// TODO: remove any
-		(componentRefConfiguration.componentRef.instance as any)
+		componentRefConfiguration.componentRef.instance
 			.subscribe({
 				// must catch errors to avoid uncaught exceptions
 				error: () => { }
@@ -312,8 +309,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		configuration: IKxModalComponentCreationConfiguration<T, D>
 	): void {
 
-		(componentRef.instance as any).configuration = Object.seal(configuration);
-		// TODO: remove any
+		componentRef.instance.configuration = Object.seal(configuration);
 
 		const values = configuration.values;
 		if (!values) {

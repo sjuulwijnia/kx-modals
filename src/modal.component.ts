@@ -3,7 +3,10 @@ import { Subject } from 'rxjs/Subject';
 
 import { IKxModalComponentCreationConfiguration } from './modal.models';
 
-export type KxModalComponentRef<T> = ComponentRef<KxModalComponent<T>>;
+export interface KxModalComponentType<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE> {
+	new(...args: any[]): MODAL_COMPONENT;
+}
+
 export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	@HostBinding('style.zIndex') public get styleZIndex(): number {
 		return 1041 - ((this.$$modalCount - this.$$modalIndex) * 2);

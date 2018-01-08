@@ -1,6 +1,6 @@
 import {
 	KxModalComponent,
-	KxModalComponentRef
+	KxModalComponentType
 } from './src/modal.component';
 
 import {
@@ -16,7 +16,6 @@ import {
 } from './src/modal.module';
 
 import {
-	IKxModalComponentType,
 	IKxModalService,
 
 	IKxModalStyling,
@@ -40,8 +39,8 @@ import {
 } from './src/modal.tokens';
 
 export {
+	KxModalComponentType,
 	KxModalComponent,
-	KxModalComponentRef,
 
 	KxModalModule,
 	KxModalRootModule,
@@ -49,7 +48,6 @@ export {
 	KxModalService,
 	IKxModalService,
 
-	IKxModalComponentType,
 	IKxModalStyling,
 	IKxModalStylingAnimation,
 

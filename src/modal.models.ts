@@ -1,11 +1,10 @@
 import { animate, style, AnimationFactory, AnimationMetadata } from '@angular/animations';
 import { ComponentFactoryResolver, ComponentRef, Injector, Renderer2 } from '@angular/core';
 
-import { KxModalComponent } from './modal.component';
-
-export interface IKxModalComponentType<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE> {
-	new(...args: any[]): MODAL_COMPONENT;
-}
+import {
+	KxModalComponent,
+	KxModalComponentType
+} from './modal.component';
 
 export interface IKxModalContainerService {
 	/**
@@ -33,12 +32,12 @@ export interface IKxModalContainerCreator extends IKxModalContainerService {
 
 export interface IKxModalService extends IKxModalContainerService {
 	create<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE>(
-		modalComponent: IKxModalComponentType<MODAL_COMPONENT, RETURN_TYPE>, modalConfiguration?: IKxModalConfiguration
+		modalComponent: KxModalComponentType<MODAL_COMPONENT, RETURN_TYPE>, modalConfiguration?: IKxModalConfiguration
 	): MODAL_COMPONENT;
 }
 
 export interface IKxModalComponentCreationConfiguration<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE> extends IKxModalConfiguration {
-	component: IKxModalComponentType<MODAL_COMPONENT, RETURN_TYPE>;
+	component: KxModalComponentType<MODAL_COMPONENT, RETURN_TYPE>;
 	componentFactoryResolver: ComponentFactoryResolver;
 	injector: Injector;
 }

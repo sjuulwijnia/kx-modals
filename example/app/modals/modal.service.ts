@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { animate, style } from '@angular/animations';
 
 import {
-	IKxModalComponentType,
+	KxModalComponentType,
 	IKxModalConfiguration,
 	IKxModalService,
 	KxModalComponent,
@@ -29,7 +29,7 @@ export class ModalService implements IKxModalService {
 		public readonly kxModalService: KxModalService
 	) { }
 
-	public create<T extends KxModalComponent<D>, D>(modalComponent: IKxModalComponentType<T, D>, modalConfiguration?: IKxModalConfiguration): T {
+	public create<T extends KxModalComponent<D>, D>(modalComponent: KxModalComponentType<T, D>, modalConfiguration?: IKxModalConfiguration): T {
 		return this.kxModalService.create<T, D>(modalComponent, modalConfiguration);
 	}
 
