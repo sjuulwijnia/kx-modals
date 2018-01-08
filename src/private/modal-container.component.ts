@@ -36,7 +36,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
 	selector: 'kx-modal-container',
 	template: `
-		<div (click)="closeTopComponentByContainerEvent('closeOnBackdropClick', $event)">
+		<div (click)="closeOnBackdropClick($event)">
 			<ng-template #modalContainer></ng-template>
 		</div>`,
 	styles: [`.kx-modal-visible { display: block; opacity: 1; }`]
@@ -102,9 +102,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 	ngOnInit() {
 		this.escapeKeydownSubscription = Observable
-			.fromEvent(document, 'keydown', $event => $event)
+			.fromEvent(document, 'keydown', $event => ($event as KeyboardEvent))
 			.subscribe($event => {
-				this.closeTopComponentByContainerEvent('closeOnEscape', $event);
+				this.closeOnEscape($event);
 			});
 	}
 
@@ -167,14 +167,24 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		return componentRefConfiguration.componentRef.instance;
 	}
 
+	public closeOnBackdropClick($event: MouseEvent) {
+		this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnBackdropClick, $event);
+	}
+
+	public closeOnEscape($event: KeyboardEvent) {
+		if ($event.code === 'Escape') {
+			this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnEscape, $event);
+		}
+	}
+
 	/**
 	 * Takes the top KxModalComponent and closes it if the eventType is configured to close it.
 	 *
 	 * @param eventType The eventType that closes the upper componentRef.
 	 * @param $event The event that triggered the closing.
 	 */
-	public closeTopComponentByContainerEvent(
-		eventType: 'closeOnEscape' | 'closeOnBackdropClick',
+	private closeTopComponentByContainerEvent(
+		eventType: KxModalComponentCloseReason,
 		$event: Event
 	): void {
 
@@ -426,7 +436,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 		// if backdrop close is configured, start listening
 		this.renderer.listen(backdrop, 'click', $event => {
-			this.closeTopComponentByContainerEvent('closeOnBackdropClick', $event);
+			this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnBackdropClick, $event);
 		});
 
 		this.modalBackdropManager = new KxModalContainerStaticAnimationManager(
@@ -488,6 +498,11 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		modalComponent['$$modalIndex'] = index;
 		modalComponentRefConfiguration.index = index;
 	}
+}
+
+export enum KxModalComponentCloseReason {
+	CloseOnBackdropClick = 'closeOnBackdropClick',
+	CloseOnEscape = 'closeOnEscape'
 }
 
 export interface KxModalComponentRefConfiguration<T> {
