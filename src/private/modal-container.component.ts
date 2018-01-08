@@ -138,12 +138,12 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 * @param configuration Configuration to use for creating the modal.
 	 * @return The created modal.
 	 */
-	public create<T>(
-		configuration: IKxModalComponentCreationConfiguration
-	): KxModalComponent<T> {
+	public create<T extends KxModalComponent<D>, D>(
+		configuration: IKxModalComponentCreationConfiguration<T, D>
+	): T {
 
 		// create the modal component
-		const componentRefConfiguration = this.createModalComponent<T>(configuration);
+		const componentRefConfiguration = this.createModalComponent<T, D>(configuration);
 		if (!componentRefConfiguration) {
 			return new Observable(observer => {
 				observer.error(`
@@ -151,12 +151,14 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 				Are you sure it has been added to the entryComponent of the containing NgModule?
 				Can all dependencies be resolved?
 			`);
-			}) as KxModalComponent<T>;
+			}) as any;
+			// TODO: fix any
 		}
 
 		// subscribe on the componentRef.instance
 		// we need the subscribe().add(...) call in order to remove the modal from view again
-		componentRefConfiguration.componentRef.instance
+		// TODO: remove any
+		(componentRefConfiguration.componentRef.instance as any)
 			.subscribe({
 				// must catch errors to avoid uncaught exceptions
 				error: () => { }
@@ -209,8 +211,8 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 * @param configuration The configuration used to create the new modal.
 	 * @return The created KxModalComponentRef.
 	 */
-	private createModalComponent<T>(
-		configuration: IKxModalComponentCreationConfiguration
+	private createModalComponent<T extends KxModalComponent<D>, D>(
+		configuration: IKxModalComponentCreationConfiguration<T, D>
 	): KxModalComponentRefConfiguration<T> {
 
 		// retrieve the component factory; will error if it can't find the given ModalComponent as an entryComponent
@@ -220,7 +222,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		}
 
 		// create the component from the factory; will error if it fails to initialize (missing dependencies, etc.)
-		const componentRef = componentFactory.create(configuration.injector) as KxModalComponentRef<T>;
+		const componentRef = componentFactory.create(configuration.injector) as ComponentRef<T>;
 		if (!componentRef) {
 			return null;
 		}
@@ -278,7 +280,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 *
 	 * @param componentRef The KxModalComponentRef which ``ngAfterViewInit`` should be augmented.
 	 */
-	private replaceComponentAfterViewInit<T>(componentRef: KxModalComponentRef<T>): void {
+	private replaceComponentAfterViewInit<T>(componentRef: ComponentRef<T>): void {
 		if (typeof (this.modalStyling) === 'string' || !this.modalStyling.afterViewInit) {
 			return;
 		}
@@ -305,12 +307,14 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 * @param componentRef The KxModalComponentRef to apply these values on.
 	 * @param configuration The configuration that needs to be applied on the KxModalComponentRef.
 	 */
-	private insertComponentValues<T>(
-		componentRef: KxModalComponentRef<T>,
-		configuration: IKxModalComponentCreationConfiguration
+	private insertComponentValues<T extends KxModalComponent<D>, D>(
+		componentRef: ComponentRef<T>,
+		configuration: IKxModalComponentCreationConfiguration<T, D>
 	): void {
 
-		componentRef.instance.configuration = Object.seal(configuration);
+		(componentRef.instance as any).configuration = Object.seal(configuration);
+		// TODO: remove any
+
 		const values = configuration.values;
 		if (!values) {
 			return;
@@ -328,9 +332,9 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 * @param componentRef The KxModalComponentRef to be removed from the view.
 	 * @param configuration The configuration used to create this KxModalComponentRef.
 	 */
-	private deleteModalComponent<T>(
+	private deleteModalComponent<T extends KxModalComponent<D>, D>(
 		componentRefConfiguration: KxModalComponentRefConfiguration<T>,
-		configuration: IKxModalComponentCreationConfiguration
+		configuration: IKxModalComponentCreationConfiguration<T, D>
 	): void {
 
 		// delete the modal backdrop
@@ -414,7 +418,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 *
 	 * @param configuration The configuration used for the modal that created the backdrop.
 	 */
-	private createModalBackdrop(configuration: IKxModalComponentCreationConfiguration): void {
+	private createModalBackdrop<T extends KxModalComponent<D>, D>(configuration: IKxModalComponentCreationConfiguration<T, D>): void {
 
 		if (!!this.modalBackdropManager) {
 			return;
@@ -445,7 +449,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 *
 	 * @param configuration The configuration used for the modal that deletes the backdrop.
 	 */
-	private deleteModalBackdrop(configuration: IKxModalComponentCreationConfiguration): void {
+	private deleteModalBackdrop<T extends KxModalComponent<D>, D>(configuration: IKxModalComponentCreationConfiguration<T, D>): void {
 
 		if (this.modalComponentRefConfigurations.length > 1 || !this.modalBackdropManager) {
 			return;
@@ -492,6 +496,6 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 export interface KxModalComponentRefConfiguration<T> {
 	index: number;
-	componentRef: KxModalComponentRef<T>;
+	componentRef: ComponentRef<T>;
 	componentRefAnimationManager: KxModalContainerModalAnimationManager;
 }

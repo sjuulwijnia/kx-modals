@@ -1,7 +1,7 @@
 
 
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import { ViewContainerRef, Renderer2 } from '@angular/core';
+import { ComponentRef, ViewContainerRef, Renderer2 } from '@angular/core';
 
 import { KxModalComponent, KxModalComponentRef } from '../../modal.component';
 import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
@@ -21,7 +21,7 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		globalStyling: string | IKxModalStylingAnimation,
 		localStyling: string | IKxModalStylingAnimation,
 		renderer: Renderer2,
-		private readonly componentRef: KxModalComponentRef<any>
+		private readonly componentRef: ComponentRef<any>
 	) {
 		super(componentRef.location.nativeElement, animationBuilder, renderer);
 

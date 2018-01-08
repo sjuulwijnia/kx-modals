@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { animate, style } from '@angular/animations';
 
-import { IKxModalConfiguration, IKxModalService, KxModalComponent, KxModalService } from 'kx-modals';
+import {
+	IKxModalComponentType,
+	IKxModalConfiguration,
+	IKxModalService,
+	KxModalComponent,
+	KxModalService
+} from 'kx-modals';
 
 import { ConfirmModalComponent, ConfirmModalConfiguration } from './confirm-modal.component';
 import { NotifyModalComponent, NotifyModalConfiguration } from './notify-modal.component';
@@ -23,11 +29,11 @@ export class ModalService implements IKxModalService {
 		public readonly kxModalService: KxModalService
 	) { }
 
-	public create<T>(modalComponent: typeof KxModalComponent, modalConfiguration?: IKxModalConfiguration) {
-		return this.kxModalService.create<T>(modalComponent, modalConfiguration);
+	public create<T extends KxModalComponent<D>, D>(modalComponent: IKxModalComponentType<T, D>, modalConfiguration?: IKxModalConfiguration): T {
+		return this.kxModalService.create<T, D>(modalComponent, modalConfiguration);
 	}
 
-	public confirm(values: string | ConfirmModalConfiguration): ConfirmModalComponent {
+	public confirm(values: string | ConfirmModalConfiguration) {
 		if (typeof values === 'string') {
 			values = {
 				title: values
@@ -37,10 +43,10 @@ export class ModalService implements IKxModalService {
 		return this.create(ConfirmModalComponent, {
 			values: values,
 			styling: 'tiny'
-		}) as ConfirmModalComponent;
+		});
 	}
 
-	public notify(values: string | NotifyModalConfiguration): NotifyModalComponent {
+	public notify(values: string | NotifyModalConfiguration) {
 		if (typeof values === 'string') {
 			values = {
 				title: values
@@ -51,10 +57,10 @@ export class ModalService implements IKxModalService {
 			values: values,
 
 			styling: 'tiny'
-		}) as NotifyModalComponent;
+		});
 	}
 
-	public notifyCustomOutAnimation(values: string | NotifyModalConfiguration): NotifyModalComponent {
+	public notifyCustomOutAnimation(values: string | NotifyModalConfiguration) {
 		if (typeof values === 'string') {
 			values = {
 				title: values
@@ -83,14 +89,14 @@ export class ModalService implements IKxModalService {
 					}))
 				]
 			}
-		}) as NotifyModalComponent;
+		});
 	}
 
 	public stacking(): StackingModalComponent {
-		return this.create(StackingModalComponent) as StackingModalComponent;
+		return this.create(StackingModalComponent);
 	}
 
-	public wait(values: string | WaitModalConfiguration): WaitModalComponent {
+	public wait(values: string | WaitModalConfiguration) {
 		if (typeof values === 'string') {
 			values = {
 				title: values
@@ -106,6 +112,6 @@ export class ModalService implements IKxModalService {
 			},
 
 			styling: (values.basic ? 'basic' : 'tiny')
-		}) as WaitModalComponent;
+		});
 	}
 }

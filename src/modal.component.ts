@@ -12,7 +12,7 @@ export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	/**
 	 * The configuration used to create this modal. Is sealed.
 	 */
-	public configuration: IKxModalComponentCreationConfiguration = null;
+	public configuration: IKxModalComponentCreationConfiguration<any, T> = null;
 
 	/**
 	 * Number of modals in the parent KxModalContainerComponent.

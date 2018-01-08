@@ -11,7 +11,8 @@ import {
 
 	IKxModalConfiguration,
 	IKxModalConfigurationSettings,
-	IKxModalConfigurationValues
+	IKxModalConfigurationValues,
+	IKxModalComponentType
 } from './modal.models';
 
 import { Observable } from 'rxjs/Observable';
@@ -40,10 +41,10 @@ export class KxModalService implements IKxModalService {
 	 *
 	 * *Default: empty (undefined)*
 	 */
-	public create<T>(
-		modalComponent: typeof KxModalComponent,
+	public create<T extends KxModalComponent<D>, D>(
+		modalComponent: IKxModalComponentType<T, D>,
 		modalConfiguration?: IKxModalConfiguration
-	): KxModalComponent<T> {
+	): T {
 		modalConfiguration = modalConfiguration || {};
 
 		modalConfiguration.settings = {
@@ -64,7 +65,7 @@ export class KxModalService implements IKxModalService {
 		};
 		modalConfiguration.values = modalConfiguration.values || {};
 
-		return this.kxModalContainerService.create<T>({
+		return this.kxModalContainerService.create<T, D>({
 			component: modalComponent,
 			componentFactoryResolver: this.componentFactoryResolver,
 			injector: this.injector,

@@ -16,6 +16,7 @@ import {
 } from './src/modal.module';
 
 import {
+	IKxModalComponentType,
 	IKxModalService,
 
 	IKxModalStyling,
@@ -48,6 +49,7 @@ export {
 	KxModalService,
 	IKxModalService,
 
+	IKxModalComponentType,
 	IKxModalStyling,
 	IKxModalStylingAnimation,
 

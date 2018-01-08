@@ -3,14 +3,8 @@ import { ComponentFactoryResolver, ComponentRef, Injector, Renderer2 } from '@an
 
 import { KxModalComponent } from './modal.component';
 
-export interface IKxModalContainerCreator extends IKxModalContainerService {
-	/**
-	 * Creates a modal using the given *configuration*.
-	 *
-	 * @param configuration Configuration to use for creating the modal.
-	 * @return The created modal.
-	 */
-	create<T>(configuration: IKxModalComponentCreationConfiguration): KxModalComponent<T>;
+export interface IKxModalComponentType<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE> {
+	new(...args: any[]): MODAL_COMPONENT;
 }
 
 export interface IKxModalContainerService {
@@ -25,12 +19,26 @@ export interface IKxModalContainerService {
 	readonly modalCount: number;
 }
 
-export interface IKxModalService extends IKxModalContainerService {
-	create<T>(modalComponent: typeof KxModalComponent, modalConfiguration?: IKxModalConfiguration): KxModalComponent<T>;
+export interface IKxModalContainerCreator extends IKxModalContainerService {
+	/**
+	 * Creates a modal using the given *configuration*.
+	 *
+	 * @param configuration Configuration to use for creating the modal.
+	 * @return The created modal.
+	 */
+	create<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE>(
+		configuration: IKxModalComponentCreationConfiguration<MODAL_COMPONENT, RETURN_TYPE>
+	): MODAL_COMPONENT;
 }
 
-export interface IKxModalComponentCreationConfiguration extends IKxModalConfiguration {
-	component: typeof KxModalComponent;
+export interface IKxModalService extends IKxModalContainerService {
+	create<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE>(
+		modalComponent: IKxModalComponentType<MODAL_COMPONENT, RETURN_TYPE>, modalConfiguration?: IKxModalConfiguration
+	): MODAL_COMPONENT;
+}
+
+export interface IKxModalComponentCreationConfiguration<MODAL_COMPONENT extends KxModalComponent<RETURN_TYPE>, RETURN_TYPE> extends IKxModalConfiguration {
+	component: IKxModalComponentType<MODAL_COMPONENT, RETURN_TYPE>;
 	componentFactoryResolver: ComponentFactoryResolver;
 	injector: Injector;
 }
