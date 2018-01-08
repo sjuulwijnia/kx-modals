@@ -52,7 +52,7 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		this._isVisible = true;
 
 		// apply in classes
-		this.applyClasses(`${this.globalStyling.inClasses} ${this.globalStyling.classes} ${this.localStyling.inClasses} ${this.localStyling.classes}`);
+		this.applyClasses(`${this.globalStyling.inClasses || ''} ${this.globalStyling.classes || ''} ${this.localStyling.inClasses || ''} ${this.localStyling.classes || ''}`);
 
 		// determine animationFactory
 		const animationFactory = this.determineAnimationFactory(this.localStyling, this.globalStyling, 'in');
@@ -88,7 +88,7 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		this._isVisible = false;
 
 		// apply out classes
-		this.applyClasses(`${this.globalStyling.outClasses} ${this.localStyling.outClasses}`);
+		this.applyClasses(`${this.globalStyling.outClasses || ''} ${this.localStyling.outClasses || ''}`);
 
 		// determine animationFactory
 		const animationFactory = this.determineAnimationFactory(this.localStyling, this.globalStyling, 'out');

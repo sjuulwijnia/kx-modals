@@ -48,7 +48,7 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 		this._isVisible = true;
 
 		// apply in classes
-		this.applyClasses(`${this.styling.inClasses} ${this.styling.classes}`);
+		this.applyClasses(`${this.styling.inClasses || ''} ${this.styling.classes || ''}`);
 
 		// play animation
 		return this.playAnimation(this.styling.inFactory, innerCallback);
@@ -68,7 +68,7 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
-			this.removeClasses(`${this.styling.outClasses} ${this.styling.classes}`);
+			this.removeClasses(`${this.styling.outClasses || ''} ${this.styling.classes || ''}`);
 		};
 
 		if (configuration.containerElementCount > 1 || !this._isVisible) {
