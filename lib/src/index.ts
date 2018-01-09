@@ -36,4 +36,4 @@ export {
 
 export {
 	KX_MODAL_STYLING_TOKEN
-} from './modal.tokens';
+} from './modal.configuration';

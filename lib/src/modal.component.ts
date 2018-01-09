@@ -1,13 +1,18 @@
 import { AfterViewInit, ComponentRef, HostBinding } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
+import { KX_MODAL_BACKDROP_ZINDEX } from './modal.configuration';
+
 import { IKxModalComponentCreationConfiguration } from './modal.models';
+import { IKxModalContainerItemComponent } from './private/modal-container.models';
 
 export type KxModalComponentRef<T> = ComponentRef<KxModalComponent<T>>;
 export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	@HostBinding('style.zIndex') public get styleZIndex(): number {
-		return 1041 - ((this.$$modalCount - this.$$modalIndex) * 2);
+		return KX_MODAL_BACKDROP_ZINDEX + 5 - ((this.$$modalCount - this.$$modalIndex - 1) * 2);
 	}
+
+	private modalContainerItem: IKxModalContainerItemComponent = null;
 
 	/**
 	 * The configuration used to create this modal. Is sealed.
@@ -44,6 +49,16 @@ export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 		return this.$$isAnimating;
 	}
 	private $$isAnimating = false;
+
+	/**
+	 * Creates a new KxModalComponent.
+	 * @param args These are not used. Do whatever you want with these.
+	 *
+	 * *However*, they are required to make the modals function properly when it comes to dependency injection, so... *Keep these.*
+	 */
+	constructor(...args: any[]) {
+		super();
+	}
 
 	/**
 	 * Dummy after view init. Needs to be here, else we can't override and call it.
@@ -85,5 +100,13 @@ export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	 */
 	public closeError(reason?: any) {
 		this.error(reason);
+	}
+
+	public show() {
+		this.modalContainerItem.show();
+	}
+
+	public hide() {
+		this.modalContainerItem.hide();
 	}
 }

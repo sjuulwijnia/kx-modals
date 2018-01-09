@@ -10,7 +10,7 @@ export class StackingModalComponent extends KxModalComponent<any> implements Sta
 	public index = 1;
 
 	constructor(
-		public kxModalService?: KxModalService
+		public kxModalService: KxModalService
 	) {
 		super();
 	}
@@ -20,10 +20,13 @@ export class StackingModalComponent extends KxModalComponent<any> implements Sta
 	}
 
 	public onStackModal() {
+		this.hide();
 		this.kxModalService.create(StackingModalComponent, {
 			values: {
 				index: (this.index + 1)
 			}
+		}).subscribe({
+			complete: () => { this.show(); }
 		});
 	}
 }

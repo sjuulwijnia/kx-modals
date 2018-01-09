@@ -175,7 +175,7 @@ export interface IKxModalStylingAnimationWithCallbacks extends IKxModalStylingAn
 	/**
 	 * Hooks into the Angular component life cycle, and is ran when a modal's ``ngAfterViewInit`` is called.
 	 */
-	afterViewInit?: (componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) => void;
+	ngAfterViewInit?: (componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) => void;
 }
 
 export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimationWithCallbacks {

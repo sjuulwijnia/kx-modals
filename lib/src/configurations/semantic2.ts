@@ -26,7 +26,7 @@ export const SEMANTIC2: IKxModalStyling = {
 		out: animate('500ms'),
 		outClasses: 'animating scale out',
 
-		afterViewInit: SEMANTIC2_AFTER_VIEW_INIT
+		ngAfterViewInit: SEMANTIC2_AFTER_VIEW_INIT
 	}
 };
 

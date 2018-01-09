@@ -18,9 +18,9 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 		animationBuilder: AnimationBuilder,
 		element: HTMLElement,
 		renderer: Renderer2,
-		styling: string | IKxModalStylingAnimation,
-		private readonly viewContainerRef: ViewContainerRef
+		styling: string | IKxModalStylingAnimation
 	) {
+
 		super(element, animationBuilder, renderer);
 
 		this.styling = this.createModalStylingPart(styling);
@@ -31,16 +31,19 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 	 *
 	 * @param callback The callback that needs to be called when the animation is done.
 	 */
-	public inAnimation(callback?: () => void): boolean {
+	public inAnimation(configuration: {
+		containerElementCount?: number,
+		callback?: () => void
+	}): boolean {
 
 		// configure callbacks
-		const outerCallback = callback || (() => { });
+		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
 			this.removeClasses(this.styling.inClasses);
 		};
 
-		if (this.viewContainerRef.length > 0 || !!this._isVisible) {
+		if (configuration.containerElementCount > 1 || !!this._isVisible) {
 			return false;
 		}
 
@@ -48,7 +51,8 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 		this._isVisible = true;
 
 		// apply in classes
-		this.applyClasses(`${this.styling.inClasses} ${this.styling.classes}`);
+		this.applyClasses(this.styling.inClasses || '');
+		this.applyClasses(this.styling.classes || '');
 
 		// play animation
 		return this.playAnimation(this.styling.inFactory, innerCallback);
@@ -68,10 +72,11 @@ export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimation
 		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
-			this.removeClasses(`${this.styling.outClasses} ${this.styling.classes}`);
+			this.removeClasses(this.styling.outClasses || '');
+			this.removeClasses(this.styling.classes || '');
 		};
 
-		if (configuration.containerElementCount > 1 || !this._isVisible) {
+		if (configuration.containerElementCount > 0 || !this._isVisible) {
 			return false;
 		}
 

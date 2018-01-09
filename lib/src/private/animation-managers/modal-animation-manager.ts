@@ -52,7 +52,10 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		this._isVisible = true;
 
 		// apply in classes
-		this.applyClasses(`${this.globalStyling.inClasses} ${this.globalStyling.classes} ${this.localStyling.inClasses} ${this.localStyling.classes}`);
+		this.applyClasses(this.globalStyling.inClasses || '');
+		this.applyClasses(this.globalStyling.classes || '');
+		this.applyClasses(this.localStyling.inClasses || '');
+		this.applyClasses(this.localStyling.classes || '');
 
 		// determine animationFactory
 		const animationFactory = this.determineAnimationFactory(this.localStyling, this.globalStyling, 'in');
