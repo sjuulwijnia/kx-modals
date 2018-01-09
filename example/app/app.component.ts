@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { ICodeSample } from './app-code.component';
+import { ICodeSample, KxAppCodeComponent } from './app-code.component';
 import { ModalService } from './modals/modal.service';
 
 import { Observable } from 'rxjs/Observable';

@@ -11,8 +11,7 @@ import {
 } from '@angular/core';
 
 import {
-	KxModalComponent,
-	KxModalComponentRef
+	KxModalComponent
 } from '../modal.component';
 
 import {
@@ -27,7 +26,7 @@ import {
 	IKxModalContainerCreator
 } from '../modal.models';
 
-import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers';
+import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers/index';
 
 import { KxModalContainerItemComponent } from './modal-container-item.component';
 import { KxModalContainerService } from './modal-container.service';
@@ -35,6 +34,7 @@ import { KxModalContainerService } from './modal-container.service';
 import { KX_MODAL_STYLING_TOKEN, KX_MODAL_BACKDROP_ZINDEX } from '../modal.configuration';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
 	selector: 'kx-modal-container',
@@ -73,11 +73,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		return this.modalContainerRef.length;
 	}
 
-	private escapeKeydownSubscription = Observable
-		.fromEvent(document, 'keydown', $event => $event)
-		.subscribe($event => {
-			this.closeTopComponentByContainerEvent('closeOnEscape', $event);
-		});
+	private escapeKeydownSubscription: Subscription = null;
 
 	constructor(
 		private readonly animationBuilder: AnimationBuilder,
@@ -97,7 +93,11 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	}
 
 	ngOnInit() {
-
+		this.escapeKeydownSubscription = Observable
+			.fromEvent(document, 'keydown', $event => ($event as KeyboardEvent))
+			.subscribe($event => {
+				this.closeOnEscape($event);
+			});
 	}
 
 	ngAfterViewInit() {
@@ -120,13 +120,13 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	 * @param configuration Configuration to use for creating the modal.
 	 * @return The created modal.
 	 */
-	public create<T>(
-		configuration: IKxModalComponentCreationConfiguration
-	): KxModalComponent<T> {
+	public create<MC extends KxModalComponent<RT>, RT>(
+		configuration: IKxModalComponentCreationConfiguration<MC, RT>
+	): MC {
 
 		const containerItemFactory = this.componentFactoryResolver.resolveComponentFactory(KxModalContainerItemComponent);
 		const containerItem = containerItemFactory.create(this.injector);
-		const containerItemInstance = containerItem.instance;
+		const containerItemInstance = containerItem.instance as KxModalContainerItemComponent<MC, RT>;
 
 		containerItemInstance.modalComponentConfiguration = configuration;
 		containerItemInstance.modalContainerItemComponentRef = containerItem;
@@ -172,14 +172,24 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		});
 	}
 
+	public closeOnBackdropClick($event: MouseEvent) {
+		this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnBackdropClick, $event);
+	}
+
+	public closeOnEscape($event: KeyboardEvent) {
+		if ($event.code === 'Escape') {
+			this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnEscape, $event);
+		}
+	}
+
 	/**
 	 * Takes the top KxModalComponent and closes it if the eventType is configured to close it.
 	 *
 	 * @param eventType The eventType that closes the upper componentRef.
 	 * @param $event The event that triggered the closing.
 	 */
-	public closeTopComponentByContainerEvent(
-		eventType: 'closeOnEscape' | 'closeOnBackdropClick',
+	private closeTopComponentByContainerEvent(
+		eventType: KxModalComponentCloseReason,
 		$event: Event
 	): void {
 
@@ -279,7 +289,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 		// if backdrop close is configured, start listening
 		this.renderer.listen(backdrop, 'click', $event => {
-			this.closeTopComponentByContainerEvent('closeOnBackdropClick', $event);
+			this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnBackdropClick, $event);
 		});
 
 		this.modalBackdropManager = new KxModalContainerStaticAnimationManager(
@@ -327,8 +337,13 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 	}
 }
 
+export enum KxModalComponentCloseReason {
+	CloseOnBackdropClick = 'closeOnBackdropClick',
+	CloseOnEscape = 'closeOnEscape'
+}
+
 export interface KxModalComponentRefConfiguration<T> {
 	index: number;
-	componentRef: KxModalComponentRef<T>;
+	componentRef: ComponentRef<T>;
 	componentRefAnimationManager: KxModalContainerModalAnimationManager;
 }

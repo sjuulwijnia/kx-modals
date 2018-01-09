@@ -1,17 +1,10 @@
 import { animate, style, AnimationFactory, AnimationMetadata } from '@angular/animations';
 import { ComponentFactoryResolver, ComponentRef, Injector, Renderer2 } from '@angular/core';
 
-import { KxModalComponent } from './modal.component';
-
-export interface IKxModalContainerCreator extends IKxModalContainerService {
-	/**
-	 * Creates a modal using the given *configuration*.
-	 *
-	 * @param configuration Configuration to use for creating the modal.
-	 * @return The created modal.
-	 */
-	create<T>(configuration: IKxModalComponentCreationConfiguration): KxModalComponent<T>;
-}
+import {
+	KxModalComponent,
+	KxModalComponentType
+} from './modal.component';
 
 export interface IKxModalContainerService {
 	/**
@@ -25,12 +18,26 @@ export interface IKxModalContainerService {
 	readonly modalCount: number;
 }
 
-export interface IKxModalService extends IKxModalContainerService {
-	create<T>(modalComponent: typeof KxModalComponent, modalConfiguration?: IKxModalConfiguration): KxModalComponent<T>;
+export interface IKxModalContainerCreator extends IKxModalContainerService {
+	/**
+	 * Creates a modal using the given *configuration*.
+	 *
+	 * @param configuration Configuration to use for creating the modal.
+	 * @return The created modal.
+	 */
+	create<MC extends KxModalComponent<RT>, RT>(
+		configuration: IKxModalComponentCreationConfiguration<MC, RT>
+	): MC;
 }
 
-export interface IKxModalComponentCreationConfiguration extends IKxModalConfiguration {
-	component: typeof KxModalComponent;
+export interface IKxModalService extends IKxModalContainerService {
+	create<MC extends KxModalComponent<RT>, RT>(
+		modalComponent: KxModalComponentType<MC, RT>, modalConfiguration?: IKxModalConfiguration
+	): MC;
+}
+
+export interface IKxModalComponentCreationConfiguration<MC extends KxModalComponent<RT> = KxModalComponent<RT>, RT = any> extends IKxModalConfiguration {
+	component: KxModalComponentType<MC, RT>;
 	componentFactoryResolver: ComponentFactoryResolver;
 	injector: Injector;
 }

@@ -28,13 +28,13 @@ export class KxModalContainerService implements IKxModalContainerCreator {
 	 * @param configuration Configuration to use for creating the modal.
 	 * @return The created modal.
 	 */
-	public create<T>(configuration: IKxModalComponentCreationConfiguration): KxModalComponent<T> {
+	public create<T extends KxModalComponent<D>, D>(configuration: IKxModalComponentCreationConfiguration<T, D>): T {
 		if (!this.containerComponent) {
 			// tslint:disable-next-line:max-line-length
 			throw new Error(`There's no registered KxModalContainerComponent - there must be ONE KxModalContainerComponent (kx-modal-container).`);
 		}
 
-		return this.containerComponent.create<T>(configuration);
+		return this.containerComponent.create<T, D>(configuration);
 	}
 
 	/**

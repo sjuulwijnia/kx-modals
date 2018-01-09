@@ -14,11 +14,11 @@ import {
 
 import { IKxModalContainerItemComponent, KxModalComponentContainerItemStatus } from './modal-container.models';
 import { KxModalContainerService } from './modal-container.service';
-import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers';
+import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers/index';
 
 import {
 	KxModalComponent,
-	KxModalComponentRef
+	KxModalComponentType
 } from '../modal.component';
 
 import {
@@ -38,12 +38,12 @@ import { KX_MODAL_STYLING_TOKEN } from '../modal.configuration';
 		`:host.kx-hide { display: none !important; }`
 	]
 })
-export class KxModalContainerItemComponent implements IKxModalContainerItemComponent {
+export class KxModalContainerItemComponent<MC extends KxModalComponent<RT> = KxModalComponent<RT>, RT = any> implements IKxModalContainerItemComponent {
 	@ViewChild('modal', { read: ViewContainerRef }) public modalComponentViewContainerRef: ViewContainerRef;
 
-	public modalComponentConfiguration: IKxModalComponentCreationConfiguration = null;
+	public modalComponentConfiguration: IKxModalComponentCreationConfiguration<MC, RT> = null;
 
-	private modalComponentRef: KxModalComponentRef<any> = null;
+	private modalComponentRef: ComponentRef<MC> = null;
 	private modalComponentRefAnimationManager: KxModalContainerModalAnimationManager = null;
 
 	public get modal() {
@@ -76,7 +76,7 @@ export class KxModalContainerItemComponent implements IKxModalContainerItemCompo
 	 *
 	 * @return The modal if it is created, or null if it has been destroyed.
 	 */
-	public create(): KxModalComponent<any> {
+	public create(): MC {
 		if (this.status === KxModalComponentContainerItemStatus.created) {
 			return this.modal;
 		}
@@ -95,7 +95,9 @@ export class KxModalContainerItemComponent implements IKxModalContainerItemCompo
 			this.renderer,
 			this.modalComponentRef
 		);
-		this.modalComponentRefAnimationManager.inAnimation();
+		this.modalComponentRefAnimationManager.inAnimation({
+			containerElementCount: 0
+		});
 
 		this.modalContainerItemComponentRefAnimationManager = new KxModalContainerStaticAnimationManager(
 			this.animationBuilder,
@@ -159,7 +161,7 @@ export class KxModalContainerItemComponent implements IKxModalContainerItemCompo
 		this.modal['$$modalCount'] = count;
 	}
 
-	private createModalComponent(): KxModalComponentRef<any> {
+	private createModalComponent(): ComponentRef<MC> {
 		const componentFactoryResolver = this.modalComponentConfiguration.componentFactoryResolver;
 		const componentFactory = componentFactoryResolver.resolveComponentFactory(this.modalComponentConfiguration.component);
 		const componentRef = componentFactory.create(this.modalComponentConfiguration.injector);
@@ -170,7 +172,7 @@ export class KxModalContainerItemComponent implements IKxModalContainerItemCompo
 		return componentRef;
 	}
 
-	private insertModalConfiguration(componentRef: KxModalComponentRef<any>): void {
+	private insertModalConfiguration(componentRef: ComponentRef<MC>): void {
 		const modal = componentRef.instance;
 
 		modal.configuration = Object.seal(this.modalComponentConfiguration);
@@ -187,7 +189,7 @@ export class KxModalContainerItemComponent implements IKxModalContainerItemCompo
 		}
 	}
 
-	private replaceComponentAfterViewInit(componentRef: KxModalComponentRef<any>): void {
+	private replaceComponentAfterViewInit(componentRef: ComponentRef<MC>): void {
 		const AFTER_VIEW_INIT = 'ngAfterViewInit';
 		const modalStyling = this.modalModuleStyling.modal;
 		if (typeof (modalStyling) === 'string' || !modalStyling[AFTER_VIEW_INIT]) {

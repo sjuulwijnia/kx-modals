@@ -5,7 +5,10 @@ import {
 } from '@angular/core';
 
 import { KxModalContainerService } from './private/modal-container.service';
-import { KxModalComponent } from './modal.component';
+import {
+	KxModalComponent,
+	KxModalComponentType
+} from './modal.component';
 import {
 	IKxModalService,
 
@@ -40,10 +43,10 @@ export class KxModalService implements IKxModalService {
 	 *
 	 * *Default: empty (undefined)*
 	 */
-	public create<T>(
-		modalComponent: typeof KxModalComponent,
+	public create<MC extends KxModalComponent<RT>, RT>(
+		modalComponent: KxModalComponentType<MC, RT>,
 		modalConfiguration?: IKxModalConfiguration
-	): KxModalComponent<T> {
+	): MC {
 		modalConfiguration = modalConfiguration || {};
 
 		modalConfiguration.settings = {
@@ -64,7 +67,7 @@ export class KxModalService implements IKxModalService {
 		};
 		modalConfiguration.values = modalConfiguration.values || {};
 
-		return this.kxModalContainerService.create<T>({
+		return this.kxModalContainerService.create<MC, RT>({
 			component: modalComponent,
 			componentFactoryResolver: this.componentFactoryResolver,
 			injector: this.injector,

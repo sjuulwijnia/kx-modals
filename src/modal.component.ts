@@ -6,8 +6,11 @@ import { KX_MODAL_BACKDROP_ZINDEX } from './modal.configuration';
 import { IKxModalComponentCreationConfiguration } from './modal.models';
 import { IKxModalContainerItemComponent } from './private/modal-container.models';
 
-export type KxModalComponentRef<T> = ComponentRef<KxModalComponent<T>>;
-export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
+export interface KxModalComponentType<MC extends KxModalComponent<RT>, RT> {
+	new (...args: any[]): MC;
+}
+
+export class KxModalComponent<RT = any> extends Subject<RT> implements AfterViewInit {
 	@HostBinding('style.zIndex') public get styleZIndex(): number {
 		return KX_MODAL_BACKDROP_ZINDEX + 5 - ((this.$$modalCount - this.$$modalIndex - 1) * 2);
 	}
@@ -17,7 +20,7 @@ export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	/**
 	 * The configuration used to create this modal. Is sealed.
 	 */
-	public configuration: IKxModalComponentCreationConfiguration = null;
+	public configuration: IKxModalComponentCreationConfiguration<any, RT> = null;
 
 	/**
 	 * Number of modals in the parent KxModalContainerComponent.
@@ -82,7 +85,7 @@ export class KxModalComponent<T> extends Subject<T> implements AfterViewInit {
 	 * *Default: true*
 	 */
 	public closeSuccess(
-		returnValue?: T,
+		returnValue?: RT,
 		close = true
 	): void {
 		this.next(returnValue);

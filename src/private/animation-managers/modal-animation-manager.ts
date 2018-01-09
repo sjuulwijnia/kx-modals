@@ -1,9 +1,9 @@
 
 
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import { ViewContainerRef, Renderer2 } from '@angular/core';
+import { ComponentRef, ViewContainerRef, Renderer2 } from '@angular/core';
 
-import { KxModalComponent, KxModalComponentRef } from '../../modal.component';
+import { KxModalComponent } from '../../modal.component';
 import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
 import { KxModalBaseAnimationManager } from './base-animation-manager';
 
@@ -21,7 +21,7 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		globalStyling: string | IKxModalStylingAnimation,
 		localStyling: string | IKxModalStylingAnimation,
 		renderer: Renderer2,
-		private readonly componentRef: KxModalComponentRef<any>
+		private readonly componentRef: ComponentRef<any>
 	) {
 		super(componentRef.location.nativeElement, animationBuilder, renderer);
 
@@ -34,10 +34,13 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 	 *
 	 * @param callback The callback that needs to be called when the animation is done.
 	 */
-	public inAnimation(callback: () => void = (() => { })): boolean {
+	public inAnimation(configuration: {
+		containerElementCount?: number,
+		callback?: () => void
+	}): boolean {
 
 		// configure callbacks
-		const outerCallback = callback;
+		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
 			this.componentRef.instance['$$isAnimating'] = false;
@@ -80,7 +83,8 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		const outerCallback = configuration.callback || (() => { });
 		const innerCallback = () => {
 			outerCallback();
-			this.removeClasses(`${this.globalStyling.outClasses} ${this.localStyling.outClasses}`);
+			this.removeClasses(this.globalStyling.outClasses || '');
+			this.removeClasses(this.localStyling.outClasses || '');
 		};
 
 		if (!this._isVisible) {
@@ -91,7 +95,7 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 		this._isVisible = false;
 
 		// apply out classes
-		this.applyClasses(`${this.globalStyling.outClasses} ${this.localStyling.outClasses}`);
+		this.applyClasses(`${this.globalStyling.outClasses || ''} ${this.localStyling.outClasses || ''}`);
 
 		// determine animationFactory
 		const animationFactory = this.determineAnimationFactory(this.localStyling, this.globalStyling, 'out');

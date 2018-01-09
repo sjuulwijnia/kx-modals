@@ -10,7 +10,10 @@ export abstract class KxModalBaseAnimationManager {
 		protected readonly renderer: Renderer2,
 	) { }
 
-	public abstract inAnimation(callback?: () => void): boolean;
+	public abstract inAnimation(configuration: {
+		containerElementCount?: number,
+		callback?: () => void
+	}): boolean;
 
 	public abstract outAnimation(configuration: {
 		containerElementCount?: number,
