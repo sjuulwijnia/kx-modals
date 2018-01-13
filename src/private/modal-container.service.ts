@@ -30,7 +30,6 @@ export class KxModalContainerService implements IKxModalContainerCreator {
 	 */
 	public create<T extends KxModalComponent<D>, D>(configuration: IKxModalComponentCreationConfiguration<T, D>): T {
 		if (!this.containerComponent) {
-			// tslint:disable-next-line:max-line-length
 			throw new Error(`There's no registered KxModalContainerComponent - there must be ONE KxModalContainerComponent (kx-modal-container).`);
 		}
 
@@ -44,7 +43,6 @@ export class KxModalContainerService implements IKxModalContainerCreator {
 	 */
 	public registerContainerComponent(containerComponent: IKxModalContainerCreator): void {
 		if (!!this.containerComponent) {
-			// tslint:disable-next-line:max-line-length
 			throw new Error(` There's already a registered KxModalContainerComponent - there can only be ONE KxModalContainerComponent (kx-modal-container).`);
 		}
 

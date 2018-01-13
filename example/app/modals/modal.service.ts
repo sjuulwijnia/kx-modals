@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { animate, style } from '@angular/animations';
+import { Injectable } from '@angular/core';
 
 import {
-	KxModalComponentType,
 	IKxModalConfiguration,
 	IKxModalService,
 	KxModalComponent,
+	KxModalComponentType,
 	KxModalService
 } from 'kx-modals';
 
@@ -29,8 +29,11 @@ export class ModalService implements IKxModalService {
 		public readonly kxModalService: KxModalService
 	) { }
 
-	public create<T extends KxModalComponent<D>, D>(modalComponent: KxModalComponentType<T, D>, modalConfiguration?: IKxModalConfiguration): T {
-		return this.kxModalService.create<T, D>(modalComponent, modalConfiguration);
+	public create<MC extends KxModalComponent<RT>, RT>(
+		modalComponent: KxModalComponentType<MC, RT>,
+		modalConfiguration?: IKxModalConfiguration
+	): MC {
+		return this.kxModalService.create(modalComponent, modalConfiguration);
 	}
 
 	public confirm(values: string | ConfirmModalConfiguration) {
@@ -60,7 +63,7 @@ export class ModalService implements IKxModalService {
 		});
 	}
 
-	public notifyCustomOutAnimation(values: string | NotifyModalConfiguration) {
+	public notifyCustomInAndOutAnimation(values: string | NotifyModalConfiguration) {
 		if (typeof values === 'string') {
 			values = {
 				title: values

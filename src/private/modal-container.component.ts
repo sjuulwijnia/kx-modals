@@ -43,7 +43,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class KxModalContainerComponent implements IKxModalContainerCreator, AfterViewInit, OnDestroy, OnInit {
 	@ViewChild('modalContainer', { read: ViewContainerRef }) public modalContainerRef: ViewContainerRef;
-	private modalContainerItemRefs: ComponentRef<KxModalContainerItemComponent>[] = [];
+	private modalContainerItemRefs: ComponentRef<KxModalContainerItemComponent<any, any>>[] = [];
 
 	private readonly bodyStyling: string | IKxModalStylingAnimation = null;
 	private readonly modalBackdropStyling: string | IKxModalStylingAnimation = null;
@@ -149,7 +149,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 		return modal;
 	}
 
-	private afterModalCreated(containerItemRef: ComponentRef<KxModalContainerItemComponent>) {
+	private afterModalCreated(containerItemRef: ComponentRef<KxModalContainerItemComponent<any, any>>) {
 		this.modalContainerItemRefs.push(containerItemRef);
 		this.updateContainerItems();
 
@@ -160,7 +160,7 @@ export class KxModalContainerComponent implements IKxModalContainerCreator, Afte
 
 	}
 
-	private afterModalDestroyed(containerItemRef: ComponentRef<KxModalContainerItemComponent>) {
+	private afterModalDestroyed(containerItemRef: ComponentRef<KxModalContainerItemComponent<any, any>>) {
 		containerItemRef.instance.destroy();
 
 		this.modalContainerItemRefs.splice(containerItemRef.instance.index, 1);

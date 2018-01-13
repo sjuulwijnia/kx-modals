@@ -27,19 +27,25 @@ export class KxModalService implements IKxModalService {
 		private readonly kxModalContainerService: KxModalContainerService
 	) { }
 
+	/**
+	 * Whether there are *any* modals open or not (includes hidden modals).
+	 */
 	public get hasModals(): boolean {
 		return this.modalCount > 0;
 	}
 
+	/**
+	 * The amount of modals currently open (includes hidden modals).
+	 */
 	public get modalCount(): number {
 		return this.kxModalContainerService.modalCount;
 	}
 
 	/**
-	 * Creates a modal.
+	 * Creates a modal of type *modalComponent* using *modalConfiguration*.
 	 *
 	 * @param modalComponent The KxModalComponent to be created.
-	 * @param modalConfiguration The configuration used for the modalComponent.
+	 * @param modalConfiguration The configuration used for the *modalComponent*.
 	 *
 	 * *Default: empty (undefined)*
 	 */
@@ -65,9 +71,10 @@ export class KxModalService implements IKxModalService {
 
 			...(modalConfiguration.styling || {})
 		};
+
 		modalConfiguration.values = modalConfiguration.values || {};
 
-		return this.kxModalContainerService.create<MC, RT>({
+		return this.kxModalContainerService.create({
 			component: modalComponent,
 			componentFactoryResolver: this.componentFactoryResolver,
 			injector: this.injector,

@@ -38,7 +38,7 @@ import { KX_MODAL_STYLING_TOKEN } from '../modal.configuration';
 		`:host.kx-hide { display: none !important; }`
 	]
 })
-export class KxModalContainerItemComponent<MC extends KxModalComponent<RT> = KxModalComponent<RT>, RT = any> implements IKxModalContainerItemComponent {
+export class KxModalContainerItemComponent<MC extends KxModalComponent<RT>, RT> implements IKxModalContainerItemComponent {
 	@ViewChild('modal', { read: ViewContainerRef }) public modalComponentViewContainerRef: ViewContainerRef;
 
 	public modalComponentConfiguration: IKxModalComponentCreationConfiguration<MC, RT> = null;
@@ -50,7 +50,7 @@ export class KxModalContainerItemComponent<MC extends KxModalComponent<RT> = KxM
 		return this.modalComponentRef.instance;
 	}
 
-	public modalContainerItemComponentRef: ComponentRef<KxModalContainerItemComponent> = null;
+	public modalContainerItemComponentRef: ComponentRef<KxModalContainerItemComponent<MC, RT>> = null;
 	private modalContainerItemComponentRefAnimationManager: KxModalContainerStaticAnimationManager = null;
 
 	private status: KxModalComponentContainerItemStatus = KxModalComponentContainerItemStatus.initial;
@@ -156,6 +156,12 @@ export class KxModalContainerItemComponent<MC extends KxModalComponent<RT> = KxM
 		});
 	}
 
+	/**
+	 * Updates this modal to have a new *index* and *count*.
+	 *
+	 * @param index Modal's new index.
+	 * @param count Current count of modals opened.
+	 */
 	public update(index: number, count: number) {
 		this.modal['$$modalIndex'] = index;
 		this.modal['$$modalCount'] = count;
@@ -199,15 +205,14 @@ export class KxModalContainerItemComponent<MC extends KxModalComponent<RT> = KxM
 		const modal = componentRef.instance;
 		const modalAfterViewInitOriginal = modal[AFTER_VIEW_INIT];
 		const modalAfterViewInitStyling = modalStyling[AFTER_VIEW_INIT].bind(modal);
-		const renderer = this.renderer;
 		if (!!modalAfterViewInitOriginal) {
 			modal[AFTER_VIEW_INIT] = function () {
 				modalAfterViewInitOriginal.bind(modal)();
-				modalAfterViewInitStyling(componentRef, renderer);
+				modalAfterViewInitStyling(componentRef, this.renderer);
 			}.bind(modal);
 		} else {
 			modal[AFTER_VIEW_INIT] = function () {
-				modalAfterViewInitStyling(componentRef, renderer);
+				modalAfterViewInitStyling(componentRef, this.renderer);
 			}.bind(modal);
 		}
 	}

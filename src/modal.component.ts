@@ -7,11 +7,15 @@ import { IKxModalComponentCreationConfiguration } from './modal.models';
 import { IKxModalContainerItemComponent } from './private/modal-container.models';
 
 export interface KxModalComponentType<MC extends KxModalComponent<RT>, RT> {
-	new (...args: any[]): MC;
+	new(...args: any[]): MC;
 }
 
 export class KxModalComponent<RT = any> extends Subject<RT> implements AfterViewInit {
-	@HostBinding('style.zIndex') public get styleZIndex(): number {
+	/**
+	 * Current z-index of this component.
+	 */
+	@HostBinding('style.zIndex')
+	public get styleZIndex(): number {
 		return KX_MODAL_BACKDROP_ZINDEX + 5 - ((this.$$modalCount - this.$$modalIndex - 1) * 2);
 	}
 
@@ -105,10 +109,16 @@ export class KxModalComponent<RT = any> extends Subject<RT> implements AfterView
 		this.error(reason);
 	}
 
+	/**
+	 * Shows this modal, making it visible and adding it back to view.
+	 */
 	public show() {
 		this.modalContainerItem.show();
 	}
 
+	/**
+	 * Hides this modal, making it invisible and removing it from view.
+	 */
 	public hide() {
 		this.modalContainerItem.hide();
 	}

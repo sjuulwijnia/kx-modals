@@ -31,12 +31,21 @@ export interface IKxModalContainerCreator extends IKxModalContainerService {
 }
 
 export interface IKxModalService extends IKxModalContainerService {
+	/**
+	 * Creates a modal of type *modalComponent* using *modalConfiguration*.
+	 *
+	 * @param modalComponent The KxModalComponent to be created.
+	 * @param modalConfiguration The configuration used for the *modalComponent*.
+	 *
+	 * *Default: empty (undefined)*
+	 */
 	create<MC extends KxModalComponent<RT>, RT>(
-		modalComponent: KxModalComponentType<MC, RT>, modalConfiguration?: IKxModalConfiguration
+		modalComponent: KxModalComponentType<MC, RT>,
+		modalConfiguration?: IKxModalConfiguration
 	): MC;
 }
 
-export interface IKxModalComponentCreationConfiguration<MC extends KxModalComponent<RT> = KxModalComponent<RT>, RT = any> extends IKxModalConfiguration {
+export interface IKxModalComponentCreationConfiguration<MC extends KxModalComponent<RT>, RT> extends IKxModalConfiguration {
 	component: KxModalComponentType<MC, RT>;
 	componentFactoryResolver: ComponentFactoryResolver;
 	injector: Injector;
@@ -102,6 +111,7 @@ export interface IKxModalConfigurationSettings {
 	 */
 	animateBackdrop?: boolean;
 }
+
 /**
  * Values that will be passed on to the modal. These values will share the same keys on the passed object as on the modal.
  */
@@ -178,11 +188,11 @@ export interface IKxModalStylingAnimation {
 	outClasses?: string;
 }
 
-export interface IKxModalStylingAnimationWithCallbacks extends IKxModalStylingAnimation {
+export interface IKxModalStylingAnimationWithCallbacks<MC extends KxModalComponent<RT> = KxModalComponent<RT>, RT = any> extends IKxModalStylingAnimation {
 	/**
 	 * Hooks into the Angular component life cycle, and is ran when a modal's ``ngAfterViewInit`` is called.
 	 */
-	ngAfterViewInit?: (componentRef: ComponentRef<KxModalComponent<any>>, renderer: Renderer2) => void;
+	ngAfterViewInit?: (componentRef: ComponentRef<KxModalComponentType<MC, RT>>, renderer: Renderer2) => void;
 }
 
 export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimationWithCallbacks {
