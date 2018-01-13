@@ -63,7 +63,7 @@ export class ModalService implements IKxModalService {
 		});
 	}
 
-	public notifyCustomInAndOutAnimation(values: string | NotifyModalConfiguration) {
+	public notifyCustomOutAnimation(values: string | NotifyModalConfiguration) {
 		if (typeof values === 'string') {
 			values = {
 				title: values
@@ -75,16 +75,7 @@ export class ModalService implements IKxModalService {
 
 			styling: {
 				classes: 'tiny',
-				in: [
-					style({
-						opacity: 0,
-						transform: 'rotateZ(-225deg) scale(0)'
-					}),
-					animate('500ms ease-in', style({
-						opacity: 1,
-						transform: 'rotateZ(0) scale(1)'
-					}))
-				],
+
 				out: [
 					animate('500ms ease-in', style({
 						opacity: 0,

@@ -205,14 +205,15 @@ export class KxModalContainerItemComponent<MC extends KxModalComponent<RT>, RT> 
 		const modal = componentRef.instance;
 		const modalAfterViewInitOriginal = modal[AFTER_VIEW_INIT];
 		const modalAfterViewInitStyling = modalStyling[AFTER_VIEW_INIT].bind(modal);
+		const renderer = this.renderer;
 		if (!!modalAfterViewInitOriginal) {
 			modal[AFTER_VIEW_INIT] = function () {
 				modalAfterViewInitOriginal.bind(modal)();
-				modalAfterViewInitStyling(componentRef, this.renderer);
+				modalAfterViewInitStyling(componentRef, renderer);
 			}.bind(modal);
 		} else {
 			modal[AFTER_VIEW_INIT] = function () {
-				modalAfterViewInitStyling(componentRef, this.renderer);
+				modalAfterViewInitStyling(componentRef, renderer);
 			}.bind(modal);
 		}
 	}

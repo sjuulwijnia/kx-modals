@@ -7,6 +7,9 @@ import { KxModalComponent } from '../../modal.component';
 import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
 import { KxModalBaseAnimationManager } from './base-animation-manager';
 
+/**
+ * This animation manager is used for the modal.
+ */
 export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationManager {
 	private _isVisible = false;
 	public get isVisible() {
@@ -123,7 +126,6 @@ export class KxModalContainerModalAnimationManager extends KxModalBaseAnimationM
 	): AnimationFactory {
 
 		const key = type + 'Factory';
-
 		if (!!local[key]) {
 			return local[key];
 		} else if (!!global[key]) {

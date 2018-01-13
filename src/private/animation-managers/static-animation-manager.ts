@@ -6,6 +6,9 @@ import { ViewContainerRef, Renderer2 } from '@angular/core';
 import { IKxModalStylingAnimation, IKxModalStylingAnimationWithFactory } from '../../modal.models';
 import { KxModalBaseAnimationManager } from './base-animation-manager';
 
+/**
+ * This animation manager is used for both the background and the modal container.
+ */
 export class KxModalContainerStaticAnimationManager extends KxModalBaseAnimationManager {
 	private _isVisible = false;
 	public get isVisible() {
