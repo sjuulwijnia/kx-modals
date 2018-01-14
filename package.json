@@ -1,13 +1,14 @@
 {
 	"private": true,
 	"name": "kx-modals",
-	"version": "1.0.0-rc.4",
+	"version": "1.0.1",
 	"author": "sjuulwijnia",
 	"description": "Angular modals done right.",
 	"main": "./index.js",
 	"typings": "./index.d.ts",
 	"keywords": [
 		"angular",
+		"dialogs",
 		"modals"
 	],
 	"license": "MIT",
