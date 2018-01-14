@@ -1,0 +1,18 @@
+<div class="ui top attached tabular menu --code-sample-copy-container">
+	<a *ngFor="let sample of codeSamples; let $index = index" (click)="onSetCodeSampleIndex($index)" class="item" [class.active]="codeSampleIndex === $index">
+		<code>
+			{{ sample.title }}
+		</code>
+	</a>
+	<button *ngIf="!codeSampleCopied" class="mini ui labeled icon right floated button --code-sample-copy" (click)="onCodeSampleCopy($event)">
+		Copy
+		<i class="wizard icon"></i>
+	</button>
+	<button *ngIf="codeSampleCopied" class="mini ui labeled icon right floated green button --code-sample-copy" (click)="onCodeSampleCopy($event)">
+		Copied!
+		<i class="check icon"></i>
+	</button>
+</div>
+<div *ngIf="!!codeSamples && codeSamples.length > 0" class="ui bottom attached tab segment active">
+	<pre #codeSampleContainer class="--code-sample">{{ codeSamples[codeSampleIndex].code }}</pre>
+</div>

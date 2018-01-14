@@ -1,0 +1,20 @@
+<i class="close icon" (click)="onClose()"></i>
+<div class="header">
+	Stacking modal
+</div>
+
+<div class="content">
+	<p>
+		This modal can summon more modals! This modal is #{{ index }}.
+	</p>
+
+	<button class="ui basic button" (click)="onStackModal()">
+		Stack it!
+	</button>
+</div>
+
+<div class="actions">
+	<button class="ui basic button" (click)="onClose()">
+		Close
+	</button>
+</div>

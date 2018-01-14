@@ -1,0 +1,18 @@
+<div *ngIf="basic" class="ui active dimmer">
+	<div class="ui small text loader">
+		<h5>
+			{{ title }}
+		</h5>
+		<p *ngIf="!!body">
+			{{ body }}
+		</p>
+	</div>
+</div>
+
+<div *ngIf="!basic" class="header">
+	<i class="right aligned wait icon"></i> {{ title }}
+</div>
+
+<div *ngIf="!basic && !!body" class="content">
+	{{ body}}
+</div>

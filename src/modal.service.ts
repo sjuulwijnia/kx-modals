@@ -1,44 +1,85 @@
-import { Injectable } from "@angular/core";
-
-import { KxModalBaseComponent } from "./modal-base.component";
-import { KxModalContainerService } from "./private/modal-container.service";
 import {
-	KxModalOptions,
-	IKxModalService
-} from "./modal.models";
+	ComponentFactoryResolver,
+	Injectable,
+	Injector
+} from '@angular/core';
 
-import { Observable } from "rxjs/Observable";
+import { KxModalContainerService } from './private/modal-container.service';
+import {
+	KxModalComponent,
+	KxModalComponentType
+} from './modal.component';
+import {
+	IKxModalService,
+
+	IKxModalConfiguration,
+	IKxModalConfigurationSettings,
+	IKxModalConfigurationValues
+} from './modal.models';
+
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class KxModalService implements IKxModalService {
-	public get hasOpenModals(): boolean {
-		return this.modalContainerService.hasOpenModals;
-	}
-	public get openModalCount(): number {
-		return this.modalContainerService.openModalCount;
-	}
-
-	public get onAnyModalOpened(): Observable<void> {
-		return this.modalContainerService.onAnyModalOpened;
-	}
-
-	public get onAllModalsClosed(): Observable<void> {
-		return this.modalContainerService.onAllModalsClosed;
-	}
-
 	constructor(
-		private modalContainerService: KxModalContainerService
+		private readonly componentFactoryResolver: ComponentFactoryResolver,
+		private readonly injector: Injector,
+		private readonly kxModalContainerService: KxModalContainerService
 	) { }
 
-	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE> {
-		if (!modalComponent) {
-			return Observable.throw(new Error(`UNKNOWN COMPONENT REQUESTED: ${modalComponent}`));
-		}
+	/**
+	 * Whether there are *any* modals open or not (includes hidden modals).
+	 */
+	public get hasModals(): boolean {
+		return this.modalCount > 0;
+	}
 
-		modalOptions = modalOptions || {};
-		modalOptions.modalValues = modalOptions.modalValues || {};
-		modalOptions.modalSettings = Object.assign({}, this.modalContainerService.defaultModalSettings, modalOptions.modalSettings || {});
+	/**
+	 * The amount of modals currently open (includes hidden modals).
+	 */
+	public get modalCount(): number {
+		return this.kxModalContainerService.modalCount;
+	}
 
-		return this.modalContainerService.create<RETURN_TYPE>(modalComponent, modalOptions);
+	/**
+	 * Creates a modal of type *modalComponent* using *modalConfiguration*.
+	 *
+	 * @param modalComponent The KxModalComponent to be created.
+	 * @param modalConfiguration The configuration used for the *modalComponent*.
+	 *
+	 * *Default: empty (undefined)*
+	 */
+	public create<MC extends KxModalComponent<RT>, RT>(
+		modalComponent: KxModalComponentType<MC, RT>,
+		modalConfiguration?: IKxModalConfiguration
+	): MC {
+		modalConfiguration = modalConfiguration || {};
+
+		modalConfiguration.settings = {
+			animate: true,
+			animateBackdrop: true,
+
+			closeOnBackdropClick: true,
+			closeOnEscape: true,
+			closeCausesError: false,
+
+			...(modalConfiguration.settings || {})
+		};
+
+		modalConfiguration.styling = modalConfiguration.styling || {
+			classes: '',
+
+			...(modalConfiguration.styling || {})
+		};
+
+		modalConfiguration.values = modalConfiguration.values || {};
+
+		return this.kxModalContainerService.create({
+			component: modalComponent,
+			componentFactoryResolver: this.componentFactoryResolver,
+			injector: this.injector,
+
+			...modalConfiguration
+		});
 	}
 }

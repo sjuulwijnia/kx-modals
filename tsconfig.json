@@ -1,0 +1,27 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"outDir": "./dist/out-tsc",
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"skipLibCheck": true,
+		"target": "es5",
+		"baseUrl": ".",
+		"rootDir": "./",
+		"paths": {
+			"kx-modals": [
+				"./index.ts"
+			]
+		},
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"lib": [
+			"es2015",
+			"dom"
+		]
+	}
+}

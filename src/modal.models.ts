@@ -1,133 +1,201 @@
-import { Observable } from "rxjs/Observable";
+import { animate, style, AnimationFactory, AnimationMetadata } from '@angular/animations';
+import { ComponentFactoryResolver, ComponentRef, Injector, Renderer2 } from '@angular/core';
 
-import { KxModalBaseComponent } from "./modal-base.component";
+import {
+	KxModalComponent,
+	KxModalComponentType
+} from './modal.component';
 
-export interface KxModalSettings {
-	/**
-	 * Extension on the global KxModalStyleSettings.containerClasses that applies to this individual modal only.
-	 * Defaults to empty.
-	 */
-	modalContainerClasses?: string;
-
-	/**
-	 * Extension on the global KxModalStyleSettings.dialogClasses that applies to this individual modal only.
-	 * Defaults to empty.
-	 */
-	modalDialogClasses?: string;
-
-	/**
-	 * Whether pressing the backdrop (or anywhere outside the modal, more specifically) should close this modal when it is the top-most modal.
-	 * Defaults to true.
-	 */
-	dismissByClick?: boolean;
-
-	/**
-	 * Whether pressing escape should close this modal when it is the top-most modal.
-	 * Defaults to true.
-	 */
-	dismissByEscape?: boolean;
-
-	/**
-	 * Whether dismissByEscape and dismissByClick should throw an error when triggered. If true, make sure the error is caught using a .catch(...) on the Observable.
-	 * Defaults to false.
-	 */
-	dismissCausesError?: boolean;
-}
-
-export interface KxModalOptions {
-	/**
-	 * The values that should be passed on to this individual modal. These are available in and after the OnInit cycle.
-	 */
-	modalValues?: { [key: string]: any };
-
-	/**
-	 * The settings that are used for this individual modal. All omitted settings are set to their defaults.
-	 */
-	modalSettings?: KxModalSettings;
-}
-
-export interface IKxModalService {
+export interface IKxModalContainerService {
 	/**
 	 * Whether there are any modals currently open or not.
 	 */
-	readonly hasOpenModals: boolean;
+	readonly hasModals: boolean;
 
 	/**
 	 * The amount of modals currently open.
 	 */
-	readonly openModalCount: number;
-
-	readonly onAnyModalOpened: Observable<void>;
-	readonly onAllModalsClosed: Observable<void>;
-
-	/**
-	 * Creates the given ModalComponent using the given option.
-	 * Returns an Observable to subscribe to for the result.
-	 */
-	create<RETURN_TYPE>(modalComponent: string | KxModalBaseComponent<any>, modalOptions?: KxModalOptions): Observable<RETURN_TYPE>;
+	readonly modalCount: number;
 }
 
-export interface KxModalDeclaration {
+export interface IKxModalContainerCreator extends IKxModalContainerService {
 	/**
-	 * The ModalComponent to register to the service, allowing this ModalComponent to be called by name rather than by class declaration.
+	 * Creates a modal using the given *configuration*.
+	 *
+	 * @param configuration Configuration to use for creating the modal.
+	 * @return The created modal.
 	 */
-	modalComponent: any;
-
-	/**
-	 * The name that the ModalComponent should register under and should be called by. If omitted, it uses the name of the ModalComponent itself.
-	 * Example: if your ModalComponent is named 'ConfirmModalComponent' and this field is omitted, it will register under 'ConfirmModalComponent'.
-	 */
-	modalComponentName?: string;
-};
-
-export interface KxModalStyleSettings {
-	/**
-	 * The classes that are used for the backdrop.
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-backdrop'.
-	 */
-	backdropClasses?: string;
-
-	/**
-	 * The classes that are used for the outer <div> that is containing the modal. This one is usually used to set the location of the modal, and is extended by setting the KxModalSettings.modalContainerClasses when creating an individual modal. 
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal'.
-	 */
-	containerClasses?: string;
-
-	/**
-	 * The classes that are used for the inner <div> that is containing the modal. This one is usually used to set the outer styling characteristics of the modal, and is extended by setting the KxModalSettings.modalDialogClasses when creating an individual modal. 
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-dialog'.
-	 */
-	dialogClasses?: string;
-};
-
-export interface KxModalRootModuleStyleSettings extends KxModalStyleSettings {
-	/**
-	 * The classes that are applied to the <body> element when a modal is opened.
-	 * Defaults to the modal values used by the Bootstrap 4 modal, 'modal-open'.
-	 */
-	bodyClasses?: string;
+	create<MC extends KxModalComponent<RT>, RT>(
+		configuration: IKxModalComponentCreationConfiguration<MC, RT>
+	): MC;
 }
 
-export type KxGlobalStyleSettings =
-	KxModalRootModuleStyleSettings |
-	'bootstrap3' |
-	'bootstrap4' |
-	'foundation6';
-
-export interface KxRootModalModuleDeclaration {
+export interface IKxModalService extends IKxModalContainerService {
 	/**
-	 * Contains all ModalComponents that you want to be able to be called by name rather than by class declaration.
+	 * Creates a modal of type *modalComponent* using *modalConfiguration*.
+	 *
+	 * @param modalComponent The KxModalComponent to be created.
+	 * @param modalConfiguration The configuration used for the *modalComponent*.
+	 *
+	 * *Default: empty (undefined)*
 	 */
-	modalComponents?: KxModalDeclaration[];
+	create<MC extends KxModalComponent<RT>, RT>(
+		modalComponent: KxModalComponentType<MC, RT>,
+		modalConfiguration?: IKxModalConfiguration
+	): MC;
+}
+
+export interface IKxModalComponentCreationConfiguration<MC extends KxModalComponent<RT>, RT> extends IKxModalConfiguration {
+	component: KxModalComponentType<MC, RT>;
+	componentFactoryResolver: ComponentFactoryResolver;
+	injector: Injector;
+}
+
+export interface IKxModalConfiguration {
+	/**
+	 * Settings to be used for this modal.
+	 */
+	settings?: IKxModalConfigurationSettings;
 
 	/**
-	 * The default settings object used for the modals that can be overridden by each modal.
+	 * Additional styling to be used for this modal.
+	 * * Classes will be added to the default classes.
+	 * * Animations will override the default animations.
 	 */
-	defaultSettings?: KxModalSettings;
+	styling?: string | IKxModalStylingAnimation;
 
 	/**
-	 * The settings object used for the global styling of all modals used by this application. Put simple, it concerns the backdrop that is used and how the container of the modals is styled.
-	 * Default: 'bootstrap4'
+	 * Values that will be passed on to the modal. These values will share the same keys on the passed object as on the modal.
 	 */
-	globalStyleSettings?: KxGlobalStyleSettings;
+	values?: IKxModalConfigurationValues;
+}
+
+/**
+ * Settings to be used for this modal.
+ */
+export interface IKxModalConfigurationSettings {
+	/**
+	 * Whether this modal should close when the escape key is pressed.
+	 *
+	 * *Default: true*
+	 */
+	closeOnEscape?: boolean;
+
+	/**
+	 * Whether this modal should close when the backdrop is clicked.
+	 *
+	 * *Default: true*
+	 */
+	closeOnBackdropClick?: boolean;
+
+	/**
+	 * Whether closing the modal by pressing escape or clicking on the backdrop should cause an error.
+	 *
+	 * *Default: false*
+	 */
+	closeCausesError?: boolean;
+
+	/**
+	 * Whether to animate the modal if it opens or closes.
+	 * Won't have any effect if NoopAnimationsModule is used.
+	 *
+	 * *Default: true*
+	 */
+	animate?: boolean;
+
+	/**
+	 * Whether to animate the backdrop if this is the modal that creates the backdrop or removes the backdrop.
+	 * Won't have any effect if NoopAnimationsModule is used.
+	 *
+	 * *Default: true*
+	 */
+	animateBackdrop?: boolean;
+}
+
+/**
+ * Values that will be passed on to the modal. These values will share the same keys on the passed object as on the modal.
+ */
+export interface IKxModalConfigurationValues {
+	[key: string]: any;
+}
+
+export abstract class IKxModalStyling {
+	/**
+	 * The class that needs to be applied to the ``document.body`` when a modal is opened.
+	 *
+	 * ``OR``
+	 *
+	 * The styling configuration used for the ``document.body`` (IKxModalStylingAnimation).
+	 */
+	body?: string | IKxModalStylingAnimation;
+
+	/**
+	 * The class that needs to be applied to the modal backdrop (string).
+	 *
+	 * ``OR``
+	 *
+	 * The styling configuration used for the modal backdrop (IKxModalStylingAnimation).
+	 */
+	modalBackdrop?: string | IKxModalStylingAnimation;
+
+	/**
+	 * The class that needs to be applied to the modal container.
+	 *
+	 * ``OR``
+	 *
+	 * The styling configuration used for the modal container (IKxModalStylingAnimation).
+	 */
+	modalContainer?: string | IKxModalStylingAnimation;
+
+	/**
+	 * The class that needs to be applied to all the modals (string).
+	 *
+	 * ``OR``
+	 *
+	 * The styling configuration used for the all modals (IKxModalStylingAnimation).
+	 */
+	modal?: string | IKxModalStylingAnimation | IKxModalStylingAnimationWithCallbacks;
+}
+
+export interface IKxModalStylingAnimation {
+	/**
+	 * The class that needs to be appended to part that is configured.
+	 */
+	classes: string;
+
+	/**
+	 * (Optional) Configure the *in* animation that is used for this part when a modal is created.
+	 */
+	in?: AnimationMetadata | AnimationMetadata[] | 'none';
+
+	/**
+	 * (Optional) Configure the classes that must be applied during the *in* animation.
+	 *
+	 * Must be used in combination with the *in* animation property, or they won't be applied.
+	 */
+	inClasses?: string;
+
+	/**
+	 * (Optional) Configure the *out* animation that is used for this part when a modal is created.
+	 */
+	out?: AnimationMetadata | AnimationMetadata[] | 'none';
+
+	/**
+	 * (Optional) Configure the classes that must be applied during the *out* animation.
+	 *
+	 * Must be used in combination with the *out* animation property, or they won't be applied.
+	 */
+	outClasses?: string;
+}
+
+export interface IKxModalStylingAnimationWithCallbacks<MC extends KxModalComponent<RT> = KxModalComponent<RT>, RT = any> extends IKxModalStylingAnimation {
+	/**
+	 * Hooks into the Angular component life cycle, and is ran when a modal's ``ngAfterViewInit`` is called.
+	 */
+	ngAfterViewInit?: (componentRef: ComponentRef<KxModalComponentType<MC, RT>>, renderer: Renderer2) => void;
+}
+
+export interface IKxModalStylingAnimationWithFactory extends IKxModalStylingAnimationWithCallbacks {
+	inFactory?: AnimationFactory;
+	outFactory?: AnimationFactory;
 }

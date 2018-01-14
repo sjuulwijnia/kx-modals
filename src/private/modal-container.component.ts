@@ -1,141 +1,349 @@
-import { Component, ComponentRef, ComponentFactory, ComponentFactoryResolver, OnInit, Renderer, ViewChild, ViewContainerRef } from "@angular/core";
-import { animate, state, style, transition, trigger } from "@angular/core";
-
-import { KxModalComponent } from "./modal.component";
 import {
-	KxModalConfiguration,
-	KX_MODAL_ANIMATION_TIME,
-	KX_MODAL_STATE_HIDE,
-	KX_MODAL_STATE_SHOW
-} from "./modal.models-private";
-import { KxModalContainerService } from "./modal-container.service";
+	animate, state, style, transition, trigger,
+	AnimationBuilder, AnimationFactory, AnimationMetadata, AnimationPlayer
+} from '@angular/animations';
+import {
+	Component, ComponentFactory, ComponentFactoryResolver, ComponentRef,
+	Inject, Injector,
+	AfterViewInit, OnDestroy, OnInit,
+	Renderer2,
+	ViewChild, ViewContainerRef
+} from '@angular/core';
 
-import { Observable } from "rxjs/Observable";
-import { Subject } from "rxjs/Subject";
+import {
+	KxModalComponent
+} from '../modal.component';
+
+import {
+	IKxModalStyling,
+	IKxModalStylingAnimation,
+	IKxModalStylingAnimationWithFactory,
+	IKxModalStylingAnimationWithCallbacks,
+	IKxModalConfiguration,
+	IKxModalConfigurationSettings,
+	IKxModalConfigurationValues,
+	IKxModalComponentCreationConfiguration,
+	IKxModalContainerCreator
+} from '../modal.models';
+
+import { KxModalContainerStaticAnimationManager, KxModalContainerModalAnimationManager } from './animation-managers/index';
+
+import { KxModalContainerItemComponent } from './modal-container-item.component';
+import { KxModalContainerService } from './modal-container.service';
+
+import { KX_MODAL_STYLING_TOKEN, KX_MODAL_BACKDROP_ZINDEX } from '../modal.configuration';
+
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
 	selector: 'kx-modal-container',
-	template: `
-<div>
-	<ng-template #kxModalContainer></ng-template>
-
-	<div [hidden]="modalComponentCount === 0" [ngClass]="kxModalBackdropClasses" [@kxModalBackdrop]="kxModalBackdrop"></div>
-</div>
-	`,
-	styles: [
-		`.kx-modals-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background-color: #000; z-index: 1040; }`
-	],
-
-	animations: [
-		trigger('kxModalBackdrop', [
-			state('kxModalAnimationShow',
-				style({
-					opacity: 0.5
-				})
-			),
-			state('kxModalAnimationHide',
-				style({
-					opacity: 0.1
-				})
-			),
-
-			transition(`void => kxModalAnimationShow`, [
-				style({
-					opacity: 0.1
-				}),
-
-				animate(`200ms`)
-			]),
-
-			transition(`kxModalAnimationShow => kxModalAnimationHide`, [
-				animate(`200ms`)
-			])
-		])
-	]
+	template: `<ng-template #modalContainer></ng-template>`,
+	styles: [`.kx-modal-visible { display: block; opacity: 1; }`]
 })
-export class KxModalContainerComponent implements OnInit {
-	public kxModalBackdrop = KX_MODAL_STATE_HIDE;
-	public kxModalBackdropClasses: string = null;
+export class KxModalContainerComponent implements IKxModalContainerCreator, AfterViewInit, OnDestroy, OnInit {
+	@ViewChild('modalContainer', { read: ViewContainerRef }) public modalContainerRef: ViewContainerRef;
+	private modalContainerItemRefs: ComponentRef<KxModalContainerItemComponent<any, any>>[] = [];
 
-	private modalContainerComponentFactory: ComponentFactory<KxModalComponent>;
-	private modalContainerCount$: Subject<number> = new Subject<number>();
-	public modalContainerCount: Observable<number> = this.modalContainerCount$.asObservable();
+	private readonly bodyStyling: string | IKxModalStylingAnimation = null;
+	private readonly modalBackdropStyling: string | IKxModalStylingAnimation = null;
+	private readonly modalContainerStyling: string | IKxModalStylingAnimation = null;
+	private readonly modalStyling: string | IKxModalStylingAnimationWithCallbacks = null;
 
-	@ViewChild("kxModalContainer", { read: ViewContainerRef }) private modalComponentContainer: ViewContainerRef;
-	private modalComponentRefs: ComponentRef<KxModalComponent>[] = [];
+	private modalBackdropManager: KxModalContainerStaticAnimationManager = null;
+	private modalBodyManager: KxModalContainerStaticAnimationManager = null;
 
-	public get modalComponentCount(): number {
-		return this.modalComponentContainer.length;
+	public get modalComponentContainerRefParent(): HTMLElement {
+		if (!this.modalContainerRef) {
+			return null;
+		}
+
+		return this.modalContainerRef.element.nativeElement.parentElement;
 	}
 
-	constructor(
-		componentFactoryResolver: ComponentFactoryResolver,
-		private modalContainerService: KxModalContainerService,
-		private renderer: Renderer
-	) {
-		this.modalContainerComponentFactory = componentFactoryResolver.resolveComponentFactory(KxModalComponent);
+	public get hasModals(): boolean {
+		return this.modalCount > 0;
+	}
 
-		this.kxModalBackdropClasses = modalContainerService.globalStyleSettings.backdropClasses;
+	public get modalCount(): number {
+		if (!this.modalContainerRef) {
+			return 0;
+		}
+
+		return this.modalContainerRef.length;
+	}
+
+	private escapeKeydownSubscription: Subscription = null;
+
+	constructor(
+		private readonly animationBuilder: AnimationBuilder,
+		private readonly componentFactoryResolver: ComponentFactoryResolver,
+		private readonly injector: Injector,
+		private readonly modalContainerService: KxModalContainerService,
+		private readonly renderer: Renderer2,
+
+		@Inject(KX_MODAL_STYLING_TOKEN) private readonly modalModuleStyling: IKxModalStyling
+	) {
+		this.modalContainerService.registerContainerComponent(this);
+
+		this.bodyStyling = modalModuleStyling.body;
+		this.modalBackdropStyling = modalModuleStyling.modalBackdrop;
+		this.modalContainerStyling = modalModuleStyling.modalContainer;
+		this.modalStyling = modalModuleStyling.modal;
 	}
 
 	ngOnInit() {
-		this.modalContainerService
-			.bindToModalContainer(this.modalContainerCount)
-			.subscribe(this.onModalCreation.bind(this));
+		this.escapeKeydownSubscription = Observable
+			.fromEvent(document, 'keydown', $event => ($event as KeyboardEvent))
+			.subscribe($event => {
+				this.closeOnEscape($event);
+			});
 	}
 
-	private onModalCreation(modalConfiguration: KxModalConfiguration<any>): void {
-		const componentRef = this.modalComponentContainer.createComponent(this.modalContainerComponentFactory);
+	ngAfterViewInit() {
+		this.modalBodyManager = new KxModalContainerStaticAnimationManager(
+			this.animationBuilder,
+			document.body,
+			this.renderer,
+			this.bodyStyling
+		);
+	}
 
-		componentRef.instance.modalConfiguration = modalConfiguration;
+	ngOnDestroy() {
+		this.modalContainerService.unregisterContainerComponent();
+		this.escapeKeydownSubscription.unsubscribe();
+	}
 
-		this.kxModalBackdrop = KX_MODAL_STATE_SHOW;
-		this.modalComponentRefs.push(componentRef);
+	/**
+	 * Creates a modal using the given *configuration*.
+	 *
+	 * @param configuration Configuration to use for creating the modal.
+	 * @return The created modal.
+	 */
+	public create<MC extends KxModalComponent<RT>, RT>(
+		configuration: IKxModalComponentCreationConfiguration<MC, RT>
+	): MC {
 
-		modalConfiguration
-			.subject
+		const containerItemFactory = this.componentFactoryResolver.resolveComponentFactory(KxModalContainerItemComponent);
+		const containerItem = containerItemFactory.create(this.injector);
+		const containerItemInstance = containerItem.instance as KxModalContainerItemComponent<MC, RT>;
+
+		containerItemInstance.modalComponentConfiguration = configuration;
+		containerItemInstance.modalContainerItemComponentRef = containerItem;
+
+		// insert into container
+		this.modalContainerRef.insert(containerItem.hostView);
+
+		// create actual modal component
+		const modal = containerItemInstance.create();
+		modal
 			.subscribe({
-				error: this.onModalDestroy.bind(this, componentRef),
-				complete: this.onModalDestroy.bind(this, componentRef)
+				error: () => { }
+			})
+			.add(() => {
+				this.afterModalDestroyed(containerItem);
 			});
 
-		this.renderer.setElementClass(document.body, this.modalContainerService.globalStyleSettings.bodyClasses, true);
+		this.afterModalCreated(containerItem);
 
-		this.emitModalComponentCount();
-
-		this.modalContainerService.onAnyModalOpened$.next();
+		return modal;
 	}
 
-	private onModalDestroy(componentRef: ComponentRef<KxModalComponent>) {
-		componentRef.instance.modalAnimationState = KX_MODAL_STATE_HIDE;
+	private afterModalCreated(containerItemRef: ComponentRef<KxModalContainerItemComponent<any, any>>) {
+		this.modalContainerItemRefs.push(containerItemRef);
+		this.updateContainerItems();
 
-		setTimeout(() => {
-			const index = this.modalComponentContainer.indexOf(componentRef.hostView);
+		this.createModalBackdrop();
+		this.modalBodyManager.inAnimation({
+			containerElementCount: this.modalContainerItemRefs.length
+		});
 
-			if (index >= 0) {
-				this.modalComponentRefs.splice(index, 1);
-				this.modalComponentContainer.remove(index);
-			}
-
-			this.emitModalComponentCount();
-		}, KX_MODAL_ANIMATION_TIME);
 	}
 
-	private emitModalComponentCount() {
-		this.modalContainerCount$.next(this.modalComponentCount);
+	private afterModalDestroyed(containerItemRef: ComponentRef<KxModalContainerItemComponent<any, any>>) {
+		containerItemRef.instance.destroy();
 
-		this.modalComponentRefs
-			.forEach((componentRef: ComponentRef<KxModalComponent>, index: number) => {
-				componentRef.instance.modalCount = this.modalComponentRefs.length;
-				componentRef.instance.modalIndex = index;
-			});
+		this.modalContainerItemRefs.splice(containerItemRef.instance.index, 1);
+		this.updateContainerItems();
 
-		if (this.modalComponentRefs.length === 0) {
-			this.renderer.setElementClass(document.body, this.modalContainerService.globalStyleSettings.bodyClasses, false);
+		this.deleteModalBackdrop();
+		this.modalBodyManager.outAnimation({
+			containerElementCount: this.modalContainerItemRefs.length
+		});
+	}
 
-			this.kxModalBackdrop = KX_MODAL_STATE_HIDE;
+	public closeOnBackdropClick($event: MouseEvent) {
+		this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnBackdropClick, $event);
+	}
 
-			this.modalContainerService.onAllModalsClosed$.next();
+	public closeOnEscape($event: KeyboardEvent) {
+		if ($event.code === 'Escape') {
+			this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnEscape, $event);
 		}
 	}
+
+	/**
+	 * Takes the top KxModalComponent and closes it if the eventType is configured to close it.
+	 *
+	 * @param eventType The eventType that closes the upper componentRef.
+	 * @param $event The event that triggered the closing.
+	 */
+	private closeTopComponentByContainerEvent(
+		eventType: KxModalComponentCloseReason,
+		$event: Event
+	): void {
+
+		// check if the event has been kx-modals canceled
+		if ($event['KX-MODALS-CANCELLED']) {
+			return;
+		}
+
+		// get the componentRef
+		const containerItem = this.modalContainerItemRefs[this.modalContainerItemRefs.length - 1];
+		if (!containerItem) {
+			return;
+		}
+
+		// check whether this instance is closed by the given eventType
+		const instance = containerItem.instance.modal;
+		if (!!instance.configuration.settings[eventType]) {
+
+			// check whether it should generate an error
+			if (!!instance.configuration.settings.closeCausesError) {
+				instance.error(`Closed by '${eventType}' event`);
+			} else {
+				instance.closeSilent();
+			}
+		}
+	}
+
+	/**
+	 * Creates the *IKxModalStylingAnimationWithFactory* that contains all styling information for this part.
+	 *
+	 * @param styling The style object to be enriched.
+	 * @return The *IKxModalStylingAnimationWithFactory* containing all styling information for this part.
+	 */
+	private createModalStylingPart(
+		styling: string | IKxModalStylingAnimationWithFactory
+	): IKxModalStylingAnimationWithFactory {
+
+		// if there's no styling, make it a string
+		if (!styling) {
+			styling = '';
+		}
+
+		// if the styling equals a string, make it the object
+		if (typeof styling === 'string') {
+			styling = {
+				classes: styling,
+				in: 'none',
+				inClasses: '',
+				out: 'none',
+				outClasses: ''
+			};
+		}
+
+		// compose the result using the object
+		return {
+			...styling,
+
+			inFactory: this.createModalAnimationpart(styling.in),
+			outFactory: this.createModalAnimationpart(styling.out)
+		};
+	}
+
+	/**
+	 * Creates an *AnimationFactory* based on the given *animations*.
+	 *
+	 * @param animations The animations to create an *AnimationFactory* of.
+	 * @return The created *AnimationFactory* or if there are no animations.
+	 */
+	private createModalAnimationpart(
+		animations: AnimationMetadata | AnimationMetadata[] | 'none' = 'none'
+	): AnimationFactory {
+
+		// check if there's an animation available, if not, return null
+		if (!animations || animations === 'none') {
+			return null;
+		}
+
+		return this.animationBuilder.build(animations);
+	}
+
+	/**
+	 * Creates the backdrop for the modal if there is none.
+	 *
+	 * @param configuration The configuration used for the modal that created the backdrop.
+	 */
+	private createModalBackdrop(): void {
+
+		if (!!this.modalBackdropManager) {
+			return;
+		}
+
+		// create the element, apply classes & add to body
+		const backdrop = this.renderer.createElement('div');
+		this.renderer.setStyle(backdrop, 'z-index', KX_MODAL_BACKDROP_ZINDEX);
+
+		this.renderer.appendChild(this.modalComponentContainerRefParent, backdrop);
+
+		// if backdrop close is configured, start listening
+		this.renderer.listen(backdrop, 'click', $event => {
+			this.closeTopComponentByContainerEvent(KxModalComponentCloseReason.CloseOnBackdropClick, $event);
+		});
+
+		this.modalBackdropManager = new KxModalContainerStaticAnimationManager(
+			this.animationBuilder,
+			backdrop,
+			this.renderer,
+			this.modalBackdropStyling
+		);
+
+		this.modalBackdropManager.inAnimation({
+			containerElementCount: this.modalContainerItemRefs.length
+		});
+	}
+
+	/**
+	 * Deletes the backdrop from view if there's one or zero modals visible.
+	 *
+	 * @param configuration The configuration used for the modal that deletes the backdrop.
+	 */
+	private deleteModalBackdrop(): void {
+
+		if (this.modalContainerItemRefs.length > 0 || !this.modalBackdropManager) {
+			return;
+		}
+
+		const backdropManager = this.modalBackdropManager;
+		this.modalBackdropManager = null;
+
+		backdropManager.outAnimation({
+			containerElementCount: this.modalContainerItemRefs.length,
+			callback: () => {
+				this.renderer.removeChild(this.modalComponentContainerRefParent, backdropManager.element);
+			}
+		});
+	}
+
+	/**
+	 * Updates all the currently open KxModalComponentRefs.
+	 */
+	private updateContainerItems() {
+		const modalComponentCount = this.modalContainerItemRefs.length;
+		for (let index = 0; index < modalComponentCount; index++) {
+			this.modalContainerItemRefs[index].instance.update(index, modalComponentCount);
+		}
+	}
+}
+
+export enum KxModalComponentCloseReason {
+	CloseOnBackdropClick = 'closeOnBackdropClick',
+	CloseOnEscape = 'closeOnEscape'
+}
+
+export interface KxModalComponentRefConfiguration<T> {
+	index: number;
+	componentRef: ComponentRef<T>;
+	componentRefAnimationManager: KxModalContainerModalAnimationManager;
 }

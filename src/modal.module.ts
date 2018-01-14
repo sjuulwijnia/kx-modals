@@ -1,54 +1,54 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { ModuleWithProviders, NgModule } from '@angular/core';
 
-import { KxModalService } from "./modal.service";
-import { KxModalComponent } from "./private/modal.component";
-import { KxModalContainerComponent } from "./private/modal-container.component";
-import { KxModalContainerService } from "./private/modal-container.service";
+import { KxModalContainerItemComponent } from './private/modal-container-item.component';
+import { KxModalContainerComponent } from './private/modal-container.component';
+import { KxModalContainerService } from './private/modal-container.service';
 
-import {
-	ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER
-} from "./private/modal.models-private";
+import { KxModalService } from './modal.service';
+import { IKxModalStyling } from './modal.models';
 
-import {
-	KxRootModalModuleDeclaration
-} from "./modal.models";
+import { KX_MODAL_STYLING_TOKEN } from './modal.configuration';
 
-import "rxjs/add/observable/throw";
-import "rxjs/add/operator/debounceTime";
+import 'rxjs/add/observable/fromEvent';
 
 @NgModule({
-	imports: [
-		CommonModule
-	],
-
-	providers: [
-		KxModalService
-	],
-
 	declarations: [
-		KxModalComponent,
+		KxModalContainerItemComponent,
 		KxModalContainerComponent
 	],
 
+	providers: [
+		KxModalContainerService,
+		KxModalService
+	],
+
 	entryComponents: [
-		KxModalComponent
+		KxModalContainerItemComponent
 	],
 
 	exports: [
 		KxModalContainerComponent
 	]
 })
-export class KxModalModule {
-	static forRoot(modalModuleConfiguration?: KxRootModalModuleDeclaration): ModuleWithProviders {
-		return {
-			ngModule: KxModalModule,
-			providers: [
-				KxModalContainerService,
+export class KxModalRootModule {
+	constructor() { }
+}
 
+@NgModule({
+	providers: [
+		KxModalService
+	]
+})
+export class KxModalModule {
+	constructor() { }
+
+	public static forRoot(modalStyling: IKxModalStyling = {}): ModuleWithProviders {
+		return {
+			ngModule: KxModalRootModule,
+			providers: [
 				{
-					provide: ROOT_MODAL_MODULE_CONFIGURATION_PROVIDER,
-					useValue: modalModuleConfiguration
+					provide: KX_MODAL_STYLING_TOKEN,
+					useValue: modalStyling
 				}
 			]
 		};
